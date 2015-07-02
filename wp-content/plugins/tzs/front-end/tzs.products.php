@@ -31,7 +31,7 @@ function tzs_front_end_products_handler($atts) {
             <thead>
     <form class="search_pr_form" id="search_pr_form2" name="search_pr_form1" method="POST">
                 <tr id="tbl_thead_records_per_page">
-                    <th colspan="3" id="thead_h1"></th>
+                    <th colspan="4" id="thead_h1"></th>
                     <th colspan="5">
                         <div id="show-search-form" class="search_button"><span></span></div>
                         <div class="thead_button">выбор критериев поиска</div>
@@ -42,11 +42,12 @@ function tzs_front_end_products_handler($atts) {
                 <tr>
                     <th id="tbl_products_id">Номер<br/>время заявки</th>
                     <th id="tbl_products_sale">Покупка<br/>Продажа</th>
-                    <th id="tbl_products_cost">Участник тендера</th>
                     <th id="tbl_products_dtc">Период публикации</th>
+                    <th id="tbl_products_dtc">Тип товара</th>
                     <th id="tbl_products_title">Название, описание и фото товара</th>
-                    <th id="tbl_products_price">Цена<br/>Форма оплаты<br/>Кол-во</th>
-                    <th id="tbl_products_cities">Место нахождения</th>
+                    <th id="tbl_products_price">Цена<br/>Кол-во</th>
+                    <th id="tbl_products_price">Форма оплаты</th>
+                    <th id="tbl_products_cost">Купить / Предложить цену</th>
                     <th id="tbl_products_comm" nonclickable="true">Контактные данные</th>
                 </tr>
                 <tr>
@@ -58,99 +59,98 @@ function tzs_front_end_products_handler($atts) {
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_2', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_2" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                            <div id="tbl_thead_search_div_2" class="tbl_thead_search_div">
-                                Тип заявки:<br>
-                                <select name="sale_or_purchase">
-                                    <option value="0" <?php if (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] == 0) echo 'selected="selected"'; ?> >Все</option>
-                                    <option value="1" <?php if (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] == 1) echo 'selected="selected"'; ?> >Продажа</option>
-                                    <option value="2" <?php if (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
-                                </select><br>
-                            </div>
+                        <div id="tbl_thead_search_div_2" class="tbl_thead_search_div">
+                            Тип заявки:<br>
+                            <select name="sale_or_purchase">
+                                <option value="0" <?php if (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] == 0) echo 'selected="selected"'; ?> >Все</option>
+                                <option value="1" <?php if (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] == 1) echo 'selected="selected"'; ?> >Продажа</option>
+                                <option value="2" <?php if (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
+                            </select><br>
+                        </div>
                     </th>
                     <th>
                         <div id="tbl_thead_search_button_3" class="tbl_thead_search_button" title="Фильтр по участнику тендера">
-                            <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_3', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_3" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                            <div id="tbl_thead_search_div_3" class="tbl_thead_search_div">
-                                Участник тендера:<br>
-                                <select name="fixed_or_tender">
-                                    <option value="0" <?php if (isset($_POST['fixed_or_tender']) && $_POST['fixed_or_tender'] == 0) echo 'selected="selected"'; ?> >Все предложения</option>
-                                    <option value="1" <?php if (isset($_POST['fixed_or_tender']) && $_POST['fixed_or_tender'] == 1) echo 'selected="selected"'; ?> >Цена зафиксирована</option>
-                                    <option value="2" <?php if (isset($_POST['fixed_or_tender']) && $_POST['fixed_or_tender'] == 2) echo 'selected="selected"'; ?> >Тендерное предложение</option>
-                                </select>
-                            </div>
+                        <div id="tbl_thead_search_div_3" class="tbl_thead_search_div">
+                            Период публикации: от:<br>
+                            <input type="text" name="data_from" value="<?php echo_val('data_from'); ?>" size="10"><br>
+                            Период публикации: до:<br>
+                            <input type="text" name="data_to" value="<?php echo_val('data_to'); ?>" size="10">
+                        </div>
                     </th>
                     <th>
                         <div id="tbl_thead_search_button_4" class="tbl_thead_search_button" title="Фильтр по периоду публикации">
-                            <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_4', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_4" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                            <div id="tbl_thead_search_div_4" class="tbl_thead_search_div">
-                                Период публикации: от:<br>
-                                <input type="text" name="data_from" value="<?php echo_val('data_from'); ?>" size="10"><br>
-                                Период публикации: до:<br>
-                                <input type="text" name="data_to" value="<?php echo_val('data_to'); ?>" size="10">
-                            </div>
+                        <div id="tbl_thead_search_div_4" class="tbl_thead_search_div">
+                            Тип товара:<br>
+                            <select name="type_id" <?php echo ($p_id == $pa_root_id) ? '' : ' disabled="disabled"'; ?> >
+                                <option value="0">все категории</option>
+                                <option disabled>- - - - - - - -</option>
+                                <?php
+                                    tzs_build_product_types('type_id', TZS_PR_ROOT_CATEGORY_PAGE_ID);
+                                ?>
+                            </select>
+                        </div>
                     </th>
                     <th>
                         <div id="tbl_thead_search_button_5" class="tbl_thead_search_button" title="Фильтр по описанию товара">
-                            <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_5', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_5" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                            <div id="tbl_thead_search_div_5" class="tbl_thead_search_div">
-                                Описание:<br>
-                                <input type="text" name="pr_title" value="<?php echo_val('pr_title'); ?>" size="30">
-                            </div>
+                        <div id="tbl_thead_search_div_5" class="tbl_thead_search_div">
+                            Описание:<br>
+                            <input type="text" name="pr_title" value="<?php echo_val('pr_title'); ?>" size="30">
+                        </div>
                     </th>
                     <th>
                         <div id="tbl_thead_search_button_6" class="tbl_thead_search_button" title="Фильтр по стоимости товара">
-                            <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_6', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_6" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                            <div id="tbl_thead_search_div_6" class="tbl_thead_search_div">
-                                Стоимость: от:<br>
-                                <input type="text" name="price_from" value="<?php echo_val('price_from'); ?>" size="10"><br>
-                                Стоимость: до:<br>
-                                <input type="text" name="price_to" value="<?php echo_val('price_to'); ?>" size="10"><br>
-                                Форма оплаты:<br>
-                                <select name="payment">
-                                    <option value="0" <?php if (isset($_POST['payment']) && $_POST['payment'] == 0) echo 'selected="selected"'; ?> >Любая</option>
-                                    <option value="1" <?php if (isset($_POST['payment']) && $_POST['payment'] == 1) echo 'selected="selected"'; ?> >Наличная</option>
-                                    <option value="2" <?php if (isset($_POST['payment']) && $_POST['payment'] == 2) echo 'selected="selected"'; ?> >Безналичная</option>
-                                </select><br>
-                                НДС:<br>
-                                <select name="nds">
-                                    <option value="0" <?php if (isset($_POST['nds']) && $_POST['nds'] == 0) echo 'selected="selected"'; ?> >Все</option>
-                                    <option value="1" <?php if (isset($_POST['nds']) && $_POST['nds'] == 1) echo 'selected="selected"'; ?> >Без НДС</option>
-                                    <option value="2" <?php if (isset($_POST['nds']) && $_POST['nds'] == 2) echo 'selected="selected"'; ?> >Включая НДС</option>
-                                </select>
-                            </div>
+                        <div id="tbl_thead_search_div_6" class="tbl_thead_search_div">
+                            Стоимость: от:<br>
+                            <input type="text" name="price_from" value="<?php echo_val('price_from'); ?>" size="10"><br>
+                            Стоимость: до:<br>
+                            <input type="text" name="price_to" value="<?php echo_val('price_to'); ?>" size="10"><br>
+                        </div>
                     </th>
                     <th>
                         <div id="tbl_thead_search_button_7" class="tbl_thead_search_button" title="Фильтр по местонахождению товара">
-                            <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_7', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_7" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                            <div id="tbl_thead_search_div_7" class="tbl_thead_search_div">
-                                Местонахождение: страна:<br>
-                                <select name="country_from">
-                                    <?php
-                                        tzs_build_countries('country_from');
-                                    ?>
-                                </select><br>
-                                Местонахождение: регион:<br>
-                                <select name="region_from">
-                                    <option value="0">все области</option>
-                                </select><br>
-                                Местонахождение: город:<br>
-                                <input type="text" name="cityname_from" value="<?php echo_val('cityname_from'); ?>" size="30">
-                            </div>
+                        <div id="tbl_thead_search_div_7" class="tbl_thead_search_div">
+                            Форма оплаты:<br>
+                            <select name="payment">
+                                <option value="0" <?php if (isset($_POST['payment']) && $_POST['payment'] == 0) echo 'selected="selected"'; ?> >Любая</option>
+                                <option value="1" <?php if (isset($_POST['payment']) && $_POST['payment'] == 1) echo 'selected="selected"'; ?> >Наличная</option>
+                                <option value="2" <?php if (isset($_POST['payment']) && $_POST['payment'] == 2) echo 'selected="selected"'; ?> >Безналичная</option>
+                            </select><br>
+                            НДС:<br>
+                            <select name="nds">
+                                <option value="0" <?php if (isset($_POST['nds']) && $_POST['nds'] == 0) echo 'selected="selected"'; ?> >Все</option>
+                                <option value="1" <?php if (isset($_POST['nds']) && $_POST['nds'] == 1) echo 'selected="selected"'; ?> >Без НДС</option>
+                                <option value="2" <?php if (isset($_POST['nds']) && $_POST['nds'] == 2) echo 'selected="selected"'; ?> >Включая НДС</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th>
+                        <div id="tbl_thead_search_button_8" class="tbl_thead_search_button" title="Фильтр по местонахождению товара">
+                            <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_8', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
+                            <label class="switch"><input id="chk_8" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
+                        </div>
+                        <div id="tbl_thead_search_div_8" class="tbl_thead_search_div">
+                            Участник тендера:<br>
+                            <select name="fixed_or_tender">
+                                <option value="0" <?php if (isset($_POST['fixed_or_tender']) && $_POST['fixed_or_tender'] == 0) echo 'selected="selected"'; ?> >Все предложения</option>
+                                <option value="1" <?php if (isset($_POST['fixed_or_tender']) && $_POST['fixed_or_tender'] == 1) echo 'selected="selected"'; ?> >Цена зафиксирована</option>
+                                <option value="2" <?php if (isset($_POST['fixed_or_tender']) && $_POST['fixed_or_tender'] == 2) echo 'selected="selected"'; ?> >Тендерное предложение</option>
+                            </select>
+                        </div>
                     </th>
                     <th>
                         <div class="tbl_thead_search_button_1">
@@ -212,7 +212,7 @@ function tzs_front_end_products_handler($atts) {
             }
             
             // chk_3
-            jQuery('#chk_3').prop('checked', (jQuery('[name=fixed_or_tender]').val() > 0));
+            jQuery('#chk_3').prop('checked', ((jQuery('[name=data_from]').val().length > 7) || (jQuery('[name=data_to]').val().length > 7)));
             if (jQuery('#chk_3').is(':checked')) {
                 jQuery('#chk_3').removeAttr('disabled');
             } else {
@@ -220,7 +220,7 @@ function tzs_front_end_products_handler($atts) {
             }
             
             // chk_4
-            jQuery('#chk_4').prop('checked', ((jQuery('[name=data_from]').val().length > 7) || (jQuery('[name=data_to]').val().length > 7)));
+            jQuery('#chk_4').prop('checked', (jQuery('[name=type_id]').val() > 0));
             if (jQuery('#chk_4').is(':checked')) {
                 jQuery('#chk_4').removeAttr('disabled');
             } else {
@@ -236,7 +236,7 @@ function tzs_front_end_products_handler($atts) {
             }
             
             // chk_6
-            jQuery('#chk_6').prop('checked', ((jQuery('[name=payment]').val() > 0) || (jQuery('[name=nds]').val() > 0) || (jQuery('[name=price_from]').val().length > 0) || (jQuery('[name=price_to]').val().length > 0)));
+            jQuery('#chk_6').prop('checked', ((jQuery('[name=price_from]').val().length > 0) || (jQuery('[name=price_to]').val().length > 0)));
             if (jQuery('#chk_6').is(':checked')) {
                 jQuery('#chk_6').removeAttr('disabled');
             } else {
@@ -244,11 +244,19 @@ function tzs_front_end_products_handler($atts) {
             }
             
             // chk_7
-            jQuery('#chk_7').prop('checked', ((jQuery('[name=country_from]').val() > 0) || (jQuery('[name=region_from]').val() > 0) || (jQuery('[name=cityname_from]').val().length > 0)));
+            jQuery('#chk_7').prop('checked', ((jQuery('[name=payment]').val() > 0) || (jQuery('[name=nds]').val() > 0)));
             if (jQuery('#chk_7').is(':checked')) {
                 jQuery('#chk_7').removeAttr('disabled');
             } else {
                 jQuery('#chk_7').attr('disabled', 'disabled');
+            }
+            
+            // chk_8
+            jQuery('#chk_8').prop('checked', (jQuery('[name=fixed_or_tender]').val() > 0));
+            if (jQuery('#chk_8').is(':checked')) {
+                jQuery('#chk_8').removeAttr('disabled');
+            } else {
+                jQuery('#chk_8').attr('disabled', 'disabled');
             }
         }
         
@@ -266,13 +274,13 @@ function tzs_front_end_products_handler($atts) {
                         break;
                     }
                     case 'chk_3': {
-                        jQuery('[name=fixed_or_tender]').attr('value', 0);
+                        jQuery('[name=data_from]').attr('value', '');
+                        jQuery('[name=data_to]').attr('value', '');
                         jQuery('#chk_3').attr('disabled', 'disabled');
                         break;
                     }
                     case 'chk_4': {
-                        jQuery('[name=data_from]').attr('value', '');
-                        jQuery('[name=data_to]').attr('value', '');
+                        jQuery('[name=type_id]').attr('value', 0);
                         jQuery('#chk_4').attr('disabled', 'disabled');
                         break;
                     }
@@ -282,18 +290,20 @@ function tzs_front_end_products_handler($atts) {
                         break;
                     }
                     case 'chk_6': {
-                        jQuery('[name=payment]').attr('value', 0);
-                        jQuery('[name=nds]').attr('value', 0);
                         jQuery('[name=price_from]').attr('value', '');
                         jQuery('[name=price_to]').attr('value', '');
                         jQuery('#chk_6').attr('disabled', 'disabled');
                         break;
                     }
                     case 'chk_7': {
-                        jQuery('[name=country_from]').attr('value', 0);
-                        jQuery('[name=region_from]').attr('value', 0);
-                        jQuery('[name=cityname_from]').attr('value', '');
+                        jQuery('[name=payment]').attr('value', 0);
+                        jQuery('[name=nds]').attr('value', 0);
                         jQuery('#chk_7').attr('disabled', 'disabled');
+                        break;
+                    }
+                    case 'chk_8': {
+                        jQuery('[name=fixed_or_tender]').attr('value', 0);
+                        jQuery('#chk_8').attr('disabled', 'disabled');
                         break;
                     }
                 }
@@ -408,7 +418,7 @@ function tzs_front_end_products_handler($atts) {
                 
                 // Устанавливаем обработчики событий 
                 setFormFielsdChangeHandler('search_pr_form');
-                jQuery('#chk_2, #chk_3, #chk_4, #chk_5, #chk_6, #chk_7').change(function(eventObject) { onClearFilterSelected(eventObject); });
+                jQuery('#chk_2, #chk_3, #chk_4, #chk_5, #chk_6, #chk_7, #chk_8').change(function(eventObject) { onClearFilterSelected(eventObject); });
                 
                 /*jQuery('#slideout').hover(
                     function() {

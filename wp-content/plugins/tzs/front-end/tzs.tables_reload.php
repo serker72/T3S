@@ -3,7 +3,7 @@
 /*
  * Вывод одной строки таблицы в виде html
  */
-function tzs_products_table_record_out($row, $form_type) {
+function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
 //    $user_info = tzs_get_user_meta($row->user_id);
 
     $output_tbody = '<tr rid="'.$row->id.'" id="';
@@ -33,27 +33,17 @@ function tzs_products_table_record_out($row, $form_type) {
     $output_tbody .= '</strong>
                     </span>
                 </div>
-            </td>
-            <td>
-                <div>';
-
-                if ($row->fixed_or_tender == 1) {
-                    $output_tbody .= 'Цена зафиксирована<br/>
-                <a class="btnBlue" title="Купить товар по фиксированной цене">Купить</a>';
-                } else {
-                    $output_tbody .= 'Тендерное предложение<br/>
-                    <a class="btnBlue" title="Предложить свою цену за товар">Предложить свою цену</a>';
-                }
-
-    $output_tbody .= '</div>
-            </td>
-            <td>
+            </td>';
+    
+    $output_tbody .= '<td>
                 <div>
                     '.convert_date($row->created).'<br/>
                     <span class="expired_label" title="Дата окончания публикации">
                         '.convert_date($row->expiration).'
                     </span>
                 </div>
+            </td>
+            <td>'.$pr_type_array[$row->type_id]['title'].'
             </td>
             <td>
                 <div class="ienlarger">';
@@ -87,10 +77,6 @@ function tzs_products_table_record_out($row, $form_type) {
                         <strong>'.$row->price.'</strong> '.$GLOBALS['tzs_pr_curr'][$row->currency].'
                     </span>
                     <br>
-                    <span class="payment_label" title="Форма оплаты">
-                        '.$GLOBALS['tzs_pr_payment'][$row->payment].'<br/>
-                        '.$GLOBALS['tzs_pr_nds'][$row->nds].'
-                    </span>
                     <br>
                     <span class="copies_label" title="Количество товара">
                         <strong>'.$row->copies.'</strong> '.$GLOBALS['tzs_pr_unit'][$row->unit].'
@@ -99,14 +85,27 @@ function tzs_products_table_record_out($row, $form_type) {
             </td>
             <td>
                 <div>
-                    '.tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, $row->city_from, 'Местонахождение товара').'
+                    <span class="payment_label" title="Форма оплаты">
+                        '.$GLOBALS['tzs_pr_payment'][$row->payment].'<br/>
+                        '.$GLOBALS['tzs_pr_nds'][$row->nds].'
+                    </span>
                 </div>
-            </td>
-            <td>';
+            </td>';
+            
+    
+    $output_tbody .= '<td><div>';
+
+                if ($row->fixed_or_tender == 1) {
+                    $output_tbody .= '<a class="btnBlue" title="Купить товар по фиксированной цене">Купить</a>';
+                } else {
+                    $output_tbody .= '<a class="btnBlue" title="Предложить свою цену за товар">Предложить свою цену</a>';
+                }
+
+    $output_tbody .= '</div></td>';
                 
-    $output_tbody .= tzs_print_user_contacts($row, $form_type, 1);
-    $output_tbody .= '        </td>
-        </tr>';
+    $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 1).'</td>';
+    
+    $output_tbody .= '</tr>';
     
     return $output_tbody;
 }
@@ -294,6 +293,7 @@ function tzs_front_end_tables_reload() {
 
     switch ($form_type) {
         case 'products': {
+            $pr_type_array = tzs_get_children_pages(TZS_PR_ROOT_CATEGORY_PAGE_ID);
             $table_name = TZS_PRODUCTS_TABLE;
             $table_error_msg = 'товаров';
             $table_order_by = 'created';
@@ -371,7 +371,7 @@ function tzs_front_end_tables_reload() {
                 } else {
                     foreach ( $res as $row ) {
                         if ($form_type === 'products') {
-                            $output_tbody .= tzs_products_table_record_out($row, $form_type);
+                            $output_tbody .= tzs_products_table_record_out($row, $form_type, $pr_type_array);
                         } else {
                             $output_tbody .= tzs_tr_sh_table_record_out($row, $form_type);
                         }

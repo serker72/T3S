@@ -1654,13 +1654,13 @@ max-height: 46px !important;
     text-transform:uppercase;
     font-size: 11px;
     font-weight: bold;
-    padding: 2px 8px;
+    padding: 2px 2px;
     margin: 30px 0 0 0;
     background:#1792d6;
     border:0;
     display:inline-block;
     transition:background 0.1s ease-in-out;
-    width: 127px;
+    width: 94px;
 }
 .btnBlue:hover,.btnBlue:focus {
     background:#f43c4a;
@@ -2252,7 +2252,7 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
 .search_button {
     float: left;
     background: #0B5792 url(images/search.png) no-repeat right 16px top 14px;
-    padding: 12px 6px;
+    padding: 12px 5px;
     margin-top: 15px;
     margin-bottom: 5px;
     border-radius: 10px;
@@ -2274,7 +2274,7 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
         -webkit-border-radius: 5px;
     /*width: 35px;*/
     /*height: 20px;*/
-    padding: 10px 18px;
+    padding: 10px 19px;
 }
 #jivo_chat_widget{
     display: none;
