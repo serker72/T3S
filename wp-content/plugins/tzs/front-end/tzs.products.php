@@ -33,6 +33,7 @@ function tzs_front_end_products_handler($atts) {
                 <tr id="tbl_thead_records_per_page">
                     <th colspan="3" id="thead_h1"></th>
                     <th colspan="5">
+                        <div id="show-search-form" class="search_button"><span></span></div>
                         <div class="thead_button">выбор критериев поиска</div>
                         <div class="thead_info">для добавления товаров, пожалуйста, войдите или зарегистрируйтесь</div>
                         <div id="tbl_thead_records_per_page_th"></div>
@@ -382,6 +383,8 @@ function tzs_front_end_products_handler($atts) {
                         if (!nonclickable)
                                 document.location = "/account/view-product/?id="+id;
                 });
+                
+                jQuery("#show-search-form").click(function () { onTblTheadButtonSnowClick(); });
 
                 // Создадми скрытые поля для формы
                 var theForm = "#search_pr_form1";

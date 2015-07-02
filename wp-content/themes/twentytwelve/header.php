@@ -48,8 +48,7 @@
 		</div>
 		<?php }?>
 		<div id="chat">
-			<p>ОН-ЛАЙН</p>
-			<p>помощник</p>
+                    <a href="javascript:jivo_api.open();">ОН-ЛАЙН помощник</a>
 		</div>
 
 <?php if (is_front_page()) {?>
