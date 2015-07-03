@@ -16,6 +16,29 @@
         <!--script src="/wp-content/themes/twentytwelve/js/jquery.slick.js" type="text/javascript"></script-->
 	<script>
 		var ajax_url = '<?php echo admin_url('admin-ajax.php'); ?>';
+                
+                <?php 
+                    $user_id = get_current_user_id();
+                    if ($user_id == 0) {
+                        echo 'var UserContacInfo = [];'."\n";
+                    } else {
+                        $user_info = tzs_get_user_meta($user_id);
+                        echo 'var UserContacInfo = ["'.$user_info['fio'].'", "'.$user_info['user_email'].'", "'.explode(';', $user_info['telephone'])[0].'"];'."\n";
+                    }
+                ?>
+                function onChatButtonClick() {
+                    jivo_api.open();
+                    
+                    if (UserContacInfo.length > 0) {
+                        jivo_api.setContactInfo(
+                             {
+                                name : UserContacInfo[0],
+                                email : UserContacInfo[1],
+                                phone : UserContacInfo[2]
+                             }
+                         );                        
+                    }
+                }
 	</script>
 </head>
 <body <?php body_class(); ?>>
@@ -48,7 +71,7 @@
 		</div>
 		<?php }?>
 		<div id="chat">
-                    <a href="javascript:jivo_api.open();">ОН-ЛАЙН помощник</a>
+                    <a href="javascript:onChatButtonClick();">ОН-ЛАЙН помощник</a>
 		</div>
 
 <?php if (is_front_page()) {?>
