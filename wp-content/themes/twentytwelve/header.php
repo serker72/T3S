@@ -23,7 +23,8 @@
                         echo 'var UserContacInfo = [];'."\n";
                     } else {
                         $user_info = tzs_get_user_meta($user_id);
-                        echo 'var UserContacInfo = ["'.$user_info['fio'].'", "'.$user_info['user_email'].'", "'.explode(';', $user_info['telephone'])[0].'"];'."\n";
+                        $meta = explode(';', $user_info['telephone']);
+                        echo 'var UserContacInfo = ["'.$user_info['fio'].'", "'.$user_info['user_email'].'", "'.$meta[0].'"];'."\n";
                     }
                 ?>
                 function onChatButtonClick() {
@@ -38,6 +39,19 @@
                              }
                          );                        
                     }
+                }
+                // Вызывается при открытии окна диалога JivoSite
+                function jivo_onOpen() { 
+                    if (UserContacInfo.length > 0) {
+                        jivo_api.setContactInfo(
+                             {
+                                name : UserContacInfo[0],
+                                email : UserContacInfo[1],
+                                phone : UserContacInfo[2]
+                             }
+                         );                        
+                    }
+                    
                 }
 	</script>
 </head>
