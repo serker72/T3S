@@ -2198,13 +2198,13 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
   float: right;
   min-height: 172px;
 }
-.menu-item {
+.menu-item-pr {
   margin-left: 7px;
   float: left;
   position: relative;
   width: 115px;
 }
-.menu-tile {
+.menu-tile-pr {
   display: block;
   position: relative;
   z-index: 1;
@@ -2229,7 +2229,7 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
   color: #F0F0F0;
  
 }
-.menu-tile:hover {
+.menu-tile-pr:hover {
     z-index: 10;
     -moz-transform: scale(1.05);
     /* Firefox */

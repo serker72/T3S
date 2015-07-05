@@ -52,9 +52,9 @@ if ( $query->have_posts() ) {
 	while ( $query->have_posts() ) {
 		$query->the_post(); ?>
         
-                <li class="menu-item">
+                <li class="menu-item-pr">
                     <a href="<?php the_permalink(); ?>">
-                        <span class="menu-tile"> <center> 
+                        <span class="menu-tile-pr"> <center> 
                             <?php the_title(); ?>
                         </center></span>
                     </a>
