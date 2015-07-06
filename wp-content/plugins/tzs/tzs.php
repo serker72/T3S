@@ -178,6 +178,9 @@ add_shortcode('tzs-view-shipments', 'tzs_front_end_shipments_handler');
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.view.shipment.php');
 add_shortcode('tzs-view-shipment', 'tzs_front_end_view_shipment_handler');
 
+include_once(TZS_PLUGIN_DIR.'/front-end/tzs.view.shipments.php');
+add_shortcode('tzs-view-shipmentc', 'tzs_front_end_view_shipmentc_handler');
+
 // TRUCK
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.truck.php');
 add_shortcode('tzs-new-truck', 'tzs_front_end_truck_handler');
@@ -189,6 +192,9 @@ add_shortcode('tzs-view-trucks', 'tzs_front_end_trucks_handler');
 
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.view.truck.php');
 add_shortcode('tzs-view-truck', 'tzs_front_end_view_truck_handler');
+
+include_once(TZS_PLUGIN_DIR.'/front-end/tzs.view.trucks.php');
+add_shortcode('tzs-view-truckc', 'tzs_front_end_view_truckc_handler');
 
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.my.trucks.php');
 add_shortcode('tzs-my-trucks', 'tzs_front_end_my_trucks_handler');

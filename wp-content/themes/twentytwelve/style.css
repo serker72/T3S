@@ -2199,10 +2199,12 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
   min-height: 172px;
 }
 .menu-item-pr {
-  margin-left: 7px;
+  margin-left: 1px;
+  margin-bottom: 1px;
   float: left;
   position: relative;
   width: 115px;
+  text-align: center;
 }
 .menu-tile-pr {
   display: block;
@@ -2227,6 +2229,7 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
   height: 100px;
   background-color: #0b5792;
   color: #F0F0F0;
+  text-align: center;
  
 }
 .menu-tile-pr:hover {
@@ -2278,4 +2281,7 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
 }
 #jivo_chat_widget{
     display: none;
+}
+.cub{
+    padding-top: 20px;
 }
