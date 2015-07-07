@@ -388,7 +388,7 @@ function add_tel(){
     $name = $_POST['name-tel'];
     $fam=$_POST['fam-tel'];
     $tel=$_POST['tel-tel'];
-    if (mail("Desi4ik@yandex.ru", "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
+    if (mail(get_option( 't3s_setting_email_callback' ), "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
     else echo "Error sending";
 wp_die();
 }
