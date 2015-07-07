@@ -384,8 +384,16 @@ function twentytwelve_entry_meta() {
 }
 endif;
 
-
-
+function add_tel(){
+    $name = $_POST['name-tel'];
+    $fam=$_POST['fam-tel'];
+    $tel=$_POST['tel-tel'];
+    if (mail("Desi4ik@yandex.ru", "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
+    else echo "Error sending";
+wp_die();
+}
+add_action("wp_ajax_add_tel", "add_tel");
+add_action("wp_ajax_nopriv_add_tel", "add_tel");
 
 /* add the bet */
 

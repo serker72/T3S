@@ -87,6 +87,10 @@
 		<div id="chat">
                     <a href="javascript:onChatButtonClick();">ОН-ЛАЙН помощник</a>
 		</div>
+                <div id="tel" >
+                    <a href="#modal" role="button" class="btn" data-toggle="modal">Заказать звонок</a>
+                </div>
+
 
 <?php if (is_front_page()) {?>
 <div style="clear: both;"></div>
@@ -103,6 +107,73 @@
            
 	</div>
 </header>
+    <div id="modal" class="modal hide" style="width: 270px;">
+	<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		<h2>Заказать звонок</h2>
+	</div>
+	<div class="modal-body">
+            <span id="tel_error" style="color: red;"></span>
+            <label>Имя</label> <input id="name-tel" class="" />
+            <label>Фамилия</label> <input id="fam-tel" class="" />
+            <label>Телефон</label> <input id="tel-tel" type="" class="" />
+            <div style="clear:both"></div>
+            <center><button class="btn-success" style="margin: 5px;" onclick="tel_click();" ata-dismiss="modal" aria-hidden="true">Заказать</button></center>
+	</div>
+</div>
+    <script>
+        jQuery('document').ready(function(){
+           jQuery('#modal').modal();
+            });
 
+function tel_click()
+{
+flag_subs=0;
+
+paramstr=document.getElementById('name-tel').id+"=" + encodeURIComponent(document.getElementById('name-tel').value) + "&"+document.getElementById('fam-tel').id+"="+encodeURIComponent(document.getElementById('fam-tel').value)+"&"+document.getElementById('tel-tel').id+"="+encodeURIComponent(document.getElementById('tel-tel').value);
+
+if  ((document.getElementById('name-tel').value != "") )
+{
+    flag_subs=flag_subs+1;
+}
+else
+{
+
+  document.getElementById('tel_error').innerHTML="Заполните поле имя!";
+  return false;  
+}
+if  ((document.getElementById('tel-tel').value != "") )
+{
+    flag_subs=flag_subs+1;
+}
+else
+{
+
+  document.getElementById('tel_error').innerHTML="Заполните номер телефона!";
+  return false;  
+}
+
+if(flag_subs>=2)
+{
+jQuery.ajax({
+		url: "/wp-admin/admin-ajax.php?action=add_tel",
+       // url: "/wp-content/plugins/tzs/functions/tzs.functions.php?action=add_bet",
+		type: "POST",
+		data: paramstr,
+		success: function(data){
+			//document.forms["bet_form"].submit();
+                        jQuery('#modal').modal('hide');
+
+		},
+        error: function(data){
+			//document.forms["bet_form"].submit();
+            
+            alert(data);
+
+		}			
+	});		   
+}
+}
+    </script>
 <div id="page" class="hfeed site">
 	<div id="main" class="wrapper">
