@@ -608,3 +608,5 @@ function tzs_regions_reload() {
 }
 add_action("wp_ajax_tzs_regions_reload", "tzs_regions_reload");
 add_action("wp_ajax_nopriv_tzs_regions_reload", "tzs_regions_reload");
+
+include_once 't3s_functions.php';
