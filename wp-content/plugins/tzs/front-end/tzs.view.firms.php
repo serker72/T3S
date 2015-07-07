@@ -7,6 +7,8 @@ function tzs_front_end_view_firms_handler($atts) {
 	$user_id = get_current_user_id();
 	
 	$sh_id = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
+        $form_type= $_GET['type'];
+        echo "pr-".$form_type."-";
     //$sh_id=7;
 	
 	if ($sh_id <= 0) {
@@ -20,6 +22,7 @@ function tzs_front_end_view_firms_handler($atts) {
 		} else if ($row == null) {
 			print_error('Пользователь не найден');
 		} else {
+                    
                     if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a>";
                     else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button>";  ?>                  
                     <script src="/wp-content/plugins/tzs/assets/js/table_reload.js"></script>
@@ -37,7 +40,7 @@ function tzs_front_end_view_firms_handler($atts) {
                         <div class="well well-large" id="company-contact">
                             <?php
                                 //echo tzs_print_user_table_ed($row->user_id);
-                                 $form_type = get_param_def('form_type', '');
+                                // $form_type = get_param_def('form_type', '');
                                  echo tzs_print_user_contacts($row, $form_type, 2);
                                  
                             ?>
@@ -54,7 +57,9 @@ function tzs_front_end_view_firms_handler($atts) {
                 </div>
                 <div class="row-fluid">
                     <div class="span12" id="">
-                        <?php /*echo do_shortcode('[tzs-view-user-products user_id=1]');*/echo do_shortcode('[tzs-view-user-products user_id='.$row->user_id.']');?>
+                        <?php if ($form_type == 'products'){ echo do_shortcode('[tzs-view-user-products user_id='.$row->user_id.']'); echo "1234567";}?>
+                        <?php if ($form_type == 'shipments') echo do_shortcode('[tzs-view-user-shipments user_id='.$row->user_id.']');?>
+                        <?php if ($form_type == 'trucks') echo do_shortcode('[tzs-view-user-trucks user_id='.$row->user_id.']');?>
                     </div>
                 </div>
             </div>

@@ -25,7 +25,7 @@ function tzs_front_end_view_shipmentc_handler($atts) {
                 <div class="span2 offset10">
                     <?php
                         echo "<img src='".get_user_meta($row->user_id, 'company_logo',true)."'/>";
-                        $form_type = get_param_def('form_type', '');
+                        $form_type = 'shipments';
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
                     <?php if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-shipments/'>Назад к списку</a> <div style='clear: both'></div>";

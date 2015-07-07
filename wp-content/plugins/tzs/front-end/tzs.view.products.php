@@ -43,7 +43,7 @@ function tzs_front_end_view_productsd_handler($atts) {
                 <div class="span2 offset10">
                     <?php
                         echo "<img src='".get_user_meta($row->user_id, 'company_logo',true)."'/>";
-                        $form_type = get_param_def('form_type', '');
+                        $form_type = 'products';
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
                     <?php 

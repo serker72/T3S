@@ -645,7 +645,7 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
     $output_tbody .= '">';
 
     if (($user_info['company'] != '') || ($user_info['fio'] != '')) {
-    $output_tbody .= '<a href="/company/?id='.$row->user_id.'">';
+    $output_tbody .= '<a href="/company/?id='.$row->user_id.'&type='.$form_type.'">';
     
         if ($user_info['company'] != '') { $output_tbody .= $user_info['company']; }
         else { $output_tbody .= $user_info['fio']; }
@@ -715,6 +715,139 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
     
     
     $output_tbody .= '</div>';
+    
+    return $output_tbody;
+}
+function tzs_tr_sh_table_record_out_cont($row, $form_type) {
+//    $user_info = tzs_get_user_meta($row->user_id);
+
+    if ($form_type === 'shipments') { $prefix = 'sh';}
+    else { $prefix = 'tr'; }
+    
+    $type = trans_types_to_str($row->trans_type, $row->tr_type);
+    
+    $cost = tzs_cost_to_str($row->cost, true);
+    
+    $output_tbody = '<tr rid="'.$row->id.'">';
+
+    $output_tbody .= '
+            <td>
+                <div class="record_number">
+                    <span class="middle" title="Номер заявки">
+                           № '.$row->id.'
+                    </span>
+                </div>
+                <div>
+                    <span class="time_label" title="Дата и время публикации заявки">
+                        '.convert_date_year2($row->time).'<br>
+                        '.convert_time_only($row->time).'
+                    </span>
+                </div>
+            </td>
+            <td>
+                <div>'.tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, (($prefix === 'tr') ? $row->tr_city_from : $row->sh_city_from),'Пункт погрузки').'<br/>'.tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, (($prefix === 'tr') ? $row->tr_city_to : $row->sh_city_to), 'Пункт выгрузки');
+    
+    if (($row->distance > 0) && ($prefix === 'tr')) {
+        $output_tbody .= '<br/>'.tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to));
+    }
+    else if (($row->distance > 0) && ($prefix === 'sh')) {
+        $output_tbody .= '<br/>'.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
+    }
+
+    $output_tbody .= '
+                </div>
+            </td>
+            <td>
+                <div><strong>
+                    <span class="expired_label" title="Дата погрузки">
+                    '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_from : $row->sh_date_from).'<br/>
+                    </span><br>
+                    <span class="expired_label" title="Дата выгрузки">
+                        '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_to : $row->sh_date_to).'
+                    </span></strong>
+                </div>
+            </td>';
+    
+    if ($prefix === 'sh') {
+        $output_tbody .= '<td>
+                <div title="Тип груза">'.(isset($GLOBALS['tzs_sh_types'][$row->sh_type]) ? $GLOBALS['tzs_sh_types'][$row->sh_type] : '').'</div>
+            </td>';
+        
+        $output_tbody .= '<td><div>';
+        if (($row->tr_weight > 0) || ($row->sh_weight > 0)) {
+            $output_tbody .= '<span title="Вес груза">'.remove_decimal_part(($prefix === 'tr') ? $row->tr_weight : $row->sh_weight).' т</span><br>';
+        }
+
+        if (($row->tr_volume > 0) || ($row->sh_volume > 0)) {
+            $output_tbody .= '<span title="Объем груза">'.remove_decimal_part(($prefix === 'tr') ? $row->tr_volume : $row->sh_volume).' м³</span>';
+        }
+        $output_tbody .= '</div></td>
+            <td><div title="Описание груза">'.$row->sh_descr.'</div></td>';
+    } else {
+        $output_tbody .= '<td>
+                <div title="Тип транспортного средства">'.$type.'</div>
+            </td>
+            <td><div title="Описание транспортного средства">';
+        
+        $tr_ds1 = '';
+        $tr_ds2 = '';
+        if ($row->tr_length > 0) {
+            $tr_ds1 .= 'Д';
+            $tr_ds2 .= intval($row->tr_length);
+        }
+        
+        if ($row->tr_width > 0) {
+            if ($tr_ds1 !== '') $tr_ds1 .= 'x';
+            if ($tr_ds2 !== '') $tr_ds2 .= 'x';
+            $tr_ds1 .= 'Ш';
+            $tr_ds2 .= intval($row->tr_width);
+        }
+        
+        if ($row->tr_height > 0) {
+            if ($tr_ds1 !== '') $tr_ds1 .= 'x';
+            if ($tr_ds2 !== '') $tr_ds2 .= 'x';
+            $tr_ds1 .= 'В';
+            $tr_ds2 .= intval($row->tr_height);
+        }
+            
+        if (($tr_ds1 !== '') && ($tr_ds2 !== '')) 
+            $output_tbody .= $tr_ds1.': '.$tr_ds2.' м<br>';
+        
+        if ($row->tr_weight > 0)
+            $output_tbody .= remove_decimal_part($row->tr_weight).' т<br>';
+
+        if($row->tr_volume > 0)
+            $output_tbody .= remove_decimal_part($row->tr_volume).' м³<br>';
+                                    
+        if ($row->tr_descr && (strlen($row->tr_descr) > 0))
+            $output_tbody .= $row->tr_descr.'<br>';
+            
+        $output_tbody .= '</div></td>
+            <td><div title="Желаемый груз">'.$row->sh_descr.'</div></td>';
+    }
+
+                
+    
+
+    $output_tbody .= '<td><div title="Стоимость перевозки груза">';
+    if ($row->price > 0) {
+        $output_tbody .= $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].'<br><br>'.
+                round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].'/км'; 
+    } else {
+        $output_tbody .= $cost[0];
+    }
+
+    $output_tbody .= '</div>
+            </td>
+            <td>
+                <div title="Форма оплаты услуг по перевозке груза">'.$cost[1].'</div>
+            </td>';
+    
+    if ($prefix === 'tr') {
+        //$output_tbody .= '<td><div title="Комментарии">'.$row->comment.'</div></td>';
+    }
+    
+    $output_tbody .= '</tr>';
     
     return $output_tbody;
 }

@@ -230,6 +230,12 @@ add_shortcode('tzs-view-products', 'tzs_front_end_products_handler');
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.user.products.php');
 add_shortcode('tzs-view-user-products', 'tzs_front_end_user_products_handler');
 
+include_once(TZS_PLUGIN_DIR.'/front-end/tzs.user.trucks.php');
+add_shortcode('tzs-view-user-trucks', 'tzs_front_end_user_trucks_handler');
+
+include_once(TZS_PLUGIN_DIR.'/front-end/tzs.user.shipments.php');
+add_shortcode('tzs-view-user-shipments', 'tzs_front_end_user_shipments_handler');
+
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.my.products.php');
 add_shortcode('tzs-my-products', 'tzs_front_end_my_products_handler');
 
