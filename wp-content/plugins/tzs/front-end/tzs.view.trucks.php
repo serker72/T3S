@@ -1,6 +1,6 @@
 <?php
 
-function tzs_front_end_view_truckc_handler($atts) {
+function tzs_front_end_view_truck_handler($atts) {
 	ob_start();
 	
 	global $wpdb;

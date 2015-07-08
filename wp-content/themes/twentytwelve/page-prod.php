@@ -53,7 +53,7 @@ if ( $total_pages > 1) {
                     <a href="/products/">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
-                                    <?php echo get_the_post_thumbnail(164); ?>
+                                    <?php echo get_the_post_thumbnail(164, array(64, 64) ); ?>
                                     Все
                                 </div>
                         </center></span>
@@ -68,7 +68,8 @@ if ( $query->have_posts() ) {
                     <a href="<?php the_permalink(); ?>">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
-                                    <?php echo get_the_post_thumbnail(); ?>
+                                    <?php echo get_the_post_thumbnail(216, array(64, 64) ); ?>
+                                    <div style="clear: both"></div>
                                     <?php the_title(); ?>
                                 </div>
                         </center></span>

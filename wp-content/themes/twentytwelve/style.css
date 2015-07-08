@@ -1127,12 +1127,20 @@ a:hover {
 .site-header #profile a:hover {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
-.site-header #login {
+/*.site-header #login {
 	background: url(images/lock_icon.png) no-repeat right;
 	width: 145px;
 	float: right;
 	line-height: 80px;
 	margin-right: 340px;
+}*/
+.site-header #login {
+  background: url(images/lock_icon.png) no-repeat right;
+  width: 145px;
+  float: left;
+  line-height: 80px;
+  margin-right: 0px;
+  margin-left: 20px;
 }
 .site-header #login a {
 	color: #fff;
@@ -2283,5 +2291,27 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
     display: none;
 }
 .cub{
-    padding-top: 20px;
+    padding-top: 5px;
+}
+#tel{
+ 
+  width: 145px;
+  float: left;
+  margin-top: 2.5%;
+  margin-left: 20px;
+  color: white;
+}
+#tel a{
+  color: white;  
+}
+.btn-tel{
+   padding: 3px 10px 3px 10px;
+  background: #3d85c6;
+  border-radius: 6px;
+  color: #ffffff;
+  float: left;
+  margin: 2px 0 2px 0;
+  
+  
+
 }

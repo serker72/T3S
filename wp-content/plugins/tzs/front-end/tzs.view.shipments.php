@@ -1,5 +1,5 @@
 <?php
-function tzs_front_end_view_shipmentc_handler($atts) {
+function tzs_front_end_view_shipment_handler($atts) {
 	ob_start();
 	
 	global $wpdb;

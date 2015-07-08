@@ -84,12 +84,14 @@
 			<a href="/account/profile">Личный кабинет</a>
 		</div>
 		<?php }?>
+                <div id="tel" >
+                    <a href="#modal" role="button" class="btn-tel" data-toggle="modal">Заказать звонок</a>
+                    <a href="skype:<?php echo get_option( 't3s_setting_skype_login' ); ?>"><img src="/wp-content/uploads/2015/07/skype.png"/><?php echo "  ".get_option( 't3s_setting_skype_login' ); ?></a>
+                </div>
 		<div id="chat">
                     <a href="javascript:onChatButtonClick();">ОН-ЛАЙН помощник</a>
 		</div>
-                <div id="tel" >
-                    <a href="#modal" role="button" class="btn" data-toggle="modal">Заказать звонок</a>
-                </div>
+                
 
 
 <?php if (is_front_page()) {?>
