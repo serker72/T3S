@@ -122,9 +122,7 @@
 	</div>
 </div>
     <script>
-        jQuery('document').ready(function(){
-           jQuery('#modal').modal();
-            });
+        
 
 function tel_click()
 {

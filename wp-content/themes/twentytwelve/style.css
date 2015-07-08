@@ -2203,15 +2203,15 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
   margin-bottom: 1px;
   float: left;
   position: relative;
-  width: 115px;
+  width: 185px;
   text-align: center;
 }
 .menu-tile-pr {
   display: block;
   position: relative;
   z-index: 1;
-  height: 115px;
-  width: 100%;
+  height: 120px;
+  width: 185px;
   text-decoration: none;
   background-position: center;
   background-repeat: no-repeat;

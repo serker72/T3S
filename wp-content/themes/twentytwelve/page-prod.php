@@ -46,13 +46,14 @@ if ( $total_pages > 1) {
 //        'next_text' => __( 'Next >>' )
 }
 ?>
-<div id="left-block" style="float: left; margin: 15px; width:70%;">
+<div id="left-block" style="float: left; margin: 15px;">
             <ul class="tiled-menu">
                 
             <li class="menu-item-pr">
                     <a href="/products/">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
+                                    <?php echo get_the_post_thumbnail(164); ?>
                                     Все
                                 </div>
                         </center></span>
@@ -67,6 +68,7 @@ if ( $query->have_posts() ) {
                     <a href="<?php the_permalink(); ?>">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
+                                    <?php echo get_the_post_thumbnail(); ?>
                                     <?php the_title(); ?>
                                 </div>
                         </center></span>
