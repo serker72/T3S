@@ -8,7 +8,7 @@
 /* 
  * Функция для отправки письма с вложенными файлами
  */
-function ksk_sendMailAttachments($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to = '', $mail_attachments = array()) {
+function ksk_sendMail_Attachments($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to = '', $mail_attachments = array()) {
     if (($mail_to === null) || ($mail_to === '')) {
         return array(false, 'Не задана обязательный параметр $mail_to');
     }
@@ -92,7 +92,7 @@ function ksk_sendMailAttachments($mail_to, $mail_from, $mail_subject, $mail_mess
  */
 function ksk_sendMailAttachmentsAndExit($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to = '', $mail_attachments = array()) {
     echo $mail_message;
-    $res = ksk_sendMailAttachments($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to, $mail_attachments);
+    $res = ksk_sendMail_Attachments($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to, $mail_attachments);
     exit;
 }
 
@@ -185,15 +185,20 @@ $msg_body = '';
 //$csv_file_path = __DIR__.'//wp-content//uploads//'.date('Y').'//'.date('m').'//';
 $csv_file_path = __DIR__ . '//';
 $pr_csv_file = $csv_file_path.'pr_arch.csv';
-$au_csv_file = $csv_file_path.'au_arch.csv';
+$tr_csv_file = $csv_file_path.'tr_arch.csv';
+$sh_csv_file = $csv_file_path.'sh_arch.csv';
 
 // Удалим файлы
 if (file_exists($pr_csv_file)) {
     unlink($pr_csv_file);
 }
 
-if (file_exists($au_csv_file)) {
-    unlink($au_csv_file);
+if (file_exists($tr_csv_file)) {
+    unlink($tr_csv_file);
+}
+
+if (file_exists($sh_csv_file)) {
+    unlink($sh_csv_file);
 }
 
 // Подключим файл wp-config.php для определния параметров подключения к БД
@@ -255,24 +260,7 @@ if ($cnt > 0) {
   AND wum.meta_key = 'fio'
   AND wp.ID = wptp.type_id
   ;";
-/*
-SELECT 'id', 'user_id', 'user_login', 'fio', 'type_id', 
-        'type_title', 'title', 'city_from', 'copies', 'price', 'currency',
-        'created', 'expiration'
-UNION
-(
-   INTO OUTFILE '".addslashes($pr_csv_file)."'
-  CHARACTER SET 'cp1251'
-  FIELDS TERMINATED BY ';'
-  ENCLOSED BY '\"' ESCAPED BY '".addslashes('\\')."'
-  LINES STARTING BY '' TERMINATED BY '\r\n'
-)
- */    
-/*    $cursor = mysqli_query($connection, $query);
-    if (!$cursor) {
-        $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
-        ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
-    }*/
+    
     $res = ksk_saveQueryResultsToCSV($connection, $query, $pr_csv_file);
     $msg_body .= $res[1] . $EOF;
     if (!$res[0]) {
@@ -289,8 +277,8 @@ UNION
 }
 
 
-/*/ Тендеры
-$query = "SELECT COUNT(*) as cnt FROM wp_tzs_auctions WHERE active=1 AND expiration IS NOT NULL AND expiration <= NOW();";
+// Транспорт
+$query = "SELECT COUNT(*) as cnt FROM wp_tzs_trucks WHERE active=1 AND tr_date_to IS NOT NULL AND tr_date_to <= NOW();";
 $cursor = mysqli_query($connection, $query);
 if (!$cursor) {
     $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
@@ -300,41 +288,67 @@ if (!$cursor) {
 $row = mysqli_fetch_assoc($cursor);
 $cnt = $row['cnt'];
 
-$msg_body .= 'Количество тендеров, у которых завершился срок публикации: '.$cnt.$EOF;
+$msg_body .= 'Количество транспорта, у которого завершился срок публикации: '.$cnt.$EOF;
 
 if ($cnt > 0) {
     // Сформируем табличку в csv-файле
     $query = "SELECT wptp.id, wptp.user_id, wu.user_login, wum.meta_value AS fio,
-  wptp.type_id, wp.post_title, wptp.title, wptp.city_from,
-  wptp.copies, wptp.price,
-  CASE wptp.currency
+  tr_city_from, tr_city_to, wptp.distance,
+  CASE wptp.trans_type
+    WHEN 1 THEN 'борт открытый'
+    WHEN 2 THEN 'борт тентованый'
+    WHEN 3 THEN 'сцепка'
+    WHEN 4 THEN 'полуприцеп'
+    WHEN 5 THEN 'рефрижератор'
+    WHEN 6 THEN 'автобус'
+    WHEN 7 THEN 'контейнеровоз'
+    WHEN 8 THEN 'панелевоз'
+    WHEN 9 THEN 'самосвал'
+    WHEN 10 THEN 'борт+манипулятор'
+    WHEN 11 THEN 'лесовоз'
+    WHEN 12 THEN 'трубовоз'
+    WHEN 13 THEN 'автокран'
+    WHEN 14 THEN 'зерновоз'
+    WHEN 15 THEN 'цементовоз'
+    WHEN 16 THEN 'цистерна'
+    WHEN 17 THEN 'автобетоносмеситель'
+    WHEN 18 THEN 'скотовоз'
+    ELSE ''
+  END AS tr_type, 
+  wptp.trans_count, wptp.price,
+  CASE wptp.price_val
     WHEN 1 THEN 'грн'
-    WHEN 2 THEN 'грн/м.кв.'
-    WHEN 3 THEN 'грн/м.куб.'
-    WHEN 4 THEN 'грн/м.пог.'
-    WHEN 5 THEN 'грн/кг'
-    WHEN 6 THEN 'грн/т'
-    WHEN 7 THEN 'грн/л'
-    WHEN 8 THEN 'грн/ч'
+    WHEN 2 THEN 'EUR'
+    WHEN 3 THEN 'USD'
+    WHEN 4 THEN 'рос.руб'
+    WHEN 5 THEN 'бел.руб'
+    WHEN 6 THEN 'лит'
+    WHEN 7 THEN 'лат'
+    WHEN 8 THEN 'лей'
+    WHEN 9 THEN 'тнг'
+    WHEN 10 THEN 'тад.сом'
+    WHEN 11 THEN 'лари'
+    WHEN 12 THEN 'AZN'
+    WHEN 13 THEN 'AMD'
+    WHEN 14 THEN 'кыр.сом'
+    WHEN 15 THEN 'TMT'
+    WHEN 16 THEN 'сум'
+    WHEN 17 THEN 'PLN'
+    WHEN 18 THEN 'RON'
+    WHEN 19 THEN 'TRY'
     ELSE ''
   END AS t_currency,
-  (SELECT MAX(wtar.rate) 
-     FROM  wp_tzs_auction_rates wtar 
-     WHERE wtar.auction_id = wptp.id 
-       AND wtar.active = 1 
-       AND wtar.reviewed IS NULL) as max_rate,
-  wptp.created, wptp.expiration
-  FROM wp_tzs_auctions wptp, wp_users wu, wp_usermeta wum, wp_posts wp
+  wptp.sh_descr, wptp.time, wptp.tr_date_from, wptp.tr_date_to
+  FROM wp_tzs_trucks wptp, wp_users wu, wp_usermeta wum
   WHERE wptp.active = 1 
-  AND wptp.expiration IS NOT NULL 
-  AND wptp.expiration <= NOW()
+  AND wptp.tr_date_to IS NOT NULL 
+  AND wptp.tr_date_to <= NOW()
   AND wu.ID = wptp.user_id
   AND wum.user_id = wptp.user_id
   AND wum.meta_key = 'fio'
-  AND wp.ID = wptp.type_id
 ;";
     
-    $res = ksk_saveQueryResultsToCSV($connection, $query, $au_csv_file);
+    $res = ksk_saveQueryResultsToCSV($connection, $query, $tr_csv_file);
     $msg_body .= $res[1] . $EOF;
     if (!$res[0]) {
         ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
@@ -342,13 +356,123 @@ if ($cnt > 0) {
     
     
     // Обновим записи
-    $query = "UPDATE wp_tzs_auctions SET active=0, last_edited=now() WHERE active=1 AND expiration IS NOT NULL AND expiration <= NOW();";
+    $query = "UPDATE wp_tzs_trucks SET active=0, last_edited=now() WHERE active=1 AND tr_date_to IS NOT NULL AND tr_date_to <= NOW();";
     $cursor = mysqli_query($connection, $query);
     if (!$cursor) {
         $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
         ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
     }
 }
-*/
-//ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file, $au_csv_file));
-ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file));
+
+
+// Груз
+$query = "SELECT COUNT(*) as cnt FROM wp_tzs_shipments WHERE active=1 AND sh_date_to IS NOT NULL AND sh_date_to <= NOW();";
+$cursor = mysqli_query($connection, $query);
+if (!$cursor) {
+    $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
+    ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
+}
+
+$row = mysqli_fetch_assoc($cursor);
+$cnt = $row['cnt'];
+
+$msg_body .= 'Количество транспорта, у которого завершился срок публикации: '.$cnt.$EOF;
+
+if ($cnt > 0) {
+    // Сформируем табличку в csv-файле
+    $query = "SELECT wptp.id, wptp.user_id, wu.user_login, wum.meta_value AS fio,
+  sh_city_from, sh_city_to, wptp.distance,
+  CASE wptp.trans_type
+    WHEN 1 THEN 'борт открытый'
+    WHEN 2 THEN 'борт тентованый'
+    WHEN 3 THEN 'сцепка'
+    WHEN 4 THEN 'полуприцеп'
+    WHEN 5 THEN 'рефрижератор'
+    WHEN 6 THEN 'автобус'
+    WHEN 7 THEN 'контейнеровоз'
+    WHEN 8 THEN 'панелевоз'
+    WHEN 9 THEN 'самосвал'
+    WHEN 10 THEN 'борт+манипулятор'
+    WHEN 11 THEN 'лесовоз'
+    WHEN 12 THEN 'трубовоз'
+    WHEN 13 THEN 'автокран'
+    WHEN 14 THEN 'зерновоз'
+    WHEN 15 THEN 'цементовоз'
+    WHEN 16 THEN 'цистерна'
+    WHEN 17 THEN 'автобетоносмеситель'
+    WHEN 18 THEN 'скотовоз'
+    ELSE ''
+  END AS tr_type, 
+  wptp.trans_count, 
+  CASE wptp.sh_type
+    WHEN 1 THEN 'стройматериалы'
+    WHEN 2 THEN 'инструмент'
+    WHEN 3 THEN 'отделочные материалы'
+    WHEN 4 THEN 'продукты'
+    WHEN 5 THEN 'с/х продукция'
+    WHEN 6 THEN 'сырьё'
+    WHEN 7 THEN 'оборудование'
+    WHEN 8 THEN 'бытовая техника'
+    WHEN 9 THEN 'товары народного потребления'
+    WHEN 10 THEN 'тара'
+    WHEN 11 THEN 'стекло'
+    WHEN 12 THEN 'опасный груз'
+    WHEN 13 THEN 'негабаритный груз'
+    WHEN 14 THEN 'спецгруз'
+    WHEN 15 THEN 'транспортные средства'
+    WHEN 16 THEN 'замороженная продукция'
+    WHEN 17 THEN 'люди'
+    WHEN 18 THEN 'другое'
+    ELSE ''
+  END AS sh_type, 
+  wptp.price,
+  CASE wptp.price_val
+    WHEN 1 THEN 'грн'
+    WHEN 2 THEN 'EUR'
+    WHEN 3 THEN 'USD'
+    WHEN 4 THEN 'рос.руб'
+    WHEN 5 THEN 'бел.руб'
+    WHEN 6 THEN 'лит'
+    WHEN 7 THEN 'лат'
+    WHEN 8 THEN 'лей'
+    WHEN 9 THEN 'тнг'
+    WHEN 10 THEN 'тад.сом'
+    WHEN 11 THEN 'лари'
+    WHEN 12 THEN 'AZN'
+    WHEN 13 THEN 'AMD'
+    WHEN 14 THEN 'кыр.сом'
+    WHEN 15 THEN 'TMT'
+    WHEN 16 THEN 'сум'
+    WHEN 17 THEN 'PLN'
+    WHEN 18 THEN 'RON'
+    WHEN 19 THEN 'TRY'
+    ELSE ''
+  END AS t_currency,
+  wptp.sh_descr, wptp.time, wptp.sh_date_from, wptp.sh_date_to
+  FROM wp_tzs_shipments wptp, wp_users wu, wp_usermeta wum
+  WHERE wptp.active = 1 
+  AND wptp.sh_date_to IS NOT NULL 
+  AND wptp.sh_date_to <= NOW()
+  AND wu.ID = wptp.user_id
+  AND wum.user_id = wptp.user_id
+  AND wum.meta_key = 'fio'
+;";
+    
+    $res = ksk_saveQueryResultsToCSV($connection, $query, $sh_csv_file);
+    $msg_body .= $res[1] . $EOF;
+    if (!$res[0]) {
+        ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
+    }
+    
+    
+    // Обновим записи
+    $query = "UPDATE wp_tzs_shipments SET active=0, last_edited=now() WHERE active=1 AND sh_date_to IS NOT NULL AND sh_date_to <= NOW();";
+    $cursor = mysqli_query($connection, $query);
+    if (!$cursor) {
+        $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
+        ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
+    }
+}
+
+//ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file, $tr_csv_file));
+ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file, $tr_csv_file, $sh_csv_file));
