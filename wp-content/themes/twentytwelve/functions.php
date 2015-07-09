@@ -386,11 +386,23 @@ endif;
 
 function add_tel(){
     $name = $_POST['name-tel'];
-    $fam=$_POST['fam-tel'];
-    $tel=$_POST['tel-tel'];
-    if (mail(get_option( 't3s_setting_email_callback' ), "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
+    $fam  = $_POST['fam-tel'];
+    $tel  = $_POST['tel-tel'];
+    $time_from = $_POST['tel-time-from'];
+    $time_to  = $_POST['tel-time-to'];
+    
+    $EOF = "\r\n";
+    $admin_email = get_option( 'admin_email' );
+    $operator_email = get_option( 't3s_setting_email_callback' );
+    $msg_body = "Поступил запрос обратного звонка от посетителя $name $fam на номер телефона $tel".$EOF."Удобное время для звонка с $time_from до $time_to.";
+    
+    $ret_flag = ksk_sendMailAttachments($operator_email, $admin_email, "Заказ звонка", $msg_body, '', array());
+    
+    //if (mail(get_option( 't3s_setting_email_callback' ), "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
+    if ($ret_flag) echo "Message send";
     else echo "Error sending";
-wp_die();
+    
+    wp_die();
 }
 add_action("wp_ajax_add_tel", "add_tel");
 add_action("wp_ajax_nopriv_add_tel", "add_tel");
@@ -616,5 +628,87 @@ function tzs_regions_reload() {
 }
 add_action("wp_ajax_tzs_regions_reload", "tzs_regions_reload");
 add_action("wp_ajax_nopriv_tzs_regions_reload", "tzs_regions_reload");
+
+/* 
+ * Функция для отправки письма с вложенными файлами
+ */
+function ksk_sendMailAttachments($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to = '', $mail_attachments = array()) {
+    if (($mail_to === null) || ($mail_to === '')) {
+        return array(false, 'Не задана обязательный параметр $mail_to');
+    }
+    
+    if (($mail_from === null) || ($mail_from === '')) {
+        return array(false, 'Не задана обязательный параметр $mail_from');
+    }
+    
+    if (($mail_subject === null) || ($mail_subject === '')) {
+        return array(false, 'Не задана обязательный параметр $mail_subject');
+    }
+    
+    if (($mail_message === null) || ($mail_message === '')) {
+        return array(false, 'Не задана обязательный параметр $mail_message');
+    }
+    
+    // Если на задан адрес Reply-To, то он совпадает с From
+    if ($mail_reply_to === '') {
+        $mail_reply_to = $mail_from;
+    }
+    
+    $EOF = "\r\n";
+    
+    //Письмо с вложением состоит из нескольких частей, которые разделяются разделителем
+    // Генерируем разделитель    
+    $boundary = md5(uniqid(time()));
+    
+    // разделитель указывается в заголовке в параметре boundary
+    $mailheaders = "MIME-Version: 1.0;".$EOF; 
+    $mailheaders .= "Content-Type: multipart/mixed; boundary=$boundary".$EOF; 
+    
+    $mailheaders .= "From: $mail_from".$EOF; 
+    $mailheaders .= "Reply-To: $mail_reply_to".$EOF; 
+    
+    // первая часть само сообщение    
+    $multipart = "--$boundary".$EOF; 
+    $multipart .= "Content-Type: text/plain; charset=UTF-8".$EOF;
+    $multipart .= "Content-Transfer-Encoding: base64".$EOF;    
+    $multipart .= $EOF;
+    $multipart .= chunk_split(base64_encode($mail_message));
+    
+    // Цикл по кол-ву вложений
+    for ($i=0;$i<count($mail_attachments);$i++) {
+        // чтение файла        
+        if (file_exists($mail_attachments[$i])) {
+            $fp = fopen($mail_attachments[$i],"r"); 
+            if (!$fp) { 
+                return array(false, 'Не удается открыть файл '.$mail_attachments[$i]); 
+            } 
+            $file = fread($fp, filesize($mail_attachments[$i])); 
+            fclose($fp);
+            
+            $fn = basename($mail_attachments[$i]);
+
+            $message_part = "--$boundary".$EOF; 
+            $message_part .= "Content-Type: application/octet-stream; name==?utf-8?B?".base64_encode($fn)."?=".$EOF;  
+            $message_part .= "Content-Transfer-Encoding: base64".$EOF; 
+            $message_part .= "Content-Disposition: attachment; filename==?utf-8?B?".base64_encode($fn)."?=".$EOF; 
+            $message_part .= "".$EOF;
+            $message_part .= chunk_split(base64_encode($file)) . $EOF;
+
+            // второй частью прикрепляем файл, можно прикрепить два и более файла
+            $multipart .= $message_part;
+        }
+    }
+    
+    $multipart .= "--$boundary--".$EOF; 
+    
+    // отправляем письмо 
+    $result = mail($mail_to, $mail_subject, $multipart, $mailheaders);
+    if ($result) {
+        return array($result, 'Письмо отправлено успешно по адресу '.$mail_to); 
+    } else {
+        return array($result, 'Ошибка при отправке письма по адресу '.$mail_to); 
+    }
+}
+
 
 include_once 't3s_functions.php';

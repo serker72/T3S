@@ -46,6 +46,8 @@ function tzs_validate_search_parameters() {
 	$price_km_from = get_param_def('price_km_from', '0');
 	$price_km_to = get_param_def('price_km_to', '0');
         
+        $sh_descr = get_param('sh_descr');
+        
         
 	// validate and parse parameters
 	if (is_valid_num_zero($cargo_city_from_radius_value)) {
@@ -188,6 +190,10 @@ function tzs_validate_search_parameters() {
 		else
 			$cargo_cityname_to_ids = isset($r['ids']) ? $r['ids'] : null;
 	}
+        
+	if ($sh_descr != null && strlen($sh_descr) == 0) {
+		$sh_descr = null;
+	}
 	
 	if (count($errors) == 0) {
 		if ($country_from > 0)
@@ -238,6 +244,8 @@ function tzs_validate_search_parameters() {
 			$res['price_km_from'] = $price_km_from;
 		if ($price_km_to > 0)
 			$res['price_km_to'] = $price_km_to;
+                if ($sh_descr != null)
+                        $res['sh_descr'] = $sh_descr;
 	}
 	
 	$res['errors'] = $errors;
@@ -246,6 +254,9 @@ function tzs_validate_search_parameters() {
 
 function tzs_search_parameters_to_sql($p, $pref) {
 	$sql = '';
+    if (isset($p['sh_descr']))
+            $sql .= ' AND lower(sh_descr) LIKE "%'.strtolower($p['sh_descr']).'%"';
+    
 	if (isset($p['country_from']))
 		$sql .= ' AND from_cid='.$p['country_from'];
 	if (isset($p['country_to']))
@@ -549,6 +560,9 @@ function tzs_front_end_search_tr_form($form_type) {
                             }
                         ?>
                     </select>
+                    <?php } else { ?>
+                    Желаемый груз:<br>
+                    <input type="text" name="sh_descr" value="<?php echo_val('sh_descr'); ?>" size="30">
                     <?php } ?>
                 </td>
             </tr>

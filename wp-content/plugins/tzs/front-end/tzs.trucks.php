@@ -116,12 +116,11 @@ function tzs_front_end_trucks_handler($atts) {
                         </div>
                     </th>
                     <th>
-                        <div id="tbl_thead_search_button_6" class="tbl_thead_search_button" title="Фильтр по типу транспортного средства">
-                            <!--img chk="1" src="<?php //echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
-                            <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_6', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
-                            <label class="switch"><input id="chk_6" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
+                        <div id="tbl_thead_search_button_5" class="tbl_thead_search_button" title="Фильтр по типу транспортного средства">
+                            <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_5', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
+                            <label class="switch"><input id="chk_5" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
-                        <div id="tbl_thead_search_div_6" class="tbl_thead_search_div">
+                        <div id="tbl_thead_search_div_5" class="tbl_thead_search_div">
                             Масса: от:<br>
                             <select name="weight_from">
                                     <?php tzs_print_weight('weight_from'); ?>
@@ -141,6 +140,14 @@ function tzs_front_end_trucks_handler($atts) {
                         </div>
                     </th>
                     <th>
+                        <div id="tbl_thead_search_button_6" class="tbl_thead_search_button" title="Фильтр по желаемому грузу">
+                            <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_6', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
+                            <label class="switch"><input id="chk_6" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
+                        </div>
+                        <div id="tbl_thead_search_div_6" class="tbl_thead_search_div">
+                            Желаемый груз:<br>
+                            <input type="text" name="sh_descr" value="<?php echo_val('sh_descr'); ?>" size="10">
+                        </div>
                     </th>
                     <th>
                         <div id="tbl_thead_search_button_7" class="tbl_thead_search_button" title="Фильтр по цене/стоимости">
@@ -307,8 +314,16 @@ function tzs_front_end_trucks_handler($atts) {
                 jQuery('#chk_4').attr('disabled', 'disabled');
             }
             
+            // chk_5
+            jQuery('#chk_5').prop('checked', ((jQuery('[name=weight_from]').val() > 0) || (jQuery('[name=weight_to]').val() > 0) || (jQuery('[name=volume_from]').val() > 0) || (jQuery('[name=volume_to]').val() > 0)));
+            if (jQuery('#chk_5').is(':checked')) {
+                jQuery('#chk_5').removeAttr('disabled');
+            } else {
+                jQuery('#chk_5').attr('disabled', 'disabled');
+            }
+            
             // chk_6
-            jQuery('#chk_6').prop('checked', ((jQuery('[name=weight_from]').val() > 0) || (jQuery('[name=weight_to]').val() > 0) || (jQuery('[name=volume_from]').val() > 0) || (jQuery('[name=volume_to]').val() > 0)));
+            jQuery('#chk_6').prop('checked', (jQuery('[name=sh_descr]').val().length > 0));
             if (jQuery('#chk_6').is(':checked')) {
                 jQuery('#chk_6').removeAttr('disabled');
             } else {
@@ -359,11 +374,16 @@ function tzs_front_end_trucks_handler($atts) {
                         jQuery('#chk_4').attr('disabled', 'disabled');
                         break;
                     }
-                    case 'chk_6': {
+                    case 'chk_5': {
                         jQuery('[name=weight_from]').attr('value', 0);
                         jQuery('[name=weight_to]').attr('value', 0);
                         jQuery('[name=volume_from]').attr('value', 0);
                         jQuery('[name=volume_to]').attr('value', 0);
+                        jQuery('#chk_5').attr('disabled', 'disabled');
+                        break;
+                    }
+                    case 'chk_6': {
+                        jQuery('[name=sh_descr]').attr('value', '');
                         jQuery('#chk_6').attr('disabled', 'disabled');
                         break;
                     }

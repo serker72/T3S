@@ -21,7 +21,7 @@ get_header(); ?>
     'showposts' => 20,
 	//'cat' => get_option('category-post'),
     'paged' => get_query_var( 'paged' ),
-    'orderby' => array( 'title' => 'ASC'),
+    'orderby' => array( 'post_name' => 'ASC'),
     'post_parent' => 164
     
 );
@@ -53,7 +53,7 @@ if ( $total_pages > 1) {
                     <a href="/products/">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
-                                    <?php echo get_the_post_thumbnail(164, array(64, 64) ); ?>
+                                    <?php echo get_the_post_thumbnail(164, array(70, 70) ); ?><br>
                                     Все
                                 </div>
                         </center></span>
@@ -68,7 +68,7 @@ if ( $query->have_posts() ) {
                     <a href="<?php the_permalink(); ?>">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
-                                    <?php echo get_the_post_thumbnail(216, array(64, 64) ); ?>
+                                    <?php echo get_the_post_thumbnail(166, array(70, 70) ); ?>
                                     <div style="clear: both"></div>
                                     <?php the_title(); ?>
                                 </div>

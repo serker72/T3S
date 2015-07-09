@@ -86,7 +86,7 @@
 		<?php }?>
                 <div id="tel" >
                     <a href="#modal" role="button" class="btn-tel" data-toggle="modal">Заказать звонок</a>
-                    <a href="skype:<?php echo get_option( 't3s_setting_skype_login' ); ?>"><img src="/wp-content/uploads/2015/07/skype.png"/><?php echo "  ".get_option( 't3s_setting_skype_login' ); ?></a>
+                    <a href="skype:<?php echo get_option( 't3s_setting_skype_login' ); ?>"><img src="/wp-content/themes/twentytwelve/images/skype.png"/><?php echo "  ".get_option( 't3s_setting_skype_login' ); ?></a>
                 </div>
 		<div id="chat">
                     <a href="javascript:onChatButtonClick();">ОН-ЛАЙН помощник</a>
@@ -119,7 +119,9 @@
             <label>Имя</label> <input id="name-tel" class="" />
             <label>Фамилия</label> <input id="fam-tel" class="" />
             <label>Телефон</label> <input id="tel-tel" type="" class="" />
-            <div style="clear:both"></div>
+            <label>Удобное время</label> <input id="tel-time-from" type="" class="" style="width: 60px;" value="09:00"/> &nbsp;-&nbsp; <input id="tel-time-to" type="" class="" style="width: 60px;" value="20:00"/><br>
+	</div>
+        <div class="modal-footer">
             <center><button class="btn-success" style="margin: 5px;" onclick="tel_click();" ata-dismiss="modal" aria-hidden="true">Заказать</button></center>
 	</div>
 </div>
@@ -128,51 +130,60 @@
 
 function tel_click()
 {
-flag_subs=0;
+    flag_subs = 0;
 
-paramstr=document.getElementById('name-tel').id+"=" + encodeURIComponent(document.getElementById('name-tel').value) + "&"+document.getElementById('fam-tel').id+"="+encodeURIComponent(document.getElementById('fam-tel').value)+"&"+document.getElementById('tel-tel').id+"="+encodeURIComponent(document.getElementById('tel-tel').value);
+    paramstr = document.getElementById('name-tel').id+"=" + encodeURIComponent(document.getElementById('name-tel').value) + "&"+document.getElementById('fam-tel').id+"="+encodeURIComponent(document.getElementById('fam-tel').value)+"&"+document.getElementById('tel-tel').id+"="+encodeURIComponent(document.getElementById('tel-tel').value)+"&"+document.getElementById('tel-time-from').id+"="+encodeURIComponent(document.getElementById('tel-time-from').value)+"&"+document.getElementById('tel-time-to').id+"="+encodeURIComponent(document.getElementById('tel-time-to').value);
 
-if  ((document.getElementById('name-tel').value != "") )
-{
-    flag_subs=flag_subs+1;
-}
-else
-{
+    if  ((document.getElementById('name-tel').value != "") )
+    {
+        flag_subs = flag_subs+1;
+    }
+    else
+    {
 
-  document.getElementById('tel_error').innerHTML="Заполните поле имя!";
-  return false;  
-}
-if  ((document.getElementById('tel-tel').value != "") )
-{
-    flag_subs=flag_subs+1;
-}
-else
-{
+      document.getElementById('tel_error').innerHTML="Заполните поле имя !";
+      return false;  
+    }
+    
+    if  ((document.getElementById('tel-tel').value != "") )
+    {
+        flag_subs=flag_subs+1;
+    }
+    else
+    {
+      document.getElementById('tel_error').innerHTML="Заполните номер телефона !";
+      return false;  
+    }
+    
+    if  ((document.getElementById('tel-time-from').value != "") && (document.getElementById('tel-time-to').value != ""))
+    {
+        flag_subs=flag_subs+1;
+    }
+    else
+    {
+      document.getElementById('tel_error').innerHTML="Заполните удобное время !";
+      return false;  
+    }
 
-  document.getElementById('tel_error').innerHTML="Заполните номер телефона!";
-  return false;  
-}
+    if(flag_subs>=3)
+    {
+        jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php?action=add_tel",
+           // url: "/wp-content/plugins/tzs/functions/tzs.functions.php?action=add_bet",
+                    type: "POST",
+                    data: paramstr,
+                    success: function(data){
+                            //document.forms["bet_form"].submit();
+                            alert(data);
+                            jQuery('#modal').modal('hide');
 
-if(flag_subs>=2)
-{
-jQuery.ajax({
-		url: "/wp-admin/admin-ajax.php?action=add_tel",
-       // url: "/wp-content/plugins/tzs/functions/tzs.functions.php?action=add_bet",
-		type: "POST",
-		data: paramstr,
-		success: function(data){
-			//document.forms["bet_form"].submit();
-                        jQuery('#modal').modal('hide');
-
-		},
-        error: function(data){
-			//document.forms["bet_form"].submit();
-            
-            alert(data);
-
-		}			
-	});		   
-}
+                    },
+                    error: function(data){
+                            //document.forms["bet_form"].submit();
+                        alert(data);
+                    }			
+            });		   
+    }
 }
     </script>
 <div id="page" class="hfeed site">
