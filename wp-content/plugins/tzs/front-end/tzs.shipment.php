@@ -93,8 +93,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
             </div>
             
             <div class="pr_edit_form_line">
-                <label for="set_dim">Указать размеры груза</label>
-                <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;<span>в метрах</span>
+                <label for="set_dim">Указать</label>
+                <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;<span>размеры груза, в метрах</span>
             </div>
             
             <div class="pr_edit_form_line">
@@ -414,6 +414,9 @@ function tzs_edit_shipment($id) {
         // Замена "," на точку "." в числах
         $sh_weight = str_replace(',', '.', $sh_weight);
         $sh_volume = str_replace(',', '.', $sh_volume);
+        $sh_length = str_replace(',', '.', $sh_length);
+        $sh_height = str_replace(',', '.', $sh_height);
+        $sh_width = str_replace(',', '.', $sh_width);
 	
 	$errors = array();
 	
@@ -475,7 +478,7 @@ function tzs_edit_shipment($id) {
 
         // Контроль пересечения дат
         if ($sh_date_to_str < $sh_date_from_str) {
-            array_push($errors, "Дата выгрузки не может быть меньше даты погрузки");
+            array_push($errors, "Дата выгрузки не может быть РАНЬШЕ даты погрузки");
         }
 	
 	if (!is_valid_city($sh_city_from)) {
