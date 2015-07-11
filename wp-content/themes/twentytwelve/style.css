@@ -737,6 +737,11 @@ input[type=text], input[type=password], select {
 	background-position: top 13px left 18px;
 	background-repeat: no-repeat;
 }
+#menu-item-491 {
+	background-image: url(images/add.png);
+	background-position: top 13px left 18px;
+	background-repeat: no-repeat;
+}
 #menu-item-76 {
 	background-image: url(images/star.png);
 	background-position: top 13px left 18px;
@@ -757,11 +762,15 @@ input[type=text], input[type=password], select {
 	background-position: top 13px left 18px;
 	background-repeat: no-repeat;
     border-right: 0 !important;
-    
+}
+#menu-item-213 {
+	background-image: url(images/star.png);
+	background-position: top 13px left 18px;
+	background-repeat: no-repeat;
 }
 #menu-profile a {
 	line-height: 41px;
-	padding: 0 20px 0 45px;
+	padding: 0 10px 0 45px;
 	display: block;
 	color: #939393;
 	text-decoration: none;

@@ -61,7 +61,7 @@ function tzs_front_end_view_productsd_handler($atts) {
             <?php } ?>
             <?php if (($user_id == $row->user_id)) {?>
                 <div style="margin-top: 15px;">
-                    <a id="view_edit"  onClick="javascript: window.location.href = '/account/edit-auction/?id=<?php echo $row->id;?>';">Изменить</a>
+                    <a id="view_edit"  onClick="javascript: window.location.href = '/account/edit-product/?id=<?php echo $row->id;?>';">Изменить</a>
                 </div>
             <?php } ?>
                 </div>
@@ -222,7 +222,7 @@ function tzs_front_end_view_productsd_handler($atts) {
                         <label><strong>Дата размещения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date($row->created); ?> <?php echo convert_time_only($row->time); ?>
+                        <?php echo convert_date($row->created); ?> <?php echo convert_time_only($row->created); ?>
                     </div>
                     <div class="clearfix"></div>
                     <div class="pull-left label-txt">

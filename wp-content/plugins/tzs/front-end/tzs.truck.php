@@ -184,7 +184,7 @@ function tzs_print_truck_form($errors, $edit=false) {
         <div style="clear: both;"></div>
         
         <div>
-            <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Изменить" : "Разместить" ?>"/>
+            <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "Разместить" ?>"/>
         </div>
         
 	<?php if ($edit) {?>
@@ -390,8 +390,17 @@ function tzs_edit_truck($id) {
 	$tr_height = get_param('tr_height');
 	$tr_width = get_param('tr_width');
 	
+        // Контроль пересечения дат
+        $tr_date_from_str = date("Ymd", strtotime($tr_date_from));
+        $tr_date_to_str = date("Ymd", strtotime($tr_date_to));
+        
+        
 	$tr_date_from = is_valid_date($tr_date_from);
 	$tr_date_to = is_valid_date($tr_date_to);
+        
+        // Замена "," на точку "." в числах
+        $tr_weight = str_replace(',', '.', $tr_weight);
+        $tr_volume = str_replace(',', '.', $tr_volume);
 	
 	$errors = array();
 	
@@ -450,7 +459,12 @@ function tzs_edit_truck($id) {
 	if ($tr_date_from == null || $tr_date_to == null) {
 		array_push($errors, "Неверный формат даты");
 	}
-	
+
+        // Контроль пересечения дат
+        if ($tr_date_to_str < $tr_date_from_str) {
+            array_push($errors, "Дата выгрузки не может быть меньше даты погрузки");
+        }
+        
 	if (!is_valid_city($tr_city_from)) {
 		array_push($errors, "Неверный пункт погрузки");
 	}
@@ -571,7 +585,7 @@ function tzs_edit_truck($id) {
 				print_errors($dis['errors']);
 				echo "Ваш транспорт изменен";
 				echo "<br/>";
-				echo '<a href="/view-truck/?id='.$id.'">Просмотреть транспорт</a>';
+				echo '<a href="/view-truck/?id='.$id.'&spis=new">Просмотреть транспорт</a>';
 			}
 		}
 	}

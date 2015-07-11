@@ -198,7 +198,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div style="clear: both;"></div>
         
         <div>
-            <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Изменить" : "Разместить" ?>"/>
+            <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "Разместить" ?>"/>
         </div>
         
 	
@@ -404,8 +404,16 @@ function tzs_edit_shipment($id) {
 	$sh_height = get_param('sh_height');
 	$sh_width = get_param('sh_width');
 	
+        // Контроль пересечения дат
+        $sh_date_from_str = date("Ymd", strtotime($sh_date_from));
+        $sh_date_to_str = date("Ymd", strtotime($sh_date_to));
+        
 	$sh_date_from = is_valid_date($sh_date_from);
 	$sh_date_to = is_valid_date($sh_date_to);
+        
+        // Замена "," на точку "." в числах
+        $sh_weight = str_replace(',', '.', $sh_weight);
+        $sh_volume = str_replace(',', '.', $sh_volume);
 	
 	$errors = array();
 	
@@ -464,6 +472,11 @@ function tzs_edit_shipment($id) {
 	if ($sh_date_from == null || $sh_date_to == null) {
 		array_push($errors, "Неверный формат даты");
 	}
+
+        // Контроль пересечения дат
+        if ($sh_date_to_str < $sh_date_from_str) {
+            array_push($errors, "Дата выгрузки не может быть меньше даты погрузки");
+        }
 	
 	if (!is_valid_city($sh_city_from)) {
 		array_push($errors, "Неверный пункт погрузки");
@@ -582,7 +595,7 @@ function tzs_edit_shipment($id) {
 				print_errors($dis['errors']);
 				echo "Ваш груз изменен";
 				echo "<br/>";
-				echo '<a href="/view-shipment/?id='.$id.'">Просмотреть груз</a>';
+				echo '<a href="/view-shipment/?id='.$id.'&spis=new">Просмотреть груз</a>';
 			}
 		}
 	}

@@ -42,10 +42,9 @@ function tzs_front_end_view_truck_handler($atts) {
             </div>
 <div class="container" id="product-container">
     <div class="row-fluid" >
+       
         <div class="span4" id="img_kart">
             <div class="well well-large">
-                
-                <div id="labeltxt">
                     <div class="pull-left label-txt">
                         <label><strong>Номер транспорта:</strong></label>
                     </div>
@@ -64,35 +63,37 @@ function tzs_front_end_view_truck_handler($atts) {
                         <label><strong>Дата размещения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date($row->created); ?> <?php echo convert_time_only($row->time); ?>
+                        <?php echo convert_date($row->time); ?> <?php echo convert_time_only($row->time); ?>
                     </div>
                     <div class="clearfix"></div>
                     <?php if ($row->last_edited != null) {?>
                     <div class="pull-left label-txt">
-                        <label><strong>Дата последнего изменения:</strong></label>
+                        <label><strong>Дата <!--последнего -->изменения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date_no_year($row->last_edited); ?> <?php echo convert_time_only($row->last_edited); ?>
+                        <?php echo convert_date($row->last_edited); ?> <?php echo convert_time_only($row->last_edited); ?>
                     </div>
                     <div class="clearfix"></div>
-                </div>
+                
                    <?php } ?>
+        
         </div>
         </div>
+        
         <div class="span6" id="descript">
               <div class="well well-large">
                     <div class="pull-left label-txt">
                         <label><strong>Дата погрузки:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date_no_year($row->tr_date_from); ?> 
+                        <?php echo convert_date($row->tr_date_from); ?> 
                     </div>
                     <div class="clearfix"></div>
                     <div class="pull-left label-txt">
                         <label><strong>Дата выгрузки:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date_no_year($row->tr_date_to); ?>
+                        <?php echo convert_date($row->tr_date_to); ?>
                     </div>
                     <div class="clearfix"></div>
                     <div class="pull-left label-txt">
@@ -172,13 +173,10 @@ function tzs_front_end_view_truck_handler($atts) {
                     <?php }?>
                 </div>
             </div>
-        </div>
-        <div class="span2" id="left-control">
-            
-                            
+        
         </div>
     </div>
-</div>
+
 			
 			
 			<script>

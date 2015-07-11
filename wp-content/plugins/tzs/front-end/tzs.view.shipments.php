@@ -29,7 +29,7 @@ function tzs_front_end_view_shipment_handler($atts) {
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
                     <?php if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-shipments/'>Назад к списку</a> <div style='clear: both'></div>";
-            else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>"; ?>
+                        else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>"; ?>
             <?php if (($user_id == $row->user_id)) {?>
                 <div style="margin-top: 15px;">
                     <a id="view_edit"  onClick="javascript: window.location.href = '/account/edit-shipment/?id=<?php echo $row->id;?>';">Изменить</a>
@@ -61,15 +61,15 @@ function tzs_front_end_view_shipment_handler($atts) {
                         <label><strong>Дата размещения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date($row->created); ?> <?php echo convert_time_only($row->time); ?>
+                        <?php echo convert_date($row->time); ?> <?php echo convert_time_only($row->time); ?>
                     </div>
                     <div class="clearfix"></div>
                     <?php if ($row->last_edited != null) {?>
                     <div class="pull-left label-txt">
-                        <label><strong>Дата последнего изменения:</strong></label>
+                        <label><strong>Дата <!--последнего -->изменения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date_no_year($row->last_edited); ?> <?php echo convert_time_only($row->last_edited); ?>
+                        <?php echo convert_date($row->last_edited); ?> <?php echo convert_time_only($row->last_edited); ?>
                     </div>
                     <div class="clearfix"></div>
                 
@@ -82,14 +82,14 @@ function tzs_front_end_view_shipment_handler($atts) {
                         <label><strong>Дата погрузки:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date_no_year($row->sh_date_from); ?> 
+                        <?php echo convert_date($row->sh_date_from); ?> 
                     </div>
                     <div class="clearfix"></div>
                     <div class="pull-left label-txt">
                         <label><strong>Дата выгрузки:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date_no_year($row->sh_date_to); ?>
+                        <?php echo convert_date($row->sh_date_to); ?>
                     </div>
                     <div class="clearfix"></div>
                     <div class="pull-left label-txt">
