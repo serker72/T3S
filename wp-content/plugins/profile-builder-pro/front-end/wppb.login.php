@@ -46,7 +46,7 @@ function wppb_front_end_login( $atts ){
 	$loginFilterArray = array();
 	ob_start();
 	global $wppb_login;
-	
+        
 	$wppb_generalSettings = get_option('wppb_general_settings');
 
 	extract(shortcode_atts(array('display' => true, 'redirect' => '', 'submit' => 'page'), $atts));

@@ -124,8 +124,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                                 <tr rid="<?php echo $row->id;?>">
                                 <td>
                                     <?php echo $row->id;?><br>
-                                    <?php echo convert_date_year2($row->time); ?><br/>
-                                    <?php echo convert_time_only($row->time);?>
+                                    <?php echo convert_time($row->time);?>
                                 </td>
                                 <td>
                                         <?php echo tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, $row->sh_city_from);?><br/><?php echo tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, $row->sh_city_to); ?>

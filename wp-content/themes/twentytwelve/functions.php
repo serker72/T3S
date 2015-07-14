@@ -629,6 +629,38 @@ function tzs_regions_reload() {
 add_action("wp_ajax_tzs_regions_reload", "tzs_regions_reload");
 add_action("wp_ajax_nopriv_tzs_regions_reload", "tzs_regions_reload");
 
+/**
+ * Запись часового пояса в $_SESSION
+ */
+function tzs_timezone_offset_session_set() {
+    global $wpdb;
+    
+    
+    $timezone_offset = isset($_POST['timezone_offset']) && is_numeric($_POST['timezone_offset']) ? intval( $_POST['timezone_offset'] ) : 0;
+    $query_str = "SET time_zone = '".($timezone_offset > 0 ? '+'.$timezone_offset : $timezone_offset).":00';";
+
+    $row1 = $wpdb->get_row("SELECT now()+0 AS ct;");
+    $wpdb->query($query_str);
+    $row2 = $wpdb->get_row("SELECT now()+0 AS ct;");
+    $cto = round(($row2->ct - $row1->ct)/10000, 0);
+    
+    $timezone_offset_enabled = ($cto == $timezone_offset);
+    
+    if (!isset($_SESSION['timezone_offset']) || ($_SESSION['timezone_offset'] != $timezone_offset)) {
+        $_SESSION['timezone_offset'] = $timezone_offset;
+        echo 'timezone_offset set to session, ct1 = '.$row1->ct.', ct2 = '.$row2->ct.', cto = '.$cto;
+    }
+        
+    if (!isset($_SESSION['timezone_offset_enabled']) || ($_SESSION['timezone_offset_enabled'] != $timezone_offset_enabled)) {
+        $_SESSION['timezone_offset_enabled'] = $timezone_offset_enabled;
+        echo 'timezone_offset_enabled set to session, ct1 = '.$row1->ct.', ct2 = '.$row2->ct.', cto = '.$cto;
+    }
+        
+    wp_die();
+}
+add_action("wp_ajax_tzs_timezone_offset_session_set", "tzs_timezone_offset_session_set");
+add_action("wp_ajax_nopriv_tzs_timezone_offset_session_set", "tzs_timezone_offset_session_set");
+
 /* 
  * Функция для отправки письма с вложенными файлами
  */

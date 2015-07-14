@@ -19,8 +19,7 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
                 </div>
                 <div>
                     <span class="time_label" title="Время добавления">
-                        '.convert_date_year2($row->created).'<br>
-                        '.convert_time_only($row->created).'
+                        '.convert_time($row->created).'
                     </span>
                 </div>
             </td>
@@ -135,8 +134,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                 </div>
                 <div>
                     <span class="time_label" title="Дата и время публикации заявки">
-                        '.convert_date_year2($row->time).'<br>
-                        '.convert_time_only($row->time).'
+                        '.convert_time($row->time).'
                     </span>
                 </div>
             </td>

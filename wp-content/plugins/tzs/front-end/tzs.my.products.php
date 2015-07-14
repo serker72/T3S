@@ -115,7 +115,7 @@ function tzs_front_end_my_products_handler($atts) {
                                 </th>
                             </tr>
                             <tr>
-                                <th id="tbl_products_id">Номер</th>
+                                <th id="tbl_products_id">№, дата и время заявки</th>
                                 <th id="tbl_products_sale">Покупка<br/>Продажа</th>
                                 <th id="tbl_products_img">Фото</th>
                                 <th id="tbl_products_dtc">Период публикации</th>
@@ -132,7 +132,10 @@ function tzs_front_end_my_products_handler($atts) {
                         foreach ( $res as $row ) {
                             ?>
                             <tr rid="<?php echo $row->id;?>">
-                                <td><?php echo $row->id;?></td>
+                                <td>
+                                    <?php echo $row->id;?><br>
+                                    <?php echo convert_time($row->created);?>
+                                </td>
                                 <td>
                                     <?php echo ($row->sale_or_purchase == 1) ? 'Продажа' : 'Покупка'; ?><br><br>
                                     <?php echo ($row->fixed_or_tender == 1) ? 'Цена зафиксирована' : 'Тендерное предложение'; ?>

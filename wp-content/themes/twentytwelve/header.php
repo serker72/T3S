@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
@@ -53,6 +54,28 @@
                     }
                     
                 }
+                
+            <?php if (!isset($_SESSION["timezone_offset"])) { ?>
+                // Функция, отрабатывающая после готовности HTML-документа
+                jQuery(document).ready(function(){
+                //jQuery("#masthead").load(function(){
+                    var vDate = new Date();
+                    //var vTimezone = vDate.getTimezone;
+                    var vTimezoneOffset = -vDate.getTimezoneOffset()/60;
+                    
+                    jQuery.ajax({
+                            url: "/wp-admin/admin-ajax.php?action=tzs_timezone_offset_session_set",
+                            type: "POST",
+                            data: "timezone_offset="+vTimezoneOffset,
+                            success: function(data){
+                                //alert(data);
+                            },
+                            error: function(data){
+                                alert('Ошибка сохранения TimezoneOffset: '+data);
+                            }			
+                    });
+                })
+            <?php } ?>
 	</script>
 </head>
 <body <?php body_class(); ?>>

@@ -126,12 +126,40 @@ function build_pages_footer($page, $pages, $tag="page") {
 	<?php
 }
 
+function get_timezone_offset($remote_tz, $origin_tz = null) {
+    if($origin_tz === null) {
+        if(!is_string($origin_tz = date_default_timezone_get())) {
+            return false; // A UTC timestamp was returned -- bail out!
+        }
+    }
+    $origin_dtz = new DateTimeZone($origin_tz);
+    $remote_dtz = new DateTimeZone($remote_tz);
+    $origin_dt = new DateTime("now", $origin_dtz);
+    $remote_dt = new DateTime("now", $remote_dtz);
+    $offset = $origin_dtz->getOffset($origin_dt) - $remote_dtz->getOffset($remote_dt);
+    
+    return $offset;
+}
+
+
 function convert_time($time) {
-	return date("d.m.Y H:i", strtotime($time));
+    if (isset($_SESSION['timezone_offset_enabled']) && $_SESSION['timezone_offset_enabled'] && is_numeric($_SESSION['timezone_offset'])) {
+        $timezone_offset = $_SESSION['timezone_offset'];
+    } else {
+        $timezone_offset = 0;
+    }
+    
+    return date("d.m.Y H:i", strtotime($time) + $timezone_offset*3600);
 }
 
 function convert_time_only($time) {
-	return date("H:i", strtotime($time));
+    if (isset($_SESSION['timezone_offset_enabled']) && $_SESSION['timezone_offset_enabled'] && is_numeric($_SESSION['timezone_offset'])) {
+        $timezone_offset = $_SESSION['timezone_offset'];
+    } else {
+        $timezone_offset = 0;
+    }
+    
+    return date("H:i", strtotime($time) + $timezone_offset*3600);
 }
 
 function convert_date($date) {
@@ -139,7 +167,7 @@ function convert_date($date) {
 }
 
 function convert_date_year2($date) {
-	return date("d.m.y", strtotime($date));
+    return date("d.m.y", strtotime($date));
 }
 
 function convert_date_no_year($date) {
