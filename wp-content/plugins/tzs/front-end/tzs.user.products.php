@@ -78,7 +78,7 @@ function tzs_front_end_user_products_handler($atts) {
                                     }
                                     ?>
                                 </td>
-                                <td><?php echo convert_date($row->created); ?></td>
+                                <td><?php echo convert_time($row->created); ?></td>
                                 <td><?php echo htmlspecialchars($row->title);?></td>
                                 <td><?php echo $row->price." ".$GLOBALS['tzs_pr_curr'][$row->currency];?></td>
                                 <td><?php echo $GLOBALS['tzs_pr_payment'][$row->payment];?></td>

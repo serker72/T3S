@@ -63,7 +63,7 @@ function tzs_front_end_view_truck_handler($atts) {
                         <label><strong>Дата размещения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date($row->time); ?> <?php echo convert_time_only($row->time); ?>
+                        <?php echo convert_time($row->time); ?>
                     </div>
                     <div class="clearfix"></div>
                     <?php if ($row->last_edited != null) {?>
@@ -71,7 +71,7 @@ function tzs_front_end_view_truck_handler($atts) {
                         <label><strong>Дата <!--последнего -->изменения:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo convert_date($row->last_edited); ?> <?php echo convert_time_only($row->last_edited); ?>
+                        <?php echo convert_time($row->last_edited); ?>
                     </div>
                     <div class="clearfix"></div>
                 
