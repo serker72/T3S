@@ -8,10 +8,10 @@ function tzs_front_end_shipments_handler($atts) {
             <thead>
     <form class="search_pr_form" id="search_pr_form2" name="search_pr_form1" method="POST">
                 <tr id="tbl_thead_records_per_page">
-                    <th colspan="3" id="thead_h1"></th>
-                    <th colspan="6">
-                        <div id="show-search-form" class="search_button"><span></span></div>
-                        <div class="thead_button">выбор критериев поиска</div>
+                    <!--th colspan="3" id="thead_h1"></th-->
+                    <th colspan="9">
+                        <div id="thead_h1" class="div_td_left"><h1 class="entry-title"><strong>ПОИСК ГРУЗА</strong></h1></div>
+                        <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
                         <div class="thead_info">для добавления грузов, пожалуйста, войдите или зарегистрируйтесь</div>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>
@@ -20,7 +20,7 @@ function tzs_front_end_shipments_handler($atts) {
                     <th id="tbl_trucks_id">N, дата и время заявки</th>
                     <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br/>выгрузки</th>
                     <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
-                    <th id="tbl_trucks_tc">Тип груза</th>
+                    <th id="tbl_trucks_tc">Тип груза /<br>Желаемый тип ТС</th>
                     <th id="tbl_trucks_wv">Вес,<br>объём</th>
                     <th id="tbl_trucks_comm">Описание груза</th>
                     <th id="tbl_trucks_cost">Cтоимость,<br/>цена 1 км</th>
@@ -49,7 +49,7 @@ function tzs_front_end_shipments_handler($atts) {
                                             <option>все области</option>
                                 </select><br>
                                 Пункт погрузки:&nbsp;<input type="checkbox" name="cargo_city_from" value="" <?php if (isset($_POST['cargo_city_from'])) echo 'checked="checked"'; ?>/>город<br>
-                                <input type="text" name="cargo_cityname_from" value="<?php echo_val('cityname_from'); ?>" size="10"><br>
+                                <input type="text" name="cargo_cityname_from" value="<?php echo_val('cargo_cityname_from'); ?>" size="10"><br>
                                 Пункт загрузки в радиусе<sup>*</sup>:&nbsp;<input type="checkbox" name="cargo_city_from_radius_check" value="" <?php if (isset($_POST['cargo_city_from_radius_check'])) echo 'checked="checked"'; ?>/><br>
                                 <select name="cargo_city_from_radius_value">
                                     <?php
@@ -105,6 +105,18 @@ function tzs_front_end_shipments_handler($atts) {
                                     foreach ($GLOBALS['tzs_sh_types_search'] as $key => $val) {
                                             echo '<option value="'.$key.'" ';
                                             if ((isset($_POST['sh_type']) && $_POST['sh_type'] == $key) || (!isset($_POST['sh_type']) && $key == 0)) {
+                                                    echo 'selected="selected"';
+                                            }
+                                            echo '>'.htmlspecialchars($val).'</option>';
+                                    }
+                                ?>
+                            </select><br>
+                            Тип транспорта:<br>
+                            <select name="trans_type">
+                                <?php
+                                    foreach ($GLOBALS['tzs_tr_types_search'] as $key => $val) {
+                                            echo '<option value="'.$key.'" ';
+                                            if ((isset($_POST['trans_type']) && $_POST['trans_type'] == $key) || (!isset($_POST['trans_type']) && $key == 0)) {
                                                     echo 'selected="selected"';
                                             }
                                             echo '>'.htmlspecialchars($val).'</option>';
@@ -296,7 +308,7 @@ function tzs_front_end_shipments_handler($atts) {
             }
             
             // chk_4
-            jQuery('#chk_4').prop('checked', (jQuery('[name=sh_type]').val() > 0));
+            jQuery('#chk_4').prop('checked', ((jQuery('[name=sh_type]').val() > 0) || (jQuery('[name=trans_type]').val() > 0)));
             if (jQuery('#chk_4').is(':checked')) {
                 jQuery('#chk_4').removeAttr('disabled');
             } else {
@@ -352,6 +364,7 @@ function tzs_front_end_shipments_handler($atts) {
                     }
                     case 'chk_4': {
                         jQuery('[name=sh_type]').attr('value', 0);
+                        jQuery('[name=trans_type]').attr('value', 0);
                         jQuery('#chk_4').attr('disabled', 'disabled');
                         break;
                     }
@@ -430,8 +443,7 @@ function tzs_front_end_shipments_handler($atts) {
         function thRecordsPerPagePrint(records_per_page) {
             var vTZS_RECORDS_PER_PAGE = <?php echo TZS_RECORDS_PER_PAGE; ?>;
             var vRecordsArray = [<?php echo TZS_RECORDS_PER_PAGE_ARRAY; ?>];
-            //var vRecordsStr = 'Количество записей на странице:&nbsp;&nbsp;&nbsp;';
-            var vRecordsStr = 'Количество записей:&nbsp;&nbsp;&nbsp;';
+            var vRecordsStr = 'Количество записей на странице:<br>';
             
             if (!records_per_page || (records_per_page < 1)) { records_per_page = vTZS_RECORDS_PER_PAGE; }
             
@@ -456,7 +468,7 @@ function tzs_front_end_shipments_handler($atts) {
                 jQuery('#tbl_products').on('click', 'td', function(e) {  
                         var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                         var id = this.parentNode.getAttribute("rid");
-                        if (!nonclickable) {
+                        if (!nonclickable && (id != null)) {
                                 document.location = "/account/view-shipment/?id="+id;
                         }
                 });
@@ -475,7 +487,7 @@ function tzs_front_end_shipments_handler($atts) {
                     'left': '-740px'
                 });
                 
-                jQuery('#thead_h1').html('<div class="div_td_left"><h1 class="entry-title">'+jQuery('h1.entry-title').html()+'</h1></div>');
+                //jQuery('#thead_h1').html('<div class="div_td_left"><h1 class="entry-title">'+jQuery('h1.entry-title').html()+'</h1></div>');
                 jQuery('header.entry-header').hide();
                 jQuery("#tbl_products").stickyTableHeaders();
                 

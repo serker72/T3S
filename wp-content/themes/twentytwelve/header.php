@@ -68,10 +68,10 @@
                             type: "POST",
                             data: "timezone_offset="+vTimezoneOffset,
                             success: function(data){
-                                //alert(data);
+                                alert(data);
                             },
                             error: function(data){
-                                alert('Ошибка сохранения TimezoneOffset: '+data);
+                                alert(data);
                             }			
                     });
                 })
@@ -80,6 +80,7 @@
 </head>
 <body <?php body_class(); ?>>
 <header id="masthead" class="site-header" role="banner">
+<div style="clear: both;"></div>
 	<div id="header">
 		<?php if (!is_front_page()) {?>
 			<div id="logo_head" style="float: left;">
@@ -95,32 +96,41 @@
 		<div id="lang">
 			<a href="#"><!-- Русский --></a>
 		</div>
-		<?php if (get_current_user_id() == 0) {?>
-		<div id="login">
-			<a href="/account/login">Войти в систему</a>
+		<div id="chat">
+                    <a class="btn-chat" href="javascript:onChatButtonClick();">он-лайн помощник</a>
 		</div>
+                <div id="tel" >
+                    <a href="#modal" role="button" class="btn-tel" data-toggle="modal">Заказать звонок</a>
+                    <!--a href="skype:<?php //echo get_option( 't3s_setting_skype_login' ); ?>"><img src="/wp-content/themes/twentytwelve/images/skype.png"/><?php //echo "  ".get_option( 't3s_setting_skype_login' ); ?></a-->
+                </div>
+		<?php if (get_current_user_id() == 0) {?>
 		<div id="registr">
 			<a href="/account/registration/">Регистрация</a>
+		</div>
+		<div id="login">
+			<a href="/account/login">Войти в систему</a>
 		</div>
 		<?php } else {?>
 		<div id="profile">
 			<a href="/account/profile">Личный кабинет</a>
 		</div>
 		<?php }?>
-                <div id="tel" >
-                    <a href="#modal" role="button" class="btn-tel" data-toggle="modal">Заказать звонок</a>
-                    <a href="skype:<?php echo get_option( 't3s_setting_skype_login' ); ?>"><img src="/wp-content/themes/twentytwelve/images/skype.png"/><?php echo "  ".get_option( 't3s_setting_skype_login' ); ?></a>
-                </div>
-		<div id="chat">
-                    <a href="javascript:onChatButtonClick();">ОН-ЛАЙН помощник</a>
-		</div>
                 
 
 
 <?php if (is_front_page()) {?>
 <div style="clear: both;"></div>
 	 <div id="sliders">
-                <a href="/"><img src="/wp-content/themes/twentytwelve/images/Head-pic.png"></a>    
+		<div id="logo-front" style="float: left;">
+			<a href="/"><img src="/wp-content/themes/twentytwelve/images/logo_footer_3.png"></a>
+		</div>
+		<div id="front-image" style="float: left;">
+                	<a href="/"><img src="/wp-content/themes/twentytwelve/images/image-front.png"></a>
+		</div>
+		<div style="clear: both;"></div>
+		<div id="front-text">
+			<p style="font-size: 35px; text-align: center;">НАЦИОНАЛЬНАЯ ТОРГОВАЯ ТОВАРНО-ТРАНСПОРТНАЯ СИСТЕМА</p>
+		</div>
             </div>
 <?php } ?>
 

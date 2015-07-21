@@ -31,10 +31,11 @@ function tzs_front_end_products_handler($atts) {
             <thead>
     <form class="search_pr_form" id="search_pr_form2" name="search_pr_form1" method="POST">
                 <tr id="tbl_thead_records_per_page">
-                    <th colspan="4" id="thead_h1"></th>
-                    <th colspan="5">
-                        <div id="show-search-form" class="search_button"><span></span></div>
-                        <div class="thead_button">выбор критериев поиска</div>
+                    <!--th colspan="4" id="thead_h1"></th-->
+                    <th colspan="10">
+                        <div id="thead_h1" class="div_td_left"><h1 class="entry-title"><strong>ПОИСК ТОВАРА</strong></h1></div>
+                        <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
+                        <!--div class="thead_button">выбор критериев поиска</div-->
                         <div class="thead_info">для добавления товаров, пожалуйста, войдите или зарегистрируйтесь</div>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>
@@ -42,11 +43,12 @@ function tzs_front_end_products_handler($atts) {
                 <tr>
                     <th id="tbl_products_id">N, дата и время заявки</th>
                     <th id="tbl_products_sale">Покупка<br/>Продажа</th>
-                    <th id="tbl_products_dtc">Период публикации</th>
-                    <th id="tbl_products_dtc">Тип товара</th>
-                    <th id="tbl_products_title">Название, описание и фото товара</th>
+                    <th id="tbl_products_dtc">Период публи-<br/>кации</th>
+                    <th id="tbl_products_type">Тип товара</th>
+                    <th id="tbl_products_img">Фото товара</th>
+                    <th id="tbl_products_title">Название, описание и местонахождение товара</th>
                     <th id="tbl_products_price">Цена<br/>Кол-во</th>
-                    <th id="tbl_products_price">Форма оплаты</th>
+                    <th id="tbl_products_payment">Форма оплаты</th>
                     <th id="tbl_products_cost">Купить / Предложить цену</th>
                     <th id="tbl_products_comm" nonclickable="true">Контактные данные</th>
                 </tr>
@@ -97,13 +99,27 @@ function tzs_front_end_products_handler($atts) {
                         </div>
                     </th>
                     <th>
+                    </th>
+                    <th>
                         <div id="tbl_thead_search_button_5" class="tbl_thead_search_button" title="Фильтр по описанию товара">
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_5', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
                             <label class="switch"><input id="chk_5" type="checkbox" value="1" name="k" disabled="disabled"><span class="switch"></span></label>
                         </div>
                         <div id="tbl_thead_search_div_5" class="tbl_thead_search_div">
                             Описание:<br>
-                            <input type="text" name="pr_title" value="<?php echo_val('pr_title'); ?>" size="30">
+                            <input type="text" name="pr_title" value="<?php echo_val('pr_title'); ?>" size="30"><br>
+                            Местонахождение: страна:<br>
+                            <select name="country_from">
+                                <?php
+                                    tzs_build_countries('country_from');
+                                ?>
+                            </select><br>
+                            Местонахождение: регион:<br>
+                            <select name="region_from">
+                                        <option>все области</option>
+                            </select><br>
+                            Местонахождение: город:<br>
+                            <input type="text" name="cityname_from" value="<?php echo_val('cityname_from'); ?>" size="10"><br>
                         </div>
                     </th>
                     <th>
@@ -228,7 +244,7 @@ function tzs_front_end_products_handler($atts) {
             }
             
             // chk_5
-            jQuery('#chk_5').prop('checked', (jQuery('[name=pr_title]').val().length > 0));
+            jQuery('#chk_5').prop('checked', ((jQuery('[name=pr_title]').val().length > 0) || (jQuery('[name=country_from]').val() > 0) || (jQuery('[name=region_from]').val() > 0) || (jQuery('[name=cityname_from]').val().length > 0)));
             if (jQuery('#chk_5').is(':checked')) {
                 jQuery('#chk_5').removeAttr('disabled');
             } else {
@@ -286,6 +302,9 @@ function tzs_front_end_products_handler($atts) {
                     }
                     case 'chk_5': {
                         jQuery('[name=pr_title]').attr('value', '');
+                        jQuery('[name=country_from]').attr('value', 0);
+                        jQuery('[name=region_from]').attr('value', 0);
+                        jQuery('[name=cityname_from]').attr('value', '');
                         jQuery('#chk_5').attr('disabled', 'disabled');
                         break;
                     }
@@ -365,7 +384,7 @@ function tzs_front_end_products_handler($atts) {
         function thRecordsPerPagePrint(records_per_page) {
             var vTZS_RECORDS_PER_PAGE = <?php echo TZS_RECORDS_PER_PAGE; ?>;
             var vRecordsArray = [<?php echo TZS_RECORDS_PER_PAGE_ARRAY; ?>];
-            var vRecordsStr = 'Количество записей:&nbsp;&nbsp;&nbsp;';
+            var vRecordsStr = 'Количество записей на странице:<br>';
             
             if (!records_per_page || (records_per_page < 1)) { records_per_page = vTZS_RECORDS_PER_PAGE; }
             
@@ -412,7 +431,7 @@ function tzs_front_end_products_handler($atts) {
                     'left': '-420px'
                 });
 
-                jQuery('#thead_h1').html('<div class="div_td_left"><h1 class="entry-title">'+jQuery('h1.entry-title').html()+'</h1></div>');
+                //jQuery('#thead_h1').html('<div class="div_td_left"><h1 class="entry-title">'+jQuery('h1.entry-title').html()+'</h1></div>');
                 jQuery('header.entry-header').hide();
                 jQuery("#tbl_products").stickyTableHeaders();
                 

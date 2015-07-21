@@ -19,6 +19,7 @@ function tzs_front_end_view_shipment_handler($atts) {
 			print_error('Груз не найден');
 		} else {
 			$type = isset($GLOBALS['tzs_tr_types'][$row->trans_type]) ? $GLOBALS['tzs_tr_types'][$row->trans_type] : "";
+			$sh_type = isset($GLOBALS['tzs_sh_types'][$row->sh_type]) ? $GLOBALS['tzs_sh_types'][$row->sh_type] : "";
 			?>
 			<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
                         <div class="row-fluid" id="contact-block-right" >
@@ -106,6 +107,24 @@ function tzs_front_end_view_shipment_handler($atts) {
                         <?php echo tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, $row->sh_city_to); ?>
                     </div>
                     <div class="clearfix"></div>
+                    <?php if ($row->distance > 0) {?>
+                    <div class="pull-left label-txt">
+                        <label><strong>Расстояние:</strong></label>
+                    </div>
+                    <div class="pull-left">
+                        <?php echo tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to)); ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php }?>
+                    <?php if (strlen($sh_type) > 0) {?>
+                    <div class="pull-left label-txt">
+                        <label><strong>Тип груза:</strong></label>
+                    </div>
+                    <div class="pull-left">
+                        <?php echo $sh_type; ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php }?>
                     <div class="pull-left label-txt">
                         <label><strong>Описание груза:</strong></label>
                     </div>
@@ -151,8 +170,8 @@ function tzs_front_end_view_shipment_handler($atts) {
                     <div class="pull-left label-txt">
                         <label><strong>Габариты:</strong></label>
                     </div>
-                    <div class="pull-left">
-                        Длинна=<?php echo $row->sh_length; ?>м Ширина=<?php echo $row->sh_width; ?>м Высота=<?php echo $row->sh_height; ?>м
+                    <div class="pull-left" style="width: 60%">
+                        Длинна = <?php echo $row->sh_length; ?>м Ширина = <?php echo $row->sh_width; ?>м Высота = <?php echo $row->sh_height; ?>м
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>
@@ -162,15 +181,6 @@ function tzs_front_end_view_shipment_handler($atts) {
                     </div>
                     <div class="pull-left" style="width: 60%">
                         <?php echo $cost;?>
-                    </div>
-                    <div class="clearfix"></div>
-                    <?php }?>
-                    <?php if ($row->distance > 0) {?>
-                    <div class="pull-left label-txt">
-                        <label><strong>Расстояние:</strong></label>
-                    </div>
-                    <div class="pull-left">
-                        <?php echo tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to)); ?>
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>

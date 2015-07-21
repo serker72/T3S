@@ -68,7 +68,7 @@ if ( $query->have_posts() ) {
                     <a href="<?php the_permalink(); ?>">
                         <span class="menu-tile-pr"> <center>
                                 <div class="cub">
-                                    <?php echo get_the_post_thumbnail(166, array(70, 70) ); ?>
+                                    <?php echo get_the_post_thumbnail($post->ID, array(70, 70) ); ?>
                                     <div style="clear: both"></div>
                                     <?php the_title(); ?>
                                 </div>

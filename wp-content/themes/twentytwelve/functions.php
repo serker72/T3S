@@ -648,12 +648,12 @@ function tzs_timezone_offset_session_set() {
     
     if (!isset($_SESSION['timezone_offset']) || ($_SESSION['timezone_offset'] != $timezone_offset)) {
         $_SESSION['timezone_offset'] = $timezone_offset;
-        echo 'timezone_offset set to session, ct1 = '.$row1->ct.', ct2 = '.$row2->ct.', cto = '.$cto;
+        //echo 'timezone_offset set to session, ct1 = '.$row1->ct.', ct2 = '.$row2->ct.', cto = '.$cto;
     }
         
     if (!isset($_SESSION['timezone_offset_enabled']) || ($_SESSION['timezone_offset_enabled'] != $timezone_offset_enabled)) {
         $_SESSION['timezone_offset_enabled'] = $timezone_offset_enabled;
-        echo 'timezone_offset_enabled set to session, ct1 = '.$row1->ct.', ct2 = '.$row2->ct.', cto = '.$cto;
+        //echo 'timezone_offset_enabled set to session, ct1 = '.$row1->ct.', ct2 = '.$row2->ct.', cto = '.$cto;
     }
         
     wp_die();

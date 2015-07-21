@@ -8,10 +8,10 @@ function tzs_front_end_trucks_handler($atts) {
             <thead>
     <form class="search_pr_form" id="search_pr_form2" name="search_pr_form1" method="POST">
                 <tr id="tbl_thead_records_per_page">
-                    <th colspan="3" id="thead_h1"></th>
-                    <th colspan="6">
-                        <div id="show-search-form" class="search_button"><span></span></div>
-                        <div class="thead_button">выбор критериев поиска</div>
+                    <!--th colspan="3" id="thead_h1"></th-->
+                    <th colspan="9">
+                        <div id="thead_h1" class="div_td_left"><h1 class="entry-title"><strong>ПОИСК ТРАНСПОРТА</strong></h1></div>
+                        <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
                         <div class="thead_info">для добавления транспорта, пожалуйста, войдите или зарегистрируйтесь</div>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>
@@ -453,8 +453,7 @@ function tzs_front_end_trucks_handler($atts) {
         function thRecordsPerPagePrint(records_per_page) {
             var vTZS_RECORDS_PER_PAGE = <?php echo TZS_RECORDS_PER_PAGE; ?>;
             var vRecordsArray = [<?php echo TZS_RECORDS_PER_PAGE_ARRAY; ?>];
-            //var vRecordsStr = 'Количество записей на странице:&nbsp;&nbsp;&nbsp;';
-            var vRecordsStr = 'Количество записей:&nbsp;&nbsp;&nbsp;';
+            var vRecordsStr = 'Количество записей на странице:<br>';
             
             if (!records_per_page || (records_per_page < 1)) { records_per_page = vTZS_RECORDS_PER_PAGE; }
             
@@ -480,7 +479,8 @@ function tzs_front_end_trucks_handler($atts) {
                 jQuery('#tbl_products').on('click', 'td', function(e) {  
                         var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                         var id = this.parentNode.getAttribute("rid");
-                        if (!nonclickable) {
+                        //alert('Тыц-тыц: cellIndex - '+this.cellIndex+', textContent -'+this.textContent+', id -'+id+', nonclickable - '+nonclickable);
+                        if (!nonclickable && (id != null)) {
                                 document.location = "/account/view-truck/?id="+id;
                         }
                 });
@@ -499,7 +499,7 @@ function tzs_front_end_trucks_handler($atts) {
                     'left': '-740px'
                 });
                 
-                jQuery('#thead_h1').html('<div class="div_td_left"><h1 class="entry-title">'+jQuery('h1.entry-title').html()+'</h1></div>');
+                //jQuery('#thead_h1').html('<div class="div_td_left"><h1 class="entry-title">'+jQuery('h1.entry-title').html()+'</h1></div>');
                 jQuery('header.entry-header').hide();
                 jQuery("#tbl_products").stickyTableHeaders();
                 

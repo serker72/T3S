@@ -518,7 +518,7 @@ function tzs_edit_shipment($id) {
 	
 	if ($set_dim) {
 		if (!is_valid_num($sh_length)) {
-			array_push($errors, "Неверно задана длинна груза");
+			array_push($errors, "Неверно задана длина груза");
 		}
 		if (!is_valid_num($sh_width)) {
 			array_push($errors, "Неверно задана ширина груза");

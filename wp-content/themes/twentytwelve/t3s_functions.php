@@ -39,8 +39,8 @@ function t3s_settings_api_init() {
     );
     
     add_settings_field(
-            't3s_setting_skype_login',
-            'Логин Skype',
+            't3s_setting_email_support',
+            'E-Mail для получения данных из формы обратной связи',
             't3s_setting_callback_function3',
             'general', // страница
             't3s_setting_section' // секция
@@ -50,7 +50,7 @@ function t3s_settings_api_init() {
     // $_POST параметров и чтобы callback функции опций выводили их значение.
     register_setting( 'general', 't3s_setting_contact_view_all' );
     register_setting( 'general', 't3s_setting_email_callback' );
-    register_setting( 'general', 't3s_setting_skype_login' );
+    register_setting( 'general', 't3s_setting_email_support' );
 }
 
 // ------------------------------------------------------------------
@@ -93,9 +93,9 @@ function t3s_setting_callback_function2() {
 
 function t3s_setting_callback_function3() {
 	echo '<input 
-		name="t3s_setting_skype_login"  
+		name="t3s_setting_email_support"  
 		type="text" 
-		value="' . get_option( 't3s_setting_skype_login' ) . '" 
+		value="' . get_option( 't3s_setting_email_support' ) . '" 
 		class="code2"
 	 />';
 }

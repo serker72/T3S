@@ -110,6 +110,15 @@ function tzs_front_end_view_truck_handler($atts) {
                         <?php echo tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, $row->tr_city_to); ?>
                     </div>
                     <div class="clearfix"></div>
+                    <?php if ($row->distance > 0) {?>
+                    <div class="pull-left label-txt">
+                        <label><strong>Расстояние:</strong></label>
+                    </div>
+                    <div class="pull-left">
+                        <?php echo tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to)); ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php }?>
                     <?php if ($row->tr_weight > 0) {?>
                     <div class="pull-left label-txt">
                         <label><strong>Вес:</strong></label>
@@ -148,8 +157,8 @@ function tzs_front_end_view_truck_handler($atts) {
                     <div class="pull-left label-txt">
                         <label><strong>Габариты:</strong></label>
                     </div>
-                    <div class="pull-left">
-                        Длинна=<?php echo $row->tr_length; ?>м Ширина=<?php echo $row->tr_width; ?>м Высота=<?php echo $row->tr_height; ?>м
+                    <div class="pull-left" style="width: 60%">
+                        Длина = <?php echo $row->tr_length; ?>м Ширина = <?php echo $row->tr_width; ?>м Высота = <?php echo $row->tr_height; ?>м
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>
@@ -159,15 +168,6 @@ function tzs_front_end_view_truck_handler($atts) {
                     </div>
                     <div class="pull-left" style="width: 60%">
                         <?php echo $cost;?>
-                    </div>
-                    <div class="clearfix"></div>
-                    <?php }?>
-                    <?php if ($row->distance > 0) {?>
-                    <div class="pull-left label-txt">
-                        <label><strong>Расстояние:</strong></label>
-                    </div>
-                    <div class="pull-left">
-                        <?php echo tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to)); ?>
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>

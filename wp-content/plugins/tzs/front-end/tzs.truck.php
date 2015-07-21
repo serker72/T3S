@@ -505,7 +505,7 @@ function tzs_edit_truck($id) {
 	
 	if ($set_dim) {
 		if (!is_valid_num($tr_length)) {
-			array_push($errors, "Неверно задана длинна транспортного средства");
+			array_push($errors, "Неверно задана длина транспортного средства");
 		}
 		if (!is_valid_num($tr_width)) {
 			array_push($errors, "Неверно задана ширина транспортного средства");

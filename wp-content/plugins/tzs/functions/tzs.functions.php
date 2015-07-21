@@ -142,14 +142,14 @@ function get_timezone_offset($remote_tz, $origin_tz = null) {
 }
 
 
-function convert_time($time) {
+function convert_time($time, $format = "d.m.Y H:i") {
     if (isset($_SESSION['timezone_offset_enabled']) && $_SESSION['timezone_offset_enabled'] && is_numeric($_SESSION['timezone_offset'])) {
         $timezone_offset = $_SESSION['timezone_offset'];
     } else {
         $timezone_offset = 0;
     }
     
-    return date("d.m.Y H:i", strtotime($time) + $timezone_offset*3600);
+    return date($format, strtotime($time) + $timezone_offset*3600);
 }
 
 function convert_time_only($time) {
@@ -687,6 +687,8 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
             } else {
                 $output_tbody .= '<span>'.$user_info['adress'].'</span>';
             }
+        } else {
+            $output_tbody .= '<span>&nbsp;</span>';
         }
 
         if (($user_id == 0) && ($GLOBALS['tzs_au_contact_view_all'] == false)) {
