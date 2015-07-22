@@ -1098,11 +1098,12 @@ a:hover {
 	position: relative;
 }
 .site-header #time {
-	background: url(images/time_icon.png) no-repeat right;
-	width: auto;
-	float: left;
-	line-height: 26px;
-	padding-right: 30px;
+    background: url(images/time_icon.png) no-repeat right;
+    width: 160px;
+    float: left;
+    line-height: 26px;
+    padding-right: 30px;
+    margin: 0 20px 0 0px;
 }
 .site-header #registr {
     background: url(images/time_icon.png) no-repeat right;
@@ -2425,4 +2426,16 @@ height:180px;
 }
 .site-map-li-first {
     text-transform: uppercase;
+}
+
+/*  Header Clock  */
+#clock {
+    line-height: 26px;
+    
+}
+#clock ul {
+    list-style: none;
+}
+#clock ul li {
+    display: inline;
 }

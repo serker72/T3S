@@ -71,11 +71,33 @@
                                 //alert(data);
                             },
                             error: function(data){
-                                alert(data);
+                                if (data.responseText !== 'undefined') {
+                                    alert('Ошибка записи TimezoneOffset: ' + data.responseText);
+                                }
                             }			
                     });
                 })
             <?php } ?>
+                
+                function HeaderClockUpdate() {
+                    var newDate = new Date();
+                    var v_day = newDate.getDate();
+                    var v_month = newDate.getMonth();
+                    var v_year = newDate.getFullYear();
+                    var v_hour = newDate.getHours();
+                    var v_minute = newDate.getMinutes();
+                    
+                    str_day = (v_day < 10 ? "0" : "") + v_day;
+                    str_month = (v_month < 10 ? "0" : "") + v_month;
+                    str_hour = (v_hour < 10 ? "0" : "") + v_hour;
+                    str_minute = (v_minute < 10 ? "0" : "") + v_minute;
+                    
+                    var str_date = str_day + '.' + str_month + '.' + v_year;
+                    
+                    if (jQuery("#clock-date").html() != str_date) jQuery("#clock-date").html(str_date);
+                    if (jQuery("#clock-hour").html() != str_hour) jQuery("#clock-hour").html(str_hour);
+                    if (jQuery("#clock-minute").html() != str_minute) jQuery("#clock-minute").html(str_minute);
+                }
 	</script>
 </head>
 <body <?php body_class(); ?>>
@@ -88,10 +110,19 @@
             		</div>
 		<?php } ?>
 		<div id="time">
-			<script type="text/javascript">
+			<!--script type="text/javascript">
 				var l = new Date();
 				document.write (l.toLocaleString());
-			</script> 
+			</script-->
+                        <div id="clock">
+                            <ul>
+                                <li id="clock-date"></li>
+                                <li>,</li>
+                                <li id="clock-hour"></li>
+                                <li>:</li>
+                                <li id="clock-minute"></li>
+                            </ul>
+                        </div>
 		</div>
 		<div id="lang">
 			<a href="#"><!-- Русский --></a>
@@ -115,6 +146,10 @@
 			<a href="/account/profile">Личный кабинет</a>
 		</div>
 		<?php }?>
+        <?php if (get_current_user_id() != 0) {
+            $tel = $user_info['telephone'];?>
+            <input type="hidden" value="<?php echo $tel; ?>" id="tel-user" />
+        <?php }?>
                 
 
 
@@ -159,7 +194,40 @@
 	</div>
 </div>
     <script>
-        
+ jQuery(document).ready(function(){
+     // Clock start
+     HeaderClockUpdate();
+     // Clock update interval 60 seconds
+     setInterval(function() { HeaderClockUpdate(); }, 60000);
+     
+    if(document.getElementById('ninja_forms_form_2')){
+	if(document.getElementById('tel-user')){
+	   document.getElementById('ninja_forms_field_3').value=document.getElementById('tel-user').value;   
+	}
+    jQuery("#ninja_forms_form_2").attr('action', '');
+    jQuery("#ninja_forms_field_7").attr('type', 'button');
+    paramstr=jQuery("#ninja_forms_form_2").serialize();
+     jQuery("#ninja_forms_field_7").click(function() {
+     jQuery("#ninja_forms_field_7").val('Идет отправка');   
+     jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php?action=add_message",
+                    type: "POST",
+                    data: paramstr,
+                    success: function(data){
+                            //document.forms["bet_form"].submit();
+                            document.getElementById('ninja_forms_form_2').submit();
+                            document.getElementById('ninja_forms_form_2_cont').style.display='none';
+                            jQuery("#well-form").html('<h2>Спасибо за Ваше обращение!</h2>');
+
+                    },
+                    error: function(data){
+                            //document.forms["bet_form"].submit();
+                        alert(data);
+                    }			
+            });
+            });		   
+ }   
+});       
 
 function tel_click()
 {

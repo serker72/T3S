@@ -407,6 +407,28 @@ function add_tel(){
 add_action("wp_ajax_add_tel", "add_tel");
 add_action("wp_ajax_nopriv_add_tel", "add_tel");
 
+function add_message(){
+    $name = $_POST['ninja_forms_field_1'];
+    $email  = $_POST['ninja_forms_field_2'];
+    $tel  = $_POST['ninja_forms_field_3'];
+    $msg_body  = $_POST['ninja_forms_field_6'];
+    
+    $EOF = "\r\n";
+    $admin_email = get_option( 'admin_email' );
+    
+    
+    
+    $ret_flag = ksk_sendMailAttachments($admin_email, $email, "Сообщение сайта t3s", $msg_body, '', array());
+    
+    //if (mail(get_option( 't3s_setting_email_callback' ), "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
+    if ($ret_flag) echo "Message send";
+    else echo "Error sending";
+    
+    wp_die();
+}
+add_action("wp_ajax_add_message", "add_message");
+add_action("wp_ajax_nopriv_add_message", "add_message");
+
 /* add the bet */
 
 function add_bet(){
