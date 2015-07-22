@@ -41,7 +41,7 @@ function tzs_front_end_products_handler($atts) {
                     </th>
                 </tr>
                 <tr>
-                    <th id="tbl_products_id">N, дата и время заявки</th>
+                    <th id="tbl_products_id">Номер, дата и время заявки</th>
                     <th id="tbl_products_sale">Покупка<br/>Продажа</th>
                     <th id="tbl_products_dtc">Период публи-<br/>кации</th>
                     <th id="tbl_products_type">Тип товара</th>

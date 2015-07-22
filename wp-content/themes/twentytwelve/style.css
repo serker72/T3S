@@ -1098,7 +1098,7 @@ a:hover {
 	position: relative;
 }
 .site-header #time {
-    background: url(images/time_icon.png) no-repeat right;
+    background: url(images/time_icon.png) no-repeat top right;
     width: 160px;
     float: left;
     line-height: 26px;
@@ -1827,7 +1827,7 @@ max-height: 46px !important;
     vertical-aligment: middle;
 }
 .time_label {
-    /*font-size: 11px;*/
+    font-size: 10px;
 /*    font-weight: bold;
     border-radius: 4px;
     -moz-border-radius: 4px;

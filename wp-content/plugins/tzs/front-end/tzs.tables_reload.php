@@ -9,7 +9,10 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
     $output_tbody = '<tr rid="'.$row->id.'" id="';
 
     if ($row->sale_or_purchase == 1) { $output_tbody .= 'tbl_auctions_tr_lot_1'; } else { $output_tbody .= 'tbl_auctions_tr_lot_0'; }
-
+    
+    $dt_created = convert_time($row->created, "d.m.y (Hч:iмин)");
+    $dt_created = explode(" ", $dt_created);
+    
     $output_tbody .= '">
             <td>
                 <div class="record_number">
@@ -18,8 +21,11 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
                     </span>
                 </div>
                 <div>
-                    <span class="time_label" title="Время добавления">
-                        '.convert_time($row->created, "d.m.y (Hч:iмин)").'
+                    <span class="date_label" title="Дата публикации заявки">
+                        '.$dt_created[0].'
+                    </span><br><br>
+                    <span class="time_label" title="Время публикации заявки">
+                        '.$dt_created[1].'
                     </span>
                 </div>
             </td>
@@ -128,6 +134,9 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
     
     $cost = tzs_cost_to_str($row->cost, true);
     
+    $dt_created = convert_time($row->time, "d.m.y (Hч:iмин)");
+    $dt_created = explode(" ", $dt_created);
+    
     $output_tbody = '<tr rid="'.$row->id.'">';
 
     $output_tbody .= '
@@ -138,8 +147,11 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                     </span>
                 </div>
                 <div>
-                    <span class="time_label" title="Дата и время публикации заявки">
-                        '.str_replace(' (', '<br>(', convert_time($row->time, "d.m.y (Hч : iмин)")).'
+                    <span class="date_label" title="Дата публикации заявки">
+                        '.$dt_created[0].'
+                    </span><br><br>
+                    <span class="time_label" title="Время публикации заявки">
+                        '.$dt_created[1].'
                     </span>
                 </div>
             </td>
