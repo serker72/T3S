@@ -2376,3 +2376,53 @@ margin-bottom: 5px;
 width:180px;
 height:180px;
 }
+.entry-header {
+    width: 80%;
+}
+
+/*    Site Map Style   */
+.site-map-wrapper {
+    width: 100%;
+}
+.site-map-container {
+    font-family: Georgia, Times, serif;
+    font-size: 16px;
+    width: 400px;
+    margin: 0 auto;
+    padding: 0 0;
+}
+.site-map-level-1 {
+    list-style: none;
+    border: #000 1px solid;
+}
+.site-map-level-1 li {
+}
+.site-map-level-1 li a {
+    display:block;
+    text-decoration:none;
+    color:#000000;
+    background-color:#FFFFFF;
+    line-height:30px;
+    border-bottom-style:solid;
+    border-bottom-width:1px;
+    border-bottom-color:#CCCCCC;
+    padding-left: 20px;
+    cursor: pointer;
+}
+.site-map-level-1 li a:hover {
+    color:#FFFFFF;
+    background: #3D85C6;
+}
+.site-map-level-2 {
+    list-style: none;
+    margin-left: 0;
+}
+.site-map-level-2 li {
+    margin-left: 0;
+}
+.site-map-level-2 li a {
+    padding-left: 40px;
+}
+.site-map-li-first {
+    text-transform: uppercase;
+}

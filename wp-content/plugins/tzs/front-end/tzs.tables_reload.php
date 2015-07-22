@@ -267,7 +267,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
         //$output_tbody .= '<td><div title="Комментарии">'.$row->comment.'</div></td>';
     }
     
-    $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 1).'</td>
+    $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>
         </tr>';
     
     return $output_tbody;

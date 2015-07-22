@@ -68,7 +68,7 @@
                             type: "POST",
                             data: "timezone_offset="+vTimezoneOffset,
                             success: function(data){
-                                alert(data);
+                                //alert(data);
                             },
                             error: function(data){
                                 alert(data);
