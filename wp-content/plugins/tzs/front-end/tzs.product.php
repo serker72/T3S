@@ -217,6 +217,8 @@ function tzs_edit_product($id) {
     if (isset($_POST['pr_type_id_nonce']) && wp_verify_nonce($_POST['pr_type_id_nonce'], 'pr_type_id')) {
 	$pr_active = get_param_def('pr_active','0');
 	$pr_type_id = get_param_def('pr_type_id','0');
+        $pr_sale_or_purchase = get_param_def('pr_sale_or_purchase','0');
+        $pr_fixed_or_tender = get_param_def('pr_fixed_or_tender','0');
 	$pr_title = get_param('pr_title');
 	$pr_description = get_param('pr_description');
 	$pr_copies = get_param_def('pr_copies','0');
@@ -258,6 +260,15 @@ function tzs_edit_product($id) {
 	if (!is_valid_num_zero($pr_type_id)) {
             array_push($errors, "Неверно задана категория товара");
 	}
+        
+	if (!is_valid_num_zero($pr_sale_or_purchase)) {
+            array_push($errors, "Неверно задан тип операции");
+	}
+        
+	if (!is_valid_num_zero($pr_fixed_or_tender)) {
+            array_push($errors, "Неверно задан тип ценового предложения");
+	}
+        
         
 	if (!is_valid_num_zero($pr_active)) {
             array_push($errors, "Неверно задан статус товара");
@@ -309,9 +320,9 @@ function tzs_edit_product($id) {
 
         if ($id == 0) {
                 $sql = $wpdb->prepare("INSERT INTO ".TZS_PRODUCTS_TABLE.
-                        " (type_id, user_id, title, description, copies, unit, currency, price, payment, nds, city_from, from_cid, from_rid, from_sid, created, comment, last_edited, active, expiration)".
-                        " VALUES (%d, %d, %s, %s, %d, %d, %d, %f, %d, %d, %s, %d, %d, %d, now(), %s, NULL, %d, %s);",
-                        intval($pr_type_id), $user_id, stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds),
+                        " (type_id, user_id, sale_or_purchase, 	fixed_or_tender, title, description, copies, unit, currency, price, payment, nds, city_from, from_cid, from_rid, from_sid, created, comment, last_edited, active, expiration)".
+                        " VALUES (%d, %d, %d, %d, %s, %s, %d, %d, %d, %f, %d, %d, %s, %d, %d, %d, now(), %s, NULL, %d, %s);",
+                        intval($pr_type_id), $user_id, intval($pr_sale_or_purchase), intval($pr_fixed_or_tender), stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds),
                         stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration);
 
                 if (false === $wpdb->query($sql)) {
@@ -330,10 +341,10 @@ function tzs_edit_product($id) {
                 }
         } else {
                 $sql = $wpdb->prepare("UPDATE ".TZS_PRODUCTS_TABLE." SET ".
-                        " last_edited=now(), type_id=%d, title=%s, description=%s, copies=%d, unit=%d, currency=%d, price=%f, payment=%d, nds=%d, ".
+                        " last_edited=now(), type_id=%d, sale_or_purchase=%d, fixed_or_tender=%d, title=%s, description=%s, copies=%d, unit=%d, currency=%d, price=%f, payment=%d, nds=%d, ".
                         " city_from=%s, from_cid=%d, from_rid=%d, from_sid=%d, comment=%s, active=%d, expiration=%s".
                         " WHERE id=%d AND user_id=%d;", 
-                        intval($pr_type_id), stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds), 
+                        intval($pr_type_id), intval($pr_sale_or_purchase), intval($pr_fixed_or_tender), stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds), 
                         stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration,
                         $id, $user_id);
 

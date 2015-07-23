@@ -104,12 +104,12 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
     
     $output_tbody .= '<td><div>';
 
-                if ($row->fixed_or_tender == 1) {
-                    $output_tbody .= '<a class="btnBlue" title="Купить товар по фиксированной цене">Купить</a>';
-                    $output_tbody .= '<span class="btnGray" title="Предложить свою цену за товар">Предложить свою цену</span>';
-                } else {
+                if ($row->fixed_or_tender == 2) {
                     $output_tbody .= '<span class="btnGray" title="Купить товар по фиксированной цене">Купить</span>';
                     $output_tbody .= '<a class="btnBlue" title="Предложить свою цену за товар">Предложить свою цену</a>';
+                } else {
+                    $output_tbody .= '<a class="btnBlue" title="Купить товар по фиксированной цене">Купить</a>';
+                    $output_tbody .= '<span class="btnGray" title="Предложить свою цену за товар">Предложить свою цену</span>';
                 }
 
     $output_tbody .= '</div></td>';
