@@ -206,10 +206,12 @@
 	}
     jQuery("#ninja_forms_form_2").attr('action', '');
     jQuery("#ninja_forms_field_7").attr('type', 'button');
-    paramstr=jQuery("#ninja_forms_form_2").serialize();
-     jQuery("#ninja_forms_field_7").click(function() {
-     jQuery("#ninja_forms_field_7").val('Идет отправка');   
-     jQuery.ajax({
+    jQuery("#ninja_forms_field_7").click(function() {
+        paramstr = "ninja_forms_field_1=" + encodeURIComponent(jQuery('#ninja_forms_field_1').val()) + "&ninja_forms_field_2="+encodeURIComponent(jQuery('#ninja_forms_field_2').val()) + "&ninja_forms_field_3=" + encodeURIComponent(jQuery('#ninja_forms_field_3').val()) + "&ninja_forms_field_6=" + encodeURIComponent(jQuery('#ninja_forms_field_6').val());
+        //paramstr=jQuery("#ninja_forms_form_2").serialize();
+        alert('paramstr: '+paramstr);
+        jQuery("#ninja_forms_field_7").val('Идет отправка');   
+        jQuery.ajax({
                     url: "/wp-admin/admin-ajax.php?action=add_message",
                     type: "POST",
                     data: paramstr,
@@ -221,8 +223,9 @@
 
                     },
                     error: function(data){
-                            //document.forms["bet_form"].submit();
-                        alert(data);
+                            if (data.responseText !== 'undefined') {
+                                alert('Ошибка отправки формы: ' + data.responseText);
+                            }
                     }			
             });
             });		   

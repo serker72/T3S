@@ -203,6 +203,15 @@ function tzs_print_product_form($errors, $edit=false) {
             });
             jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
             jQuery( "#datepicker1" ).datepicker({ dateFormat: "dd.mm.yy" });
+            
+            jQuery("[name=pr_sale_or_purchase]").change(function (eventObject) {
+                if (eventObject.target.value == 2) {
+                    jQuery("[name=pr_fixed_or_tender]").attr('value', 2);
+                    jQuery('[name=pr_fixed_or_tender]').attr('disabled', 'disabled');
+                } else {
+                    jQuery('[name=pr_fixed_or_tender]').removeAttr('disabled');
+                }
+            });
         });
     </script>
 <?php
@@ -315,6 +324,12 @@ function tzs_edit_product($id) {
             tzs_print_product_form($errors, $id > 0);
     } else {
         global $wpdb;
+        
+	// Если выбран тип заявки "Покупка" - то только "Тендерное предложение"
+        // Проверка и присвоение сделаны для перестраховки, на случай если не сработает JS
+        if ($pr_sale_or_purchase == 2) {
+            $pr_fixed_or_tender = 2;
+	}
         
         $pr_expiration = date('Y-m-d', mktime(0, 0, 0, $pr_expiration['month'], $pr_expiration['day'], $pr_expiration['year']));
 

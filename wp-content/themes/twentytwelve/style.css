@@ -1762,17 +1762,17 @@ max-height: 46px !important;
     padding: 0 0;
     margin: 0 0;
 }
-.span2.offset10 > .tbl_products_contact > .tbl_products_contact_phone b, .tbl_products_contact_email b, .tbl_products_contact_skype b {
+.span2 > .tbl_products_contact > .tbl_products_contact_phone b, .tbl_products_contact_email b, .tbl_products_contact_skype b {
     padding-left: 22px;
     display: inline;
     font-weight: normal;
     }
-.span2.offset10 > .tbl_products_contact > .tbl_products_contact_email b, .tbl_products_contact_skype b {
+.span2 > .tbl_products_contact > .tbl_products_contact_email b, .tbl_products_contact_skype b {
     padding-left: 22px;
     display: inline;
     font-weight: normal;
     }
-.span2.offset10 > .tbl_products_contact > .tbl_products_contact_skype b {
+.span2 > .tbl_products_contact > .tbl_products_contact_skype b {
     padding-left: 22px;
     display: inline;
     font-weight: normal;
@@ -1782,17 +1782,17 @@ max-height: 46px !important;
     display: inline;
     font-weight: normal;
 }
-.span2.offset10 > .tbl_products_contact > .tbl_products_contact_phone span, .tbl_products_contact_email span, .tbl_products_contact_skype span {
+.span2 > .tbl_products_contact > .tbl_products_contact_phone span, .tbl_products_contact_email span, .tbl_products_contact_skype span {
     padding-left: 22px;
     color: #3C3D3D;
     display: none;
     }
-.span2.offset10 > .tbl_products_contact > .tbl_products_contact_email span, .tbl_products_contact_skype span {
+.span2 > .tbl_products_contact > .tbl_products_contact_email span, .tbl_products_contact_skype span {
     padding-left: 22px;
     color: #3C3D3D;
     display: none;
     }
-.span2.offset10 > .tbl_products_contact > .tbl_products_contact_skype span {
+.span2 > .tbl_products_contact > .tbl_products_contact_skype span {
     padding-left: 22px;
     color: #3C3D3D;
     display: none;

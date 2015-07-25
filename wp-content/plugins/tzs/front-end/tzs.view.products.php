@@ -36,13 +36,20 @@ function tzs_front_end_view_productsd_handler($atts) {
      $max_rate=$wpdb->get_var($sql);
      if ($max_rate > 0) echo "<input id='act_rate_user' style='display: none;' value=".round($max_rate,2)." />";
      else echo "<input id='act_rate_user' style='display: none;' value=".$row->price." />";
+     $rate=" AND rate=".$max_rate;
+     $sql = "SELECT * FROM ".TZS_PRODUCT_RATES_TABLE." WHERE product_id=$sh_id $userid $active $rate";
+    /*$max = $wpdb->get_results($sql); */
+     $descrip=$wpdb->get_results($sql);
+     
+      
+    
      
     
 ?>                                   
-            <div class="row-fluid" id="contact-block-right" >
-                <div class="span2 offset10">
+            <div id="contact-block-right" style="left: 82%;">
+                <div class="span2" style="width: 80%;">
                     <?php
-                        echo "<img src='".get_user_meta($row->user_id, 'company_logo',true)."'/>";
+                        echo "<img width='145' height='95' src='".get_user_meta($row->user_id, 'company_logo',true)."'/>";
                         $form_type = 'products';
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
@@ -189,7 +196,11 @@ function tzs_front_end_view_productsd_handler($atts) {
                                     <div class="pull-left" style="padding-left: 10px; width: 50%">
                                         <strong>Комментарий к ставке</strong>
                                         <div class="clearfix"></div>
-                                        <textarea id="text_bet" class="bet-area" rows="1" cols="75" name="text-bet" placeholder="Текст ставки"></textarea>
+                                        <?php if ($descrip[0]->user_id == $user_id) {?>
+                                            <textarea id="text_bet" class="bet-area" rows="1" cols="75" name="text-bet"> <?php echo $descrip[0]->description; ?></textarea>
+                                        <?php } else {?>
+                                            <textarea id="text_bet" class="bet-area" rows="1" cols="75" name="text-bet" placeholder="Текст ставки"></textarea>
+                                        <?php }?>
                                     </div>          
                                 <?php }?>
                             <?php } ?>
@@ -421,8 +432,8 @@ jQuery.ajax({
             bet_rate=document.getElementById('bet_user').value;
             //document.getElementById('tek_price').innerHTML=bet_rate+' '+document.getElementById('currency').value+'.';
             document.getElementById('bet_error').innerHTML="Ваша ставка принята!";
-            document.getElementById('bet_user').value="";
-            document.getElementById('text_bet').value="";
+            //document.getElementById('bet_user').value="";
+            //document.getElementById('text_bet').value="";
             //jQuery("#wrapper_bet").load("/wp-content/plugins/tzs/front-end/tzs.view.auctions#wrapper_bet");
             document.getElementById('wrapper_bet').innerHTML=data;
             //alert(data);
