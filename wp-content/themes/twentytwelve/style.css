@@ -1890,6 +1890,9 @@ max-height: 46px !important;
     width: 100%;
     padding-left: 2px;
 }
+.payment_label {
+    /*white-space: nowrap;*/
+}
 .copies_label {
     /*font-weight: bold;*/
 /*    border-radius: 4px;
@@ -2470,4 +2473,16 @@ height:180px;
 }
 #clock ul li {
     display: inline;
+}
+.ninja-forms-response-msg, .ninja-forms-error-msg {
+    /*float: left;*/
+    margin: 0 5px 0 5px;
+    padding: 10px 10px 10px 30px;
+    border: 2px solid #E5AEAE;
+    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+.ninja-forms-required-items {
+    font-weight: bold;
+    padding: 5px 0;
 }

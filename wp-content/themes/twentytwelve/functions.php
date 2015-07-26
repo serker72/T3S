@@ -417,18 +417,20 @@ function add_message(){
     $admin_email = get_option( 'admin_email' );
     $support_email = get_option('t3s_setting_email_support');
     
-    
-    $msg_body_full  = "С помощью формы обратной связи отправлено новое сообщение.".$EOF;
-    $msg_body_full .= "----------------------------------------------------------".$EOF;
-    $msg_body_full .= " Имя посетителя: $name".$EOF;
-    $msg_body_full .= " E-Mail: $email".$EOF;
-    $msg_body_full .= " Номер телефона: $tel".$EOF.$EOF;
-    $msg_body_full .= " Текст сообщения:".$EOF;
-    $msg_body_full .= "----------------------------------------------------------".$EOF;
-    $msg_body_full .= $msg_body;
-    
-//function ksk_sendMailAttachments($mail_to, $mail_from, $mail_subject, $mail_message, $mail_reply_to = '', $mail_attachments = array()) {
-    $ret_flag = ksk_sendMailAttachments($support_email, $admin_email, "Сообщение сайта t3s: форма обратной связи", $msg_body_full, $email, array());
+    if ($name && $email && $msg_body) {
+        $msg_body_full  = "С помощью формы обратной связи отправлено новое сообщение.".$EOF;
+        $msg_body_full .= "----------------------------------------------------------".$EOF;
+        $msg_body_full .= " Имя посетителя: $name".$EOF;
+        $msg_body_full .= " E-Mail: $email".$EOF;
+        $msg_body_full .= " Номер телефона: $tel".$EOF.$EOF;
+        $msg_body_full .= " Текст сообщения:".$EOF;
+        $msg_body_full .= "----------------------------------------------------------".$EOF;
+        $msg_body_full .= $msg_body;
+
+        $ret_flag = ksk_sendMailAttachments($support_email, $admin_email, "Сообщение сайта t3s: форма обратной связи", $msg_body_full, $email, array());
+    } else {
+        $ret_flag = false;
+    }
     
     //if (mail(get_option( 't3s_setting_email_callback' ), "Заказ звонка", "Заказ звонка от ".$name." ".$fam." телефон - ".$tel)) echo "Message send";
     if ($ret_flag) echo "Message send";

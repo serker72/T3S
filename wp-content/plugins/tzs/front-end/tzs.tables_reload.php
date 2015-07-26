@@ -167,7 +167,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                 </tr>
                 <tr style="border: none;">
                     <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
-                        <div class="region_label">'.(($row->from_rid != NULL && $row->from_rid > 0 && $row->from_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->from_rid))) : '').'</div>
+                        <div class="region_label">'.(($row->from_rid != NULL && $row->from_rid > 0 && $row->from_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->from_rid))) : '&nbsp;&nbsp;').'</div>
                     </td>
                 </tr>
                 <tr style="border: none;">
@@ -197,7 +197,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
             </tr>
                 <tr style="border: none;">
                     <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
-                        <div class="region_label">'.(($row->to_rid != NULL && $row->to_rid > 0 && $row->to_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->to_rid))) : '&nbsp;').'</div>
+                        <div class="region_label">'.(($row->to_rid != NULL && $row->to_rid > 0 && $row->to_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->to_rid))) : '&nbsp;&nbsp;').'</div>
                     </td>
                 </tr>
             </table>
@@ -273,14 +273,15 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                 round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].
                 '/км)</div>'; 
     } else {
-        $output_tbody .= '<div title="Стоимость перевозки груза">'.$cost[0].'</div>';
+        $output_tbody .= '<div  class="price_label" title="Стоимость перевозки груза">'.$cost[0].'</div>';
     }
 
     $output_tbody .= '
             </td>
             <td>
-                <div title="Форма оплаты услуг по перевозке груза">'.str_replace(', ', ',<br>', $cost[1]).'</div>
+                <div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.$cost[1].'</div>
             </td>';
+                //<div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.str_replace(', ', ',<br>', $cost[1]).'</div>
     
     if ($prefix === 'tr') {
         //$output_tbody .= '<td><div title="Комментарии">'.$row->comment.'</div></td>';

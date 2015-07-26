@@ -200,36 +200,51 @@
      // Clock update interval 60 seconds
      setInterval(function() { HeaderClockUpdate(); }, 60000);
      
-    if(document.getElementById('ninja_forms_form_2')){
+    if(document.getElementById('ninja_forms_form_2')) {
 	if(document.getElementById('tel-user')){
 	   document.getElementById('ninja_forms_field_3').value=document.getElementById('tel-user').value;   
 	}
-    jQuery("#ninja_forms_form_2").attr('action', '');
-    jQuery("#ninja_forms_field_7").attr('type', 'button');
-    jQuery("#ninja_forms_field_7").click(function() {
-        paramstr = "ninja_forms_field_1=" + encodeURIComponent(jQuery('#ninja_forms_field_1').val()) + "&ninja_forms_field_2="+encodeURIComponent(jQuery('#ninja_forms_field_2').val()) + "&ninja_forms_field_3=" + encodeURIComponent(jQuery('#ninja_forms_field_3').val()) + "&ninja_forms_field_6=" + encodeURIComponent(jQuery('#ninja_forms_field_6').val());
-        //paramstr=jQuery("#ninja_forms_form_2").serialize();
-        alert('paramstr: '+paramstr);
-        jQuery("#ninja_forms_field_7").val('Идет отправка');   
-        jQuery.ajax({
-                    url: "/wp-admin/admin-ajax.php?action=add_message",
-                    type: "POST",
-                    data: paramstr,
-                    success: function(data){
-                            //document.forms["bet_form"].submit();
-                            document.getElementById('ninja_forms_form_2').submit();
-                            document.getElementById('ninja_forms_form_2_cont').style.display='none';
-                            jQuery("#well-form").html('<h2>Спасибо за Ваше обращение!</h2>');
+        
+        jQuery("#ninja_forms_form_2").attr('action', '');
+        jQuery("#ninja_forms_field_7").attr('type', 'button');
+        jQuery("#ninja_forms_form_2_response_msg").hide();
+    
+        jQuery("#ninja_forms_field_7").click(function() {
+            if ((jQuery('#ninja_forms_field_1').val() == '') || (jQuery('#ninja_forms_field_2').val() == '') || (jQuery('#ninja_forms_field_6').val() == '')) {
+                //alert('Не заполнены обязательные поля формы');
+                jQuery("#ninja_forms_form_2_response_msg").html('<p>Не заполнены обязательные поля формы</p>');
+                jQuery("#ninja_forms_form_2_response_msg").show();
+                return false;
+            } else {
+                jQuery("#ninja_forms_form_2_response_msg").hide();
+            }
 
-                    },
-                    error: function(data){
-                            if (data.responseText !== 'undefined') {
-                                alert('Ошибка отправки формы: ' + data.responseText);
-                            }
-                    }			
+            paramstr = "ninja_forms_field_1=" + encodeURIComponent(jQuery('#ninja_forms_field_1').val()) + "&ninja_forms_field_2="+encodeURIComponent(jQuery('#ninja_forms_field_2').val()) + "&ninja_forms_field_3=" + encodeURIComponent(jQuery('#ninja_forms_field_3').val()) + "&ninja_forms_field_6=" + encodeURIComponent(jQuery('#ninja_forms_field_6').val());
+            //paramstr=jQuery("#ninja_forms_form_2").serialize();
+            //alert('paramstr: '+paramstr);
+            jQuery("#ninja_forms_form_2_response_msg").hide();
+            jQuery("#ninja_forms_field_7").val('Идет отправка');   
+            jQuery.ajax({
+                        url: "/wp-admin/admin-ajax.php?action=add_message",
+                        type: "POST",
+                        data: paramstr,
+                        success: function(data){
+                                //document.forms["bet_form"].submit();
+                                document.getElementById('ninja_forms_form_2').submit();
+                                document.getElementById('ninja_forms_form_2_cont').style.display='none';
+                                jQuery("#well-form").html('<h2>Спасибо за Ваше обращение!</h2>');
+
+                        },
+                        error: function(data){
+                                if (data.responseText !== 'undefined') {
+                                    jQuery("#ninja_forms_form_2_response_msg").html('<p>Ошибка отправки формы:<br>' + data.responseText + '</p>');
+                                    jQuery("#ninja_forms_form_2_response_msg").show();
+                                    //alert('Ошибка отправки формы: ' + data.responseText);
+                                }
+                        }			
             });
-            });		   
- }   
+        });		   
+    }           
 });       
 
 function tel_click()
