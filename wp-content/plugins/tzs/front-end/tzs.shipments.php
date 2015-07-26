@@ -24,7 +24,7 @@ function tzs_front_end_shipments_handler($atts) {
                     <th id="tbl_trucks_wv">Вес,<br>объём</th>
                     <th id="tbl_trucks_comm">Описание груза</th>
                     <th id="tbl_trucks_cost">Cтоимость,<br/>цена 1 км</th>
-                    <th id="tbl_trucks_payment">Форма оплаты</th>
+                    <th id="tbl_trucks_payment" nonclickable="true">Форма оплаты</th>
                     <th id="tbl_trucks_cont" nonclickable="true">Контактные данные</th>
                 </tr>
                 <tr>

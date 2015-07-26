@@ -8,7 +8,7 @@ function tzs_front_end_view_firms_handler($atts) {
 	
 	$sh_id = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
         $form_type= $_GET['type'];
-        echo "pr-".$form_type."-";
+        //echo "pr-".$form_type."-";
     //$sh_id=7;
 	
 	if ($sh_id <= 0) {
@@ -57,9 +57,9 @@ function tzs_front_end_view_firms_handler($atts) {
                 </div>
                 <div class="row-fluid">
                     <div class="span12" id="">
-                        <?php if ($form_type == 'products'){ echo do_shortcode('[tzs-view-user-products user_id='.$row->user_id.']'); echo "1234567";}?>
-                        <?php if ($form_type == 'shipments') echo do_shortcode('[tzs-view-user-shipments user_id='.$row->user_id.']');?>
-                        <?php if ($form_type == 'trucks') echo do_shortcode('[tzs-view-user-trucks user_id='.$row->user_id.']');?>
+                        <?php if ($form_type == 'products'){ echo do_shortcode('[tzs-view-user-products user_id='.$row->user_id.']'); }?>
+                        <?php if ($form_type == 'shipments') echo do_shortcode('[tzs-view-user-shipments user_id='.$row->user_id.']'); ?>
+                        <?php if ($form_type == 'trucks') echo do_shortcode('[tzs-view-user-trucks user_id='.$row->user_id.']'); ?>
                     </div>
                 </div>
             </div>

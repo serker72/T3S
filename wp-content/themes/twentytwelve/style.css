@@ -882,7 +882,7 @@ input[type=text], input[type=password], select {
         border: 1px solid #CDE;
 	min-height: 55px;
 	margin: 0;
-	padding: 0;
+	padding: 1px 2px;
 }
 #tbl_products tr:hover {
 	background: #e8e8e8;
@@ -892,7 +892,7 @@ input[type=text], input[type=password], select {
     border-bottom: 2px solid #0B5792;
 }
 #tbl_products td div {
-    padding: 1px 5px;	
+    /*padding: 1px 1px;*/	
 }
 #tbl_products td img {
     padding: 0px;	
@@ -943,7 +943,7 @@ input[type=text], input[type=password], select {
     min-width: 60px;
 }
 #tbl_trucks_path {
-    min-width: 120px;
+    min-width: 130px;
 }
 #tbl_trucks_dtc {
     min-width: 60px;
@@ -1747,19 +1747,19 @@ max-height: 46px !important;
 .tbl_products_contact_phone {
     background: transparent url(images/phone_22.png) no-repeat left center;
     font-size: 11px;
-    padding: 0 0;
+    padding: 0 0 0 8px;
     margin: 0 0;
 }
 .tbl_products_contact_email {
     background: transparent url(images/email_22.png) no-repeat left center;
     font-size: 11px;
-    padding: 0 0;
+    padding: 0 0 0 8px;
     margin: 0 0;
 }
 .tbl_products_contact_skype {
     background: transparent url(images/skype_22.png) no-repeat left center;
     font-size: 11px;
-    padding: 0 0;
+    padding: 0 0 0 8px;
     margin: 0 0;
 }
 .span2 > .tbl_products_contact > .tbl_products_contact_phone b, .tbl_products_contact_email b, .tbl_products_contact_skype b {
@@ -1816,26 +1816,25 @@ max-height: 46px !important;
 .tzs_au_contact_view_all {
     display: none;
     color: #f43c4a;
+    font-size: 11px;
 }
 .record_number {
-    color: #999;
-    margin: 0 3px 10px 0;
+    /*color: #999;*/
+    /*margin: 0 3px 10px 0;*/
     white-space: nowrap;
-    /*text-align: right;*/
+    text-align: left;
+    font-weight: bold;
 }
 .middle {
-    vertical-aligment: middle;
+}
+.date_label {
+    font-weight: bold;
+    text-align: left;
 }
 .time_label {
     font-size: 10px;
-/*    font-weight: bold;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    background: #F6D654 none repeat scroll 0% 0%;
-    color: #333;
-    display: inline-block;
-    padding: 0 5px;*/
+    text-align: left;
+    white-space: nowrap;
 }
 .expired_label {
 /*    font-weight: bold;
@@ -1847,16 +1846,49 @@ max-height: 46px !important;
     display: inline-block;
     padding: 0 5px;*/
 }
+.date_from_label {
+    background: transparent url(images/zagruzka.png) no-repeat left center;
+    font-weight: bold;
+    padding-left: 15px;
+}
+.date_to_label {
+    background: transparent url(images/vygruzka.png) no-repeat left center;
+    font-weight: bold;
+    padding-left: 15px;
+}
+.city_label {
+    font-weight: bold;
+    text-align: left;
+    /*text-transform: uppercase;*/
+}
+.region_label {
+    font-size: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+.distance_label {
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+}
+.distance_label a {
+    color: #fff;
+}
+.tr_type_label {
+    white-space: nowrap;
+}
 .price_label {
-    /*font-weight: bold;*/
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    /*background: #4B86CA none repeat scroll 0% 0%; 0B5792*/
-    /*color: #FFFFFF;*/
-    background: #C9C9C9 none repeat scroll 0% 0%;
-    display: inline-block;
-    padding: 2px 8px;
+    font-weight: bold;
+    text-align: left;
+}
+.cost_label {
+    background: #B7B7B7;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap;
+    width: 100%;
+    padding-left: 2px;
 }
 .copies_label {
     /*font-weight: bold;*/

@@ -96,7 +96,7 @@ function tzs_front_end_user_trucks_handler($atts) {
                                 var nonclickable = 'true' == e.delegateTarget.rows[0].cells[this.cellIndex].getAttribute('nonclickable');
                                 var id = this.parentNode.getAttribute("rid");
                                 if (!nonclickable)
-                                        document.location = "/account/view-product/?id="+id;
+                                        document.location = "/account/view-truck/?id="+id;
                         });
                         hijackLinks(post);
                 });

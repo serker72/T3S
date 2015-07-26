@@ -644,6 +644,7 @@ function tzs_get_regions() {
  * Вывод контактных данных
  */
 function tzs_print_user_contacts($row, $form_type, $show_address=0) {
+    $user_id = get_current_user_id();
     $user_info = tzs_get_user_meta($row->user_id);
 
     $output_tbody = '<div class="tbl_products_contact" title="Контактные данные ';
@@ -673,7 +674,7 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
     $output_tbody .= '">';
 
     if (($user_info['company'] != '') || ($user_info['fio'] != '')) {
-    $output_tbody .= '<a href="/company/?id='.$row->user_id.'&type='.$form_type.'">';
+        $output_tbody .= '<a href="/company/?id='.$row->user_id.'&type='.$form_type.'">';
     
         if ($user_info['company'] != '') { $output_tbody .= $user_info['company']; }
         else { $output_tbody .= $user_info['fio']; }
@@ -688,7 +689,7 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
                 $output_tbody .= '<span>'.$user_info['adress'].'</span>';
             }
         } else {
-            $output_tbody .= '<span>&nbsp;</span>';
+            //$output_tbody .= '<span>&nbsp;</span>';
         }
 
         if (($user_id == 0) && ($GLOBALS['tzs_au_contact_view_all'] == false)) {
@@ -700,8 +701,14 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
         } else {
             $phone_list = explode(';', $user_info['telephone']);
         }
+        
+        if ($show_address) {
+            $rcnt = count($phone_list);
+        } else {
+            $rcnt = (count($phone_list) > 3) ? 3 : count($phone_list);
+        }
 
-        for ($i=0;$i < count($phone_list);$i++) {
+        for ($i=0;$i < $rcnt;$i++) {
             $output_tbody .= '<div class="tbl_products_contact_phone" phone-user="'.$row->user_id.'">
             <b>'.preg_replace("/^(.\d{2})(\d{3})(\d{3})(\d{2})(\d{1,2})/", '$1 ($2)', $phone_list[$i]).'</b>
             <span>'.preg_replace("/^(.\d{2})(\d{3})(\d{3})(\d{2})(\d{1,2})/", '$1 ($2) $3-$4-$5', $phone_list[$i]).'</span>
@@ -714,7 +721,7 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
             </div>';
         }
 
-        if ($user_info['user_email'] != '') { 
+        if ($show_address && ($user_info['user_email'] != '')) { 
             $output_tbody .= '<div class="tbl_products_contact_email" phone-user="'.$row->user_id.'">
             <b>'.  substr($user_info['user_email'], 0, 3).'XX@XX</b>
             <span>'.$user_info['user_email'].'</span>
@@ -727,7 +734,7 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
             </div>';
         }
 
-        if ($user_info['skype'] != '') { 
+        if ($show_address && ($user_info['skype'] != '')) { 
             $output_tbody .= '<div class="tbl_products_contact_skype" phone-user="'.$row->user_id.'">
             <b>'.  substr($user_info['skype'], 0, 3).'XXXX</b>
             <span>'.$user_info['skype'].'</span>

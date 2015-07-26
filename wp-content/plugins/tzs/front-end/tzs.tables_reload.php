@@ -134,7 +134,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
     
     $cost = tzs_cost_to_str($row->cost, true);
     
-    $dt_created = convert_time($row->time, "d.m.y (Hч:iмин)");
+    $dt_created = convert_time($row->time, "d.m.Y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
     
     $output_tbody = '<tr rid="'.$row->id.'">';
@@ -145,33 +145,34 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                     <span class="middle" title="Номер заявки">
                            № '.$row->id.'
                     </span>
+                </div><br>
+                <div class="date_label" title="Дата публикации заявки">
+                    '.$dt_created[0].'
                 </div>
-                <div>
-                    <span class="date_label" title="Дата публикации заявки">
-                        '.$dt_created[0].'
-                    </span><br><br>
-                    <span class="time_label" title="Время публикации заявки">
-                        '.$dt_created[1].'
-                    </span>
+                <div class="time_label" title="Время публикации заявки">
+                    '.str_replace(':', ' : ', $dt_created[1]).'
                 </div>
             </td>
             <td colspan="2">
             <table class="tbl_distance" style="width: 100%; height: 100%; border: none;">
-            <tr style="border: none;">
-            <td style="text-align: left; border: none; border-right: 1px solid #CDE; padding: 0 0 5px 0;">
-                <div>'.tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, (($prefix === 'tr') ? $row->tr_city_from : $row->sh_city_from),'Пункт погрузки').'</div>
-            </td>
-            <td style="width: 65px; border: none;">
-                <div><strong>
-                    <span class="expired_label" title="Дата погрузки">
-                    '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_from : $row->sh_date_from).'<br/>
-                    </span>
-                    </strong>
-                </div>
-            </td>
-            </tr>
-            <tr style="border: none;">
-            <td colspan="2" style="border: none; border-top: 2px dotted #0B5792; border-bottom: 2px dotted #0B5792; padding: 5px 0;">
+                <tr style="border: none;">
+                    <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
+                        <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
+                    </td>
+                    <td rowspan="2" style="width: 65px; border: none; vertical-align: middle;">
+                        <div class="date_from_label" title="Дата погрузки">
+                            '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_from : $row->sh_date_from).'<br/>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                    <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
+                        <div class="region_label">'.(($row->from_rid != NULL && $row->from_rid > 0 && $row->from_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->from_rid))) : '').'</div>
+                    </td>
+                </tr>
+                <tr style="border: none;">
+                <td colspan="2" style="text-align: left; border: none; background: #B7B7B7;">
+                    <div class="distance_label">
             ';
     
     if (($row->distance > 0) && ($prefix === 'tr')) {
@@ -181,28 +182,31 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
         $output_tbody .= 'расстояние '.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
     }
 
-    $output_tbody .= '</td>
+    $output_tbody .= '</div>
+                </td>
             </tr>
             <tr style="border: none;">
-            <td style="text-align: right; border: none; border-right: 1px solid #CDE; padding: 5px 0 0 0;">
-                <div>'.tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, (($prefix === 'tr') ? $row->tr_city_to : $row->sh_city_to), 'Пункт выгрузки').'</div>
-                <br>
-            </td>
-            <td style="border: none; padding: 5px 0 0 0;">
-                <div><strong>
-                    <span class="expired_label" title="Дата выгрузки">
+                <td style="text-align: right; border: none; border-right: 1px solid #CDE;">
+                    <div class="city_label">'.htmlspecialchars(tzs_get_city($row->to_sid)).'</div>
+                </td>
+                <td rowspan="2" style="border: none;  vertical-align: middle;">
+                    <div class="date_to_label" title="Дата выгрузки">
                         '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_to : $row->sh_date_to).'
-                    </span></strong>
-                </div>
-            </td>
+                    </div>
+                </td>
             </tr>
+                <tr style="border: none;">
+                    <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
+                        <div class="region_label">'.(($row->to_rid != NULL && $row->to_rid > 0 && $row->to_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->to_rid))) : '&nbsp;').'</div>
+                    </td>
+                </tr>
             </table>
             </td>';
     
     if ($prefix === 'sh') {
         $output_tbody .= '<td>
-                <div title="Тип груза">'.(isset($GLOBALS['tzs_sh_types'][$row->sh_type]) ? $GLOBALS['tzs_sh_types'][$row->sh_type] : '').'</div>
-                <div title="Тип транспортного средства" style="margin-top: 30px;">'.$type.'</div>
+                <div title="Тип груза">'.(isset($GLOBALS['tzs_sh_types'][$row->sh_type]) ? $GLOBALS['tzs_sh_types'][$row->sh_type] : '').'</div><br>
+                <div class="tr_type_label" title="Тип транспортного средства">'.$type.'</div>
             </td>';
         
         $output_tbody .= '<td><div>';
@@ -217,7 +221,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
             <td><div title="Описание груза">'.$row->sh_descr.'</div></td>';
     } else {
         $output_tbody .= '<td>
-                <div title="Тип транспортного средства">'.$type.'</div>
+                <div class="tr_type_label" title="Тип транспортного средства">'.$type.'</div>
             </td>
             <td><div title="Описание транспортного средства">';
         
@@ -261,15 +265,18 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                 
     
 
-    $output_tbody .= '<td><div title="Стоимость перевозки груза">';
+    $output_tbody .= '<td>';
     if ($row->price > 0) {
-        $output_tbody .= $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].'<br><br>'.
-                round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].'/км'; 
+        $output_tbody .= '<div class="price_label" title="Стоимость перевозки груза">'.
+        number_format($row->price, 0, '.', ' ').' '.$GLOBALS['tzs_curr'][$row->price_val].'<div><br>
+                <div class="cost_label" title="Цена за 1 км перевозки груза">('.
+                round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].
+                '/км)</div>'; 
     } else {
-        $output_tbody .= $cost[0];
+        $output_tbody .= '<div title="Стоимость перевозки груза">'.$cost[0].'</div>';
     }
 
-    $output_tbody .= '</div>
+    $output_tbody .= '
             </td>
             <td>
                 <div title="Форма оплаты услуг по перевозке груза">'.str_replace(', ', ',<br>', $cost[1]).'</div>

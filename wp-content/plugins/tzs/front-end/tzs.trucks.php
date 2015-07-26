@@ -17,14 +17,14 @@ function tzs_front_end_trucks_handler($atts) {
                     </th>
                 </tr>
                 <tr>
-                    <th id="tbl_trucks_id">Номер, дата и время заявки</th>
+                    <th id="tbl_trucks_id">Номер,<br>дата и время<br>заявки</th>
                     <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br/>выгрузки</th>
                     <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
-                    <th id="tbl_trucks_ttr">Тип транспортного средства</th>
+                    <th id="tbl_trucks_ttr">Тип ТС</th>
                     <th id="tbl_trucks_wv">Описание ТС</th>
                     <th id="tbl_trucks_wv">Желаемый груз</th>
-                    <th id="tbl_trucks_cost">Cтоимость,<br/>цена 1 км</th>
-                    <th id="tbl_trucks_payment">Форма оплаты</th>
+                    <th id="tbl_trucks_cost">Cтоимость,<br/>(цена 1 км)</th>
+                    <th id="tbl_trucks_payment" nonclickable="true">Форма оплаты</th>
                     <!--th id="tbl_trucks_comm">Комментарии</th-->
                     <th id="tbl_trucks_cont" nonclickable="true">Контактные данные</th>
                 </tr>
