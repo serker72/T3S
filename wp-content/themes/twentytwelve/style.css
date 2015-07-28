@@ -880,7 +880,7 @@ input[type=text], input[type=password], select {
         vertical-align: top;
 	/*border-bottom: 1px solid #a3bfd4;*/
         border: 1px solid #CDE;
-	min-height: 55px;
+	/*min-height: 55px;*/
 	margin: 0;
 	padding: 1px 2px;
 }
