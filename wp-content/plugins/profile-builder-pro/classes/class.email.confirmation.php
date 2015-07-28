@@ -289,7 +289,8 @@ class wpp_list_unfonfirmed_email_table extends WP_List_Table {
     function prepare_items() {
         global $wpdb;
 		
-		$this->dataArray = array();
+		//$this->dataArray = array();
+		$data = array();
 		$iterator = 0;
 		
 		$result = mysql_query("SELECT * FROM ".$wpdb->prefix."signups WHERE active=0");
@@ -297,7 +298,8 @@ class wpp_list_unfonfirmed_email_table extends WP_List_Table {
 			while ($row=mysql_fetch_row($result)){
 				$tempArray = array('ID' => $iterator, 'username' => $row[3], 'email' => $row[4], 'registered'  => $row[5]);
 
-				array_push($this->dataArray, $tempArray);
+				//array_push($this->dataArray, $tempArray);
+				array_push($data, $tempArray);
 				$iterator++;
 			} 
 
@@ -344,7 +346,7 @@ class wpp_list_unfonfirmed_email_table extends WP_List_Table {
          * use sort and pagination data to build a custom query instead, as you'll
          * be able to use your precisely-queried data immediately.
          */
-        $data = $this->dataArray;
+        //$data = $this->dataArray;
                 
         
         /**

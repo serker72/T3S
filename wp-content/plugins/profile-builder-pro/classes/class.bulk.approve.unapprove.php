@@ -297,7 +297,8 @@ class wpp_list_approved_unapproved_users extends WP_List_Table {
     function prepare_items() {
         global $wpdb;
 		
-		$this->dataArray = array();
+		//$this->dataArray = array();
+		$data = array();
 		$iterator = 0;
 		
 		$result = mysql_query("SELECT * FROM $wpdb->users");
@@ -323,7 +324,8 @@ class wpp_list_approved_unapproved_users extends WP_List_Table {
 				
 				$tempArray = array('ID' => $iterator, 'username' => $row[3], 'email' => $row[4], 'role'	=> print_r($role,true), 'registered'  => $row[6], 'user_status' => $status);
 
-				array_push($this->dataArray, $tempArray);
+				//array_push($this->dataArray, $tempArray);
+				array_push($data, $tempArray);
 				$iterator++;
 			} 
 
@@ -370,7 +372,7 @@ class wpp_list_approved_unapproved_users extends WP_List_Table {
          * use sort and pagination data to build a custom query instead, as you'll
          * be able to use your precisely-queried data immediately.
          */
-        $data = $this->dataArray;
+        //$data = $this->dataArray;
                 
         
         /**
