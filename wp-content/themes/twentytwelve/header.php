@@ -164,7 +164,7 @@
 		</div>
 		<div style="clear: both;"></div>
 		<div id="front-text">
-			<p style="font-size: 35px; text-align: center;">НАЦИОНАЛЬНАЯ ТОРГОВАЯ ТОВАРО-ТРАНСПОРТНАЯ СИСТЕМА Т3С</p>
+			<p>НАЦИОНАЛЬНАЯ ТОРГОВАЯ ТОВАРО-ТРАНСПОРТНАЯ СИСТЕМА Т3С</p>
 		</div>
             </div>
 <?php } ?>

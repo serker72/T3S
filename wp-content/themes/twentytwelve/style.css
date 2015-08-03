@@ -2487,3 +2487,7 @@ height:180px;
     font-weight: bold;
     padding: 5px 0;
 }
+#front-text p {
+    font-size: 33px;
+    text-align: center;
+}
