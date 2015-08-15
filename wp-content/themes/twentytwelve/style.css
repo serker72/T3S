@@ -891,6 +891,9 @@ input[type=text], input[type=password], select {
 #tbl_products tbody tr {
     border-bottom: 2px solid #0B5792;
 }
+.top_record {
+    background: #B0E0E6;
+}
 #tbl_products td div {
     /*padding: 1px 1px;*/	
 }

@@ -86,7 +86,24 @@ function tzs_front_end_my_products_handler($atts) {
                     $page = $pages;
 
             $from = ($page-1) * $pp;
-            $sql = "SELECT * FROM ".TZS_PRODUCTS_TABLE."  WHERE user_id=$user_id AND active=$active ORDER BY created DESC LIMIT $from,$pp;";
+            
+            // Добавим отбор счетов и сортировку по ним для активных записей
+            if ($active == 0) {
+                $sql = "SELECT * FROM ".TZS_PRODUCTS_TABLE."  WHERE user_id=$user_id AND active=$active ORDER BY created DESC LIMIT $from,$pp;";
+            } else {
+                $sql  = "SELECT a.*,";
+                $sql .= " b.number AS order_number,";
+                $sql .= " b.status AS order_status,";
+                $sql .= " b.dt_pay AS order_dt_pay,";
+                $sql .= " b.dt_expired AS order_dt_expired,";
+                $sql .= " IFNULL(b.dt_pay, a.created) AS dt_sort";
+                $sql .= " FROM ".TZS_PRODUCTS_TABLE." a";
+                $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'PR' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
+                $sql .= " WHERE user_id=$user_id AND active=$active";
+                $sql .= " ORDER BY order_status DESC, dt_sort DESC";
+                $sql .= " LIMIT $from,$pp;";
+            }
+            
             $res = $wpdb->get_results($sql);
             if (count($res) == 0 && $wpdb->last_error != null) {
                 print_error('Не удалось отобразить список товаров/услуг. Свяжитесь, пожалуйста, с администрацией сайта');
@@ -97,7 +114,9 @@ function tzs_front_end_my_products_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="4" id="thead_h1">
+                                <!--th colspan="10" id="thead_h1"-->
+                                <!--th colspan="4" id="thead_h1"-->
+                                <th colspan="4">
                                     <div class="div_td_left">
                                         <h3>Список <?php echo ($active === '1') ? 'публикуемых' : 'архивных'; ?> товаров</h3>
                                     </div>
@@ -131,7 +150,7 @@ function tzs_front_end_my_products_handler($atts) {
                         <?php
                         foreach ( $res as $row ) {
                             ?>
-                            <tr rid="<?php echo $row->id;?>">
+                            <tr rid="<?php echo $row->id;?>" <?php echo ($row->order_status == 1 ? ' class="top_record"' : ''); ?> >
                                 <td>
                                     <?php echo $row->id;?><br>
                                     <?php echo convert_time($row->created);?>

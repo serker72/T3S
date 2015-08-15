@@ -10,10 +10,12 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
 
     if ($row->sale_or_purchase == 1) { $output_tbody .= 'tbl_auctions_tr_lot_1'; } else { $output_tbody .= 'tbl_auctions_tr_lot_0'; }
     
+    $output_tbody .= '"'.($row->order_status == 1 ? ' class="top_record"' : '').'>';
+    
     $dt_created = convert_time($row->created, "d.m.y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
     
-    $output_tbody .= '">
+    $output_tbody .= '
             <td>
                 <div class="record_number">
                     <span class="middle" title="Номер заявки">
@@ -137,7 +139,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
     $dt_created = convert_time($row->time, "d.m.Y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
     
-    $output_tbody = '<tr rid="'.$row->id.'">';
+    $output_tbody = '<tr rid="'.$row->id.'"'.($row->order_status == 1 ? ' class="top_record"' : '').'>';
 
     $output_tbody .= '
             <td>
@@ -342,6 +344,7 @@ function tzs_front_end_tables_reload() {
             $table_name = TZS_PRODUCTS_TABLE;
             $table_error_msg = 'товаров';
             $table_order_by = 'created';
+            $order_table_prefix = 'PR';
             break;
         }
 
@@ -350,6 +353,7 @@ function tzs_front_end_tables_reload() {
             $table_error_msg = 'транспорта';
             $table_order_by = 'time';
             $table_prefix = 'tr';
+            $order_table_prefix = 'TR';
             break;
         }
 
@@ -358,6 +362,7 @@ function tzs_front_end_tables_reload() {
             $table_error_msg = 'грузов';
             $table_order_by = 'time';
             $table_prefix = 'sh';
+            $order_table_prefix = 'SH';
             break;
         }        
         
@@ -406,7 +411,19 @@ function tzs_front_end_tables_reload() {
                     $page = $pages;
 
             $from = ($page-1) * $pp;
-            $sql = "SELECT * FROM ".$table_name." WHERE active=1 $sql1 $s_sql ORDER BY ".$table_order_by." DESC LIMIT $from,$pp;";
+            //$sql = "SELECT * FROM ".$table_name." WHERE active=1 $sql1 $s_sql ORDER BY ".$table_order_by." DESC LIMIT $from,$pp;";
+            // Хитрый запрос для отбора ТОП
+            $sql  = "SELECT a.*,";
+            $sql .= " b.number AS order_number,";
+            $sql .= " b.status AS order_status,";
+            $sql .= " b.dt_pay AS order_dt_pay,";
+            $sql .= " b.dt_expired AS order_dt_expired,";
+            $sql .= " IFNULL(b.dt_pay, a.".$table_order_by.") AS dt_sort";
+            $sql .= " FROM ".$table_name." a";
+            $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = '".$order_table_prefix."' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
+            $sql .= " WHERE active=1 $sql1 $s_sql";
+            $sql .= " ORDER BY order_status DESC, dt_sort DESC";
+            $sql .= " LIMIT $from,$pp;";
             $res = $wpdb->get_results($sql);
             if (count($res) == 0 && $wpdb->last_error != null) {
                 $output_error .= '<div>Не удалось отобразить список '.$table_error_msg.'. Свяжитесь, пожалуйста, с администрацией сайта.</div>';

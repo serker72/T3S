@@ -143,7 +143,7 @@ function get_timezone_offset($remote_tz, $origin_tz = null) {
 
 
 function convert_time($time, $format = "d.m.Y H:i") {
-    if (isset($_SESSION['timezone_offset_enabled']) && $_SESSION['timezone_offset_enabled'] && is_numeric($_SESSION['timezone_offset'])) {
+    if (isset($_SESSION['timezone_offset_enabled']) && isset($_SESSION['timezone_offset']) && $_SESSION['timezone_offset_enabled'] && is_numeric($_SESSION['timezone_offset'])) {
         $timezone_offset = $_SESSION['timezone_offset'];
     } else {
         $timezone_offset = 0;
