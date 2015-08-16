@@ -99,7 +99,7 @@ function tzs_front_end_my_products_handler($atts) {
                 $sql .= " IFNULL(b.dt_pay, a.created) AS dt_sort";
                 $sql .= " FROM ".TZS_PRODUCTS_TABLE." a";
                 $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'PR' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
-                $sql .= " WHERE user_id=$user_id AND active=$active";
+                $sql .= " WHERE a.user_id=$user_id AND a.active=$active";
                 $sql .= " ORDER BY order_status DESC, dt_sort DESC";
                 $sql .= " LIMIT $from,$pp;";
             }
@@ -195,7 +195,10 @@ function tzs_front_end_my_products_handler($atts) {
                                                 <ul>
                                                         <a href="/account/view-product/?id=<?php echo $row->id;?>">Смотреть</a>
                                                         <a href="/account/edit-product/?id=<?php echo $row->id;?>">Изменить</a>
-                                                        <a href="javascript: promptDelete(<?php echo $row->id.', '.$row->active;?>);" id="red">Удалить</a>
+                                                    <?php if ($row->active && !$row->order_status) { ?>
+                                                        <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'PR');">В ТОП</a>
+                                                    <?php } ?>
+                                                        <a href="javascript:promptDelete(<?php echo $row->id.', '.$row->active;?>);" id="red">Удалить</a>
                                                 </ul>
                                         </div>
                                 </td>
@@ -207,20 +210,40 @@ function tzs_front_end_my_products_handler($atts) {
                         </table>
                     </div>
                 </div>
+            
+                <!-- Modal -->
+                <div id="RecordPickUpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button id="RecordPickUpModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Поднятие объявления в ТОП</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Создать счет на оплату услуг добавления заявки в ТОП ?</h4>
+                        <form id="RecordPickUpForm" method="post" action="" class="pr_edit_form">
+                            <div class="pr_edit_form_line">
+                                <label for="order_tbl_type">Префикс таблицы</label>
+                                <input type="text" id="order_tbl_type" name="order_tbl_type" value="" disabled="disabled">
+                            </div class="pr_edit_form_line">
+                            <div>
+                                <label for="order_tbl_id">ID заявки</label>
+                                <input type="text" id="order_tbl_id" name="order_tbl_id" value="" disabled="disabled">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                        <button class="btn btn-primary" onClick="">Создать счет</button>
+                    </div>
+                </div>
 
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>
-                <script>
-                jQuery(document).ready(function(){
-                        jQuery('table').on('click', 'td', function(e) {  
-                                var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
-                                var id = this.parentNode.getAttribute("rid");
-                                if (!nonclickable)
-                                        document.location = "/account/view-product/?id="+id;
-                        });
-                        
-                        jQuery("#tbl_products").stickyTableHeaders();
-                });
-
+            <script>
+                function promptPickUp(id, table_prefix) {
+                    jQuery("#order_tbl_type").attr('value', table_prefix);
+                    jQuery("#order_tbl_id").attr('value', id);
+                    jQuery("#RecordPickUpModal").modal('show');
+                }
+                
                 function doDisplay(id) {
                         var el = jQuery('div[for='+id+']');
                         if (el.attr('style') == null) {
@@ -298,7 +321,19 @@ function tzs_front_end_my_products_handler($atts) {
                                 }
                         });
                 }
-                </script>
+                
+                jQuery(document).ready(function(){
+                        jQuery('table').on('click', 'td', function(e) {  
+                                var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
+                                var id = this.parentNode.getAttribute("rid");
+                                if (!nonclickable)
+                                        document.location = "/account/view-product/?id="+id;
+                        });
+                        
+                        jQuery("#tbl_products").stickyTableHeaders();
+                });
+
+            </script>
                 <?php
                 build_pages_footer($page, $pages);
             }

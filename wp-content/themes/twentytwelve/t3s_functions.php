@@ -45,12 +45,39 @@ function t3s_settings_api_init() {
             'general', // страница
             't3s_setting_section' // секция
     );
+    
+    add_settings_field(
+            't3s_setting_pr_publication_min_days',
+            'Минимальный период публикации товара, дней',
+            't3s_setting_callback_function4',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_record_pickup_days',
+            'Период поднятия объявления в ТОП, дней',
+            't3s_setting_callback_function5',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_record_pickup_cost',
+            'Стоимость поднятия объявления в ТОП, грн',
+            't3s_setting_callback_function6',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
 
     // Регистрируем опции, чтобы они сохранялись при отправке 
     // $_POST параметров и чтобы callback функции опций выводили их значение.
     register_setting( 'general', 't3s_setting_contact_view_all' );
     register_setting( 'general', 't3s_setting_email_callback' );
     register_setting( 'general', 't3s_setting_email_support' );
+    register_setting( 'general', 't3s_setting_pr_publication_min_days' );
+    register_setting( 'general', 't3s_setting_record_pickup_days' );
+    register_setting( 'general', 't3s_setting_record_pickup_cost' );
 }
 
 // ------------------------------------------------------------------
@@ -96,6 +123,33 @@ function t3s_setting_callback_function3() {
 		name="t3s_setting_email_support"  
 		type="text" 
 		value="' . get_option( 't3s_setting_email_support' ) . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function4() {
+	echo '<input 
+		name="t3s_setting_pr_publication_min_days"  
+		type="text" 
+		value="' . get_option( 't3s_setting_pr_publication_min_days' ) . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function5() {
+	echo '<input 
+		name="t3s_setting_record_pickup_days"  
+		type="text" 
+		value="' . get_option( 't3s_setting_record_pickup_days' ) . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function6() {
+	echo '<input 
+		name="t3s_setting_record_pickup_cost"  
+		type="text" 
+		value="' . get_option( 't3s_setting_record_pickup_cost' ) . '" 
 		class="code2"
 	 />';
 }

@@ -1,16 +1,41 @@
 <?php
+/*******************************************************************************
+ * 
+ * tzs_find_latest_product_rec - получение ID последней добавленной записи в таблицу products
+ * 
+ *******************************************************************************/
 function tzs_find_latest_product_rec() {
-	global $wpdb;
-	
-	$user_id = get_current_user_id();
-	
-	$sql = "SELECT id FROM ".TZS_PRODUCTS_TABLE." WHERE user_id=$user_id ORDER BY id DESC LIMIT 1;";
-	
-	$row = $wpdb->get_row($sql);
-	if ($row != null && count($row) != 0 && $wpdb->last_error == null)
-		return $row->id;
-	return 0;
+    global $wpdb;
+
+    $user_id = get_current_user_id();
+
+    $sql = "SELECT id FROM ".TZS_PRODUCTS_TABLE." WHERE user_id=$user_id ORDER BY id DESC LIMIT 1;";
+
+    $row = $wpdb->get_row($sql);
+    if ($row != null && count($row) != 0 && $wpdb->last_error == null)
+            return $row->id;
+    return 0;
 }
+
+/*******************************************************************************
+ * 
+ * tzs_find_latest_order_rec - получение ID последней добавленной записи в таблицу orders
+ * 
+ *******************************************************************************/
+function tzs_find_latest_order_rec() {
+    global $wpdb;
+
+    $user_id = get_current_user_id();
+
+    $sql = "SELECT id FROM ".TZS_ORDERS_TABLE." WHERE user_id=$user_id ORDER BY id DESC LIMIT 1;";
+
+    $row = $wpdb->get_row($sql);
+    if ($row != null && count($row) != 0 && $wpdb->last_error == null)
+            return $row->id;
+    return 0;
+}
+
+
 /*******************************************************************************
  * 
  * tzs_get_user_meta - получение информации из таблицы wp_user_meta

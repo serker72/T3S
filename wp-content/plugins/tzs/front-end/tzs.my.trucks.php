@@ -84,7 +84,7 @@ function tzs_front_end_my_trucks_handler($atts) {
                 $sql .= " IFNULL(b.dt_pay, a.time) AS dt_sort";
                 $sql .= " FROM ".TZS_TRUCK_TABLE." a";
                 $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'PR' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
-                $sql .= " WHERE user_id=$user_id AND active=$active";
+                $sql .= " WHERE a.user_id=$user_id AND a.active=$active";
                 $sql .= " ORDER BY order_status DESC, dt_sort DESC";
                 $sql .= " LIMIT $from,$pp;";
             }

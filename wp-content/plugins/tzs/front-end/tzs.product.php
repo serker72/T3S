@@ -8,7 +8,7 @@ function tzs_print_product_form($errors, $edit=false) {
     //$d = date("d.m.Y");
     // Добавим 7 дней к текущей дате
     $dt = new DateTime();
-    date_add($dt, date_interval_create_from_date_string('8 days'));
+    date_add($dt, date_interval_create_from_date_string((TZS_PR_PUBLICATION_MIN_DAYS + 1).' days'));
     $d = date_format($dt, "d.m.Y");
 
     if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
@@ -28,7 +28,7 @@ function tzs_print_product_form($errors, $edit=false) {
             <hr/>
             <!--h3>Добавление товара или услуги</h3-->
             <!--p>Укажите, пожалуйста, категорию, наименование, описание, количество, стоимость, форму оплаты, месторасположение, дату окончания публикации товара и комментарии</p-->
-            <p>Минимальный период публикации товара - <strong><?php echo TZS_AU_EXPIRATION_MIN_DAYS; ?></strong> дней.<br/>При наступлении даты окончания публикации товар будет автоматически перенесен в архив.</p>
+            <p>Минимальный период публикации товара - <strong><?php echo TZS_PR_PUBLICATION_MIN_DAYS; ?></strong> дней.<br/>При наступлении даты окончания публикации товар будет автоматически перенесен в архив.</p>
             <hr/>
         </div>
 	<?php if ($edit) {?>

@@ -23,6 +23,7 @@ define( 'TZS_PRODUCTS_TABLE', $wpdb->prefix . TZS_TABLE_PREFIX . "products" );
 define( 'TZS_AUCTIONS_TABLE', $wpdb->prefix . TZS_TABLE_PREFIX . "auctions" );
 define( 'TZS_AUCTION_RATES_TABLE', $wpdb->prefix . TZS_TABLE_PREFIX . "auction_rates" );
 define( 'TZS_PRODUCT_RATES_TABLE', $wpdb->prefix . TZS_TABLE_PREFIX . "product_rates" );
+define( 'TZS_ORDERS_TABLE', $wpdb->prefix . TZS_TABLE_PREFIX . "orders" );
 
 include_once(TZS_PLUGIN_DIR.'/functions/tzs.globals.php');
 include_once(TZS_PLUGIN_DIR.'/functions/tzs.settings.php');
@@ -252,6 +253,9 @@ include_once(TZS_PLUGIN_DIR.'/front-end/tzs.product.php');
 add_shortcode('tzs-new-product', 'tzs_front_end_product_handler');
 add_shortcode('tzs-edit-product', 'tzs_front_end_edit_product_handler');
 add_shortcode('tzs-del-product', 'tzs_front_end_del_product_handler');
+
+include_once(TZS_PLUGIN_DIR.'/front-end/tzs.my.orders.php');
+add_shortcode('tzs-my-orders', 'tzs_front_end_my_orders_handler');
 
 // AUCTIONS
 /*include_once(TZS_PLUGIN_DIR.'/front-end/tzs.auctions.php');
