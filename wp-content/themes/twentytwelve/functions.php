@@ -776,5 +776,18 @@ function ksk_sendMailAttachments($mail_to, $mail_from, $mail_subject, $mail_mess
     }
 }
 
+/**
+ * Загрузка данных в таблицу с помощью Ajax
+ */
+function tzs_order_add() {
+    //include_once(WP_PLUGIN_DIR . '/tzs/front-end/tzs.tables_reload.php');
+    $output = tzs_new_order_add();
+    //echo 'Test tzs_products_reload';
+    echo json_encode($output);
+    wp_die();
+}
+add_action("wp_ajax_tzs_order_add", "tzs_order_add");
+add_action("wp_ajax_nopriv_tzs_order_add", "tzs_order_add");
+
 
 include_once 't3s_functions.php';

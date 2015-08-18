@@ -67,4 +67,61 @@ function tzs_get_user_meta($user_id) {
         return array();
     }
 }
+
+
+/*******************************************************************************
+ * 
+ * tzs_new_order_add - добавленной записи в таблицу orders
+ * 
+ *******************************************************************************/
+function tzs_new_order_add() {
+    global $wpdb;
+    
+    $errors = array();
+    $order_id = 0;
+
+    // ID последнего счета для пользователя до добавления
+    $old_last_rec = tzs_find_latest_order_rec();
+    
+    $user_id = get_current_user_id();
+    
+    $order_tbl_type = get_param('order_tbl_type');
+    $order_tbl_id = get_param('order_tbl_id');
+
+    $sql = $wpdb->prepare("INSERT INTO ".TZS_ORDERS_TABLE.
+            " (user_id, tbl_type, tbl_id, status, number, dt_create)".
+            " VALUES (%d, %s, %d, 0, %s, now());",
+            $user_id, stripslashes_deep($order_tbl_type), intval($order_tbl_id), stripslashes_deep($order_tbl_type.'.x.'.$order_tbl_id));
+    
+    if (false === $wpdb->query($sql)) {
+        array_push($errors, "Не удалось создать счет. Свяжитесь, пожалуйста, с администрацией сайта");
+        array_push($errors, $wpdb->last_error);
+    } else {
+        $new_last_rec = tzs_find_latest_order_rec();
+        if ($new_last_rec <= $old_last_rec) {
+            
+        } else {
+            $sql = $wpdb->prepare("UPDATE ".TZS_ORDERS_TABLE." SET ".
+                    " number=CONCAT(%s, DATE_FORMAT(dt_create, %s))".
+                    "  WHERE id=%d AND user_id=%d;",
+                    stripslashes_deep($order_tbl_type.'.'.$new_last_rec.'.'.$order_tbl_id.'.'), '%Y%m%d', $new_last_rec, $user_id);
+            if (false === $wpdb->query($sql)) {
+                array_push($errors, "Не удалось создать счет. Свяжитесь, пожалуйста, с администрацией сайта");
+                array_push($errors, $wpdb->last_error);
+            } else {
+                array_push($errors, "Успешно создан счет на оплату, ID: $new_last_rec");
+                $order_id = $new_last_rec;
+            }
+        }
+    }
+    
+    
+    $output = array(
+        'output_error' => implode('<br>', $errors),
+        'order_id' => $order_id,
+    );
+
+    return $output;
+}
+
 ?>

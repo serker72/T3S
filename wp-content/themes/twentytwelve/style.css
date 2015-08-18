@@ -634,13 +634,13 @@ input[disabled=disabled] {
 }
 #menu_set a {
 	color: #9a9a9a;
-	width: 57px;
+	width: 60px;
 	font-size: 13px;
 	line-height: 20px;
 	display: block;
 	border-bottom: 1px solid #eeeeee;
 	text-decoration: none;
-	padding: 0 5px;
+	padding: 1px 5px;
 }
 #menu_set a:hover {
 	color: #4f4f4f;
@@ -651,6 +651,9 @@ input[disabled=disabled] {
 }
 #menu_set #red:hover {
 	color: red;
+}
+#actions {
+    width: 62px;
 }
 
 .nameHeader {
@@ -893,6 +896,9 @@ input[type=text], input[type=password], select {
 }
 .top_record {
     background: #B0E0E6;
+}
+.pre_top_record {
+    background: #C6C82E;
 }
 #tbl_products td div {
     /*padding: 1px 1px;*/	
