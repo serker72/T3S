@@ -89,9 +89,10 @@ function tzs_new_order_add() {
     $order_tbl_id = get_param('order_tbl_id');
 
     $sql = $wpdb->prepare("INSERT INTO ".TZS_ORDERS_TABLE.
-            " (user_id, tbl_type, tbl_id, status, number, dt_create)".
-            " VALUES (%d, %s, %d, 0, %s, now());",
-            $user_id, stripslashes_deep($order_tbl_type), intval($order_tbl_id), stripslashes_deep($order_tbl_type.'.x.'.$order_tbl_id));
+            " (user_id, tbl_type, tbl_id, status, number, dt_create, cost, currency)".
+            " VALUES (%d, %s, %d, 0, %s, now(), %f, 1);",
+            $user_id, stripslashes_deep($order_tbl_type), intval($order_tbl_id), 
+            stripslashes_deep($order_tbl_type.'.x.'.$order_tbl_id), intval(get_option('t3s_setting_record_pickup_cost')));
     
     if (false === $wpdb->query($sql)) {
         array_push($errors, "Не удалось создать счет. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -110,6 +111,7 @@ function tzs_new_order_add() {
                 array_push($errors, $wpdb->last_error);
             } else {
                 array_push($errors, "Успешно создан счет на оплату, ID: $new_last_rec");
+                array_push($errors, "Подождите, выполняется переход на страницу просмотра счета...");
                 $order_id = $new_last_rec;
             }
         }

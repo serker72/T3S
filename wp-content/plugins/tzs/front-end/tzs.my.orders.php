@@ -48,7 +48,7 @@ function tzs_front_end_my_orders_handler($atts) {
                                     </div>
                                 </th>
                                 
-                                <th colspan="4">
+                                <th colspan="5">
                                     <div id="my_products_button">
                                         <?php if ($status !== '0') { ?>
                                             <button id="view_del" onClick="javascript: window.open('/account/my-orders/?status=0', '_self');">Показать неоплаченные</button>
@@ -69,6 +69,7 @@ function tzs_front_end_my_orders_handler($atts) {
                                 <th id="">Рубрика</th>
                                 <th id="">ID заявки</th>
                                 <th id="">Номер счета</th>
+                                <th id="">Сумма счета</th>
                                 <th id="">Дата и время создания</th>
                                 <th id="">Дата и время оплаты</th>
                                 <th id="">Дата окончания</th>
@@ -91,6 +92,9 @@ function tzs_front_end_my_orders_handler($atts) {
                                 </td>
                                 <td>
                                     <?php echo $row->number;?>
+                                </td>
+                                <td>
+                                    <?php echo $row->cost." ".$GLOBALS['tzs_curr'][$row->currency]; ?>
                                 </td>
                                 <td>
                                     <?php echo convert_time($row->dt_create);?>

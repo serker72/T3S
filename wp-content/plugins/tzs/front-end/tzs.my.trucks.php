@@ -77,13 +77,14 @@ function tzs_front_end_my_trucks_handler($atts) {
                 $sql = "SELECT * FROM ".TZS_TRUCK_TABLE."  WHERE user_id=$user_id AND active=$active ORDER BY time DESC LIMIT $from,$pp;";
             } else {
                 $sql  = "SELECT a.*,";
+                $sql .= " b.id AS order_id,";
                 $sql .= " b.number AS order_number,";
                 $sql .= " b.status AS order_status,";
                 $sql .= " b.dt_pay AS order_dt_pay,";
                 $sql .= " b.dt_expired AS order_dt_expired,";
                 $sql .= " IFNULL(b.dt_pay, a.time) AS dt_sort";
                 $sql .= " FROM ".TZS_TRUCK_TABLE." a";
-                $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'PR' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
+                $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'TR' AND a.id = b.tbl_id AND ((b.status=1 AND b.dt_expired > NOW()) OR b.status=0) )";
                 $sql .= " WHERE a.user_id=$user_id AND a.active=$active";
                 $sql .= " ORDER BY order_status DESC, dt_sort DESC";
                 $sql .= " LIMIT $from,$pp;";
@@ -137,7 +138,7 @@ function tzs_front_end_my_trucks_handler($atts) {
                                 $type = trans_types_to_str($row->trans_type, $row->tr_type);
                                 $cost = tzs_cost_to_str($row->cost, true);
                                 ?>
-                                <tr rid="<?php echo $row->id;?>">
+                                <tr rid="<?php echo $row->id;?>" <?php echo ($row->order_status == 1 ? ' class="top_record"' : ($row->order_status !== null && $row->order_status == 0 ? ' class="pre_top_record"' : '')); ?> >
                                 <td>
                                     <?php echo $row->id;?><br>
                                     <?php echo convert_time($row->time);?>
@@ -202,6 +203,13 @@ function tzs_front_end_my_trucks_handler($atts) {
                                                 <ul>
                                                         <a href="/account/view-truck/?id=<?php echo $row->id;?>">Смотреть</a>
                                                         <a href="/account/edit-truck/?id=<?php echo $row->id;?>">Изменить</a>
+                                                    <?php if ($row->active && ($row->order_status === null)) { ?>
+                                                        <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'TR');">В ТОП</a>
+                                                    <?php } ?>
+                                                        
+                                                    <?php if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) { ?>
+                                                        <a href="/account/view-order/?id=<?php echo $row->order_id;?>">Счет ТОП</a>
+                                                    <?php } ?>
                                                         <a href="javascript: promptDelete(<?php echo $row->id.', '.$row->active;?>);" id="red">Удалить</a>
                                                 </ul>
                                         </div>
@@ -215,6 +223,8 @@ function tzs_front_end_my_trucks_handler($atts) {
                     </div>
                 </div>
 
+                <?php include_once '/wp-content/plugins/tzs/front-end/tzs.my.new_order.php'; ?>
+                
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>
                 <script>
                 jQuery(document).ready(function(){
