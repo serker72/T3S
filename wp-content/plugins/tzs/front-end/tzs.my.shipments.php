@@ -202,7 +202,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                     </div>
                 </div>
                     
-                <?php include_once '/wp-content/plugins/tzs/front-end/tzs.my.new_order.php'; ?>
+                <?php include_once WP_PLUGIN_DIR.'/tzs/front-end/tzs.my.new_order.php'; ?>
                 
 
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>

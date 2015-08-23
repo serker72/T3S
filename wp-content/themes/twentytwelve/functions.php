@@ -791,3 +791,7 @@ add_action("wp_ajax_nopriv_tzs_order_add", "tzs_order_add");
 
 
 include_once 't3s_functions.php';
+
+//include_once 'list-table-example.php';
+
+include_once 't3s_order_wplisttable.php';
