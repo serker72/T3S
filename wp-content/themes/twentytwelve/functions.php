@@ -789,6 +789,18 @@ function tzs_order_add() {
 add_action("wp_ajax_tzs_order_add", "tzs_order_add");
 add_action("wp_ajax_nopriv_tzs_order_add", "tzs_order_add");
 
+/**
+ * Загрузка данных в таблицу с помощью Ajax
+ */
+function tzs_order_hand_pay() {
+    //include_once(WP_PLUGIN_DIR . '/tzs/front-end/tzs.tables_reload.php');
+    $output = tzs_hand_pay_order();
+    //echo 'Test tzs_products_reload';
+    echo json_encode($output);
+    wp_die();
+}
+add_action("wp_ajax_tzs_order_hand_pay", "tzs_order_hand_pay");
+add_action("wp_ajax_nopriv_tzs_order_hand_pay", "tzs_order_hand_pay");
 
 include_once 't3s_functions.php';
 

@@ -12,12 +12,15 @@ if(!class_exists('WP_List_Table')){
 
 // Создаем класс, потомком которого выступает WP_List_Table
 class Orders_List_Table extends WP_List_Table {
+    var $order_status = 0;
 
     /**
      * Переопределяем родительский конструктор,
      * чтобы передать наши собственные аргументы
      */
-     function __construct() {
+     function __construct($p_status) {
+        $this->order_status = $p_status;
+        
         parent::__construct( array(
             'singular'=> 'wp_list_text_order', //имя одной записи в единственном числе
             'plural' => 'wp_list_text_orders', //имя списка записей во множественном числе
@@ -41,6 +44,40 @@ class Orders_List_Table extends WP_List_Table {
         if ( $which == "bottom" ){
         //Код добавляет разметку после таблицы
             echo "Список неоплаченных счетов";
+            
+            if ($this->order_status == 0) {
+            ?>
+        <!-- Modal -->
+        <div id="OrderPayModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button id="OrderPayModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Ручной перевод счета в оплаченные</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Укажите дату и время оплаты счета:</h4>
+                <form id="OrderPayForm" method="post" action="" class="pr_edit_form">
+                    <div class="pr_edit_form_line">
+                        <label for="order_id">ID заявки</label>
+                        <input type="text" id="order_id" name="order_id" value="" disabled="disabled">
+                    </div>
+                    <div class="pr_edit_form_line">
+                        <label for="order_number">Номер счета</label>
+                        <input type="text" id="order_number" name="order_number" value="" disabled="disabled">
+                    </div>
+                    <div class="pr_edit_form_line">
+                        <label for="order_dt_pay">Дата и время оплаты</label>
+                        <input type="text" id="order_dt_pay" name="order_dt_pay" value="">
+                    </div>
+                </form>
+                <div id="OrderPayInfo"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button id="OrderPaySubmit" class="btn btn-primary" onClick="JavaScript:doOrderPay();">Сохранить</button>
+            </div>
+        </div>
+            <?php
+            }
         }
     }
 
@@ -55,6 +92,7 @@ class Orders_List_Table extends WP_List_Table {
             'col_order_dt_create' => 'Дата создания',
             //'col_order_tbl_type' => 'Рубрика',
             //'col_order_tbl_id' => 'ID заявки',
+            'col_order_dt_pay' => 'Дата оплаты',
             'col_order_cost' => 'Сумма',
             'col_order_user_login' => 'Пользователь',
             'col_order_pay' => 'Действие',
@@ -71,6 +109,7 @@ class Orders_List_Table extends WP_List_Table {
             'col_order_user_login' => array('user_login', false),
             'col_order_number' => array('number', false),
             'col_order_dt_create' => array('dt_create', false),
+            'col_order_dt_pay' => array('dt_pay', false),
             //'col_order_tbl_type' => array('tbl_type', false),
             //'col_order_tbl_id' => array('tbl_id', false),
         );
@@ -85,7 +124,7 @@ class Orders_List_Table extends WP_List_Table {
 
         /* -- Подготавливаем запрос к БД -- */
         $query =  "SELECT a.*, b.user_login FROM ".TZS_ORDERS_TABLE." a, ".$wpdb->prefix."users b";
-        $query .= " WHERE a.status=0 AND b.id=a.user_id";
+        $query .= " WHERE a.status=".$this->order_status." AND b.id=a.user_id";
 
         /* -- Упорядочение параметров -- */
         //Параметры, которые будут использоваться для упорядочения результата
@@ -179,8 +218,9 @@ class Orders_List_Table extends WP_List_Table {
                         case "col_order_dt_create": echo '<td '.$attributes.'>'.convert_time($rec->dt_create).'</td>';   break;
                         //case "col_order_tbl_type": echo '<td '.$attributes.'>'.stripslashes($rec->tbl_type).'</td>';   break;
                         //case "col_order_tbl_id": echo '<td '.$attributes.'>'.stripslashes($rec->tbl_id).'</td>';   break;
+                        case "col_order_dt_pay": echo '<td '.$attributes.'>'.($rec->dt_pay ? convert_time($rec->dt_pay) : '').'</td>';   break;
                         case "col_order_cost": echo '<td '.$attributes.'>'.stripslashes($rec->cost).' '.$GLOBALS['tzs_curr'][$rec->currency].'</td>';   break;
-                        case "col_order_pay": echo '<td '.$attributes.'><a href="JavaScript:promptOrderPay('.$rec->id.', \''.$rec->number.'\')">В оплаченные</a></td>';   break;
+                        case "col_order_pay": echo '<td '.$attributes.'>'.($this->order_status == 0 ? '<a href="JavaScript:promptOrderPay('.$rec->id.', \''.$rec->number.'\')">В оплаченные</a>' : '').'</td>';   break;
                     }
 /*
             'col_order_id' => 'ID',
@@ -205,60 +245,114 @@ class Orders_List_Table extends WP_List_Table {
 
 /** ************************ Регистрация тестовой страницы *****************************/
 function t3s_add_menu_items(){
-    add_menu_page('Plugin Orders List Table', 'Список счетов', 'activate_plugins', 't3s_order_list_page', 't3s_render_list_page');
+    add_menu_page('Plugin Orders List Table', 'Список счетов', 'activate_plugins', 't3s_new_order_list_page');
+    add_submenu_page('t3s_new_order_list_page', 'Plugin Orders List Table', 'Неоплаченные счета', 'activate_plugins', 't3s_new_order_list_page', 't3s_render_new_order_list_page');
+    add_submenu_page('t3s_new_order_list_page', 'Plugin Orders List Table', 'Оплаченные счета', 'activate_plugins', 't3s_pay_order_list_page', 't3s_render_pay_order_list_page');
 } 
 
 add_action('admin_menu', 't3s_add_menu_items');
 
 
 /***************************** Отрисовка таблицы на странице ********************************/
-function t3s_render_list_page() {
+function t3s_render_new_order_list_page() {
     //Инициализация класса и заполнение таблицы в классе полями
-    $wp_list_table = new Orders_List_Table();
+    $wp_list_table = new Orders_List_Table(0);
     $wp_list_table->prepare_items();
     
     // Вывод таблицы с элементами
     $wp_list_table->display();
 }
 
+function t3s_render_pay_order_list_page() {
+    //Инициализация класса и заполнение таблицы в классе полями
+    $wp_list_table = new Orders_List_Table(1);
+    $wp_list_table->prepare_items();
+    
+    // Вывод таблицы с элементами
+    $wp_list_table->display();
+}
+
+function t3s_order_list_page_header() {
+    wp_enqueue_script('jquery');
+    wp_enqueue_script("bootstrap",
+        get_bloginfo('template_url') . '/js/bootstrap.min.js',
+        array('jquery')
+    );
+    wp_enqueue_script(
+        "jquery-ui",
+        get_bloginfo('template_url') . '/js/jquery-ui.min.js',
+        array('jquery')
+    );
+    wp_enqueue_script(
+        "jquery_timepicker",
+        get_bloginfo('template_url') . '/js/jquery_timepicker.js',
+        array('jquery')
+    );
+    /*wp_enqueue_script(
+        "jquery.ui.datepicker-ru",
+        get_bloginfo('template_url') . '/js/jquery.ui.datepicker-ru.js',
+        array('jquery')
+    );*/
+    /*wp_enqueue_script(
+            'bootstrap-datetimepicker',
+            get_bloginfo('template_url') . '/js/bootstrap-datetimepicker.min.js',
+            array('jquery')
+    );*/
+    /*wp_enqueue_script(
+        'jquery-ui-timepicker-addon',
+        get_bloginfo('template_url') . '/js/jquery-ui-timepicker-addon.js',
+        array('jquery')
+    );*/
+    
+    ?>
+        <link href="/wp-content/themes/twentytwelve/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/wp-content/themes/twentytwelve/css/jquery-ui-1.8.16.custom.css" rel="stylesheet">
+        <!--link href="/wp-content/themes/twentytwelve/css/jquery-ui-timepicker-addon.css" rel="stylesheet"-->
+        
+  	<!--script src="/wp-content/themes/twentytwelve/js/jquery.js"></script>
+	<script src="/wp-content/themes/twentytwelve/js/jquery.ui.datepicker-ru.js"></script>
+        <script src="/wp-content/themes/twentytwelve/js/bootstrap.min.js"></script-->
+    <?php
+}
+//add_action('in_admin_header', 't3s_order_list_page_header');
+add_action('admin_print_scripts-toplevel_page_t3s_new_order_list_page', 't3s_order_list_page_header');
+
 function t3s_order_list_page_footer() {
     //if (!empty($_GET["page"]) && ($_GET["page"] === 't3s_order_list_page')) {
         ?>
-        <!-- Modal -->
-        <div id="OrderPayModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button id="OrderPayModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">Ручной перевод счета в оплаченные</h3>
-            </div>
-            <div class="modal-body">
-                <h4>Укажите дату и время оплаты счета:</h4>
-                <form id="OrderPayForm" method="post" action="" class="pr_edit_form">
-                    <div class="pr_edit_form_line">
-                        <label for="order_id">ID заявки</label>
-                        <input type="text" id="order_id" name="order_id" value="" disabled="disabled">
-                    </div>
-                    <div class="pr_edit_form_line">
-                        <label for="order_number">Номер счета</label>
-                        <input type="text" id="order_number" name="order_number" value="" disabled="disabled">
-                    </div>
-                    <div class="pr_edit_form_line">
-                        <label for="order_dt_pay">Дата и время оплаты</label>
-                        <input type="text" id="order_dt_pay" name="order_dt_pay" value="">
-                    </div>
-                </form>
-                <div id="OrderPayInfo"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                <button id="OrderPaySubmit" class="btn btn-primary" onClick="doOrderPay();">Сохранить</button>
-            </div>
-        </div>
-            
-        <script>
-            jQuery(document).ready(function(){
-                jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
+        <script type='text/javascript'>
+            jQuery(document).ready(function($){
+                //jQuery.datetimepicker.setDefaults(jQuery.datepicker.regional['ru']);
+                jQuery("#OrderPaySubmit").attr('enabled', 'enabled');
                 jQuery( "#order_dt_pay" ).datetimepicker({
-                    dateFormat: "dd.mm.yyyy ",
+                    closeText: 'Закрыть',
+                    prevText: '&#x3c;Пред',
+                    nextText: 'След&#x3e;',
+                    currentText: 'Сегодня',
+                    monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                    'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                    monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн',
+                    'Июл','Авг','Сен','Окт','Ноя','Дек'],
+                    dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
+                    dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
+                    dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+                    weekHeader: 'Не',
+                    dateFormat: "dd.mm.yy",
+                    firstDay: 1,
+                    isRTL: false,
+                    showMonthAfterYear: false,
+                    yearSuffix: '',                
+                    amNames: ['AM', ''],
+                    pmNames: ['PM', ''],
+                    timeFormat: 'HH:mm',
+                    timeSuffix: '',
+                    timeOnlyTitle: 'Укажите время',
+                    timeText: 'Время',
+                    hourText: 'Часы',
+                    minuteText: 'Минуты',
+                    secondText: 'Секунды',
+                    millisecText: 'Миллисекунды',
+                    timezoneText: 'Часовой пояс',                     
                     showSecond: true 
                 });
             });
@@ -266,15 +360,38 @@ function t3s_order_list_page_footer() {
             function promptOrderPay(order_id, order_number) {
                 jQuery("#order_id").attr('value', order_id);
                 jQuery("#order_number").attr('value', order_number);
+                jQuery("#OrderPaySubmit").removeAttr('disabled');
                 jQuery("#OrderPayModal").modal('show');
             }
             
-            function doPickUp() {
-                alert('doPickUp');
+            function doOrderPay() {
+                jQuery("#OrderPaySubmit").attr('disabled', 'disabled');
+                jQuery('#OrderPayInfo').html('Подождите, идет обновление счета на оплату...');
+                fd = 'order_id=' + jQuery("#order_id").val() + '&order_dt_pay=' + jQuery("#order_dt_pay").val();
+                jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php?action=tzs_order_hand_pay",
+                    type: "POST",
+                    data: fd,
+                    dataType: 'json',
+                    success: function(data) {
+                        if ((data.output_error !== 'undefined') && (data.output_error !== '')) {
+                            jQuery('#OrderPayInfo').html(data.output_error);
+                        }
+                        if ((data.order_id !== 'undefined') && (data.order_id !== '')) {
+                            location.reload();
+                        }
+                    },
+                    error: function(data) {
+                        if (data.responseText !== 'undefined') {
+                            jQuery('#OrderPayInfo').html(data.responseText);
+                        }
+                    }			
+                });
             }
         </script>
         <?php
     //}
 }
 
-add_action('wp_footer', 't3s_order_list_page_footer');
+//add_action('in_admin_footer', 't3s_order_list_page_footer');
+add_action('admin_footer-toplevel_page_t3s_new_order_list_page', 't3s_order_list_page_footer');

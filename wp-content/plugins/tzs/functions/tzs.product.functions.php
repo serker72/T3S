@@ -126,4 +126,45 @@ function tzs_new_order_add() {
     return $output;
 }
 
+
+/*******************************************************************************
+ * 
+ * tzs_hand_pay_order - ручная оплата счета
+ * 
+ *******************************************************************************/
+function tzs_hand_pay_order() {
+    global $wpdb;
+    
+    $errors = array();
+    $order_id = 0;
+
+    $user_id = get_current_user_id();
+    
+    $order_id = get_param('order_id');
+    $order_dt_pay = get_param('order_dt_pay');
+    $ts = strtotime($order_dt_pay);
+    $dt = date('Y-m-d H:i:s', $ts);
+
+    $sql = $wpdb->prepare("UPDATE ".TZS_ORDERS_TABLE." SET ".
+            " dt_pay=%s, status=1, pay_method=4".
+            " WHERE id=%d AND user_id=%d;",
+            stripslashes_deep($dt), intval($order_id), $user_id);
+    
+    if (false === $wpdb->query($sql)) {
+        array_push($errors, "Не удалось обновить счет. Свяжитесь, пожалуйста, с администрацией сайта");
+        array_push($errors, $wpdb->last_error);
+    } else {
+        array_push($errors, "Удачно обновлен счет.");
+        array_push($errors, "Подождите, выполняется обновление страницы...");
+    }
+    
+    
+    $output = array(
+        'output_error' => implode('<br>', $errors),
+        'order_id' => $order_id,
+    );
+
+    return $output;
+}
+
 ?>
