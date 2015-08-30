@@ -13,13 +13,15 @@ if(!class_exists('WP_List_Table')){
 // Создаем класс, потомком которого выступает WP_List_Table
 class Orders_List_Table extends WP_List_Table {
     var $order_status = 0;
+    var $order_pay_method = array();
 
     /**
      * Переопределяем родительский конструктор,
      * чтобы передать наши собственные аргументы
      */
-     function __construct($p_status) {
+     function __construct($p_status, $p_pay_method) {
         $this->order_status = $p_status;
+        $this->order_pay_method = $p_pay_method;
         
         parent::__construct( array(
             'singular'=> 'wp_list_text_order', //имя одной записи в единственном числе
@@ -121,10 +123,12 @@ class Orders_List_Table extends WP_List_Table {
     function prepare_items() {
         global $wpdb, $_wp_column_headers;
         $screen = get_current_screen();
+        $opm = implode(',', $this->order_pay_method);
 
         /* -- Подготавливаем запрос к БД -- */
-        $query =  "SELECT a.*, b.user_login FROM ".TZS_ORDERS_TABLE." a, ".$wpdb->prefix."users b";
+        $query  = "SELECT a.*, b.user_login FROM ".TZS_ORDERS_TABLE." a, ".$wpdb->prefix."users b";
         $query .= " WHERE a.status=".$this->order_status." AND b.id=a.user_id";
+        $query .= " AND pay_method IN (".$opm.")";
 
         /* -- Упорядочение параметров -- */
         //Параметры, которые будут использоваться для упорядочения результата
@@ -220,19 +224,8 @@ class Orders_List_Table extends WP_List_Table {
                         //case "col_order_tbl_id": echo '<td '.$attributes.'>'.stripslashes($rec->tbl_id).'</td>';   break;
                         case "col_order_dt_pay": echo '<td '.$attributes.'>'.($rec->dt_pay ? convert_time($rec->dt_pay) : '').'</td>';   break;
                         case "col_order_cost": echo '<td '.$attributes.'>'.stripslashes($rec->cost).' '.$GLOBALS['tzs_curr'][$rec->currency].'</td>';   break;
-                        case "col_order_pay": echo '<td '.$attributes.'>'.($this->order_status == 0 ? '<a href="JavaScript:promptOrderPay('.$rec->id.', \''.$rec->number.'\')">В оплаченные</a>' : '').'</td>';   break;
+                        case "col_order_pay": echo '<td '.$attributes.'>'.($this->order_status == 0 ? '<a href="JavaScript:promptOrderPay('.$rec->id.', \''.$rec->number.'\')">В оплаченные</a>' : ($this->pay_method == 4 ? '<a href="JavaScript:promptOrderUnPay('.$rec->id.', \''.$rec->number.'\')">В НЕоплаченные</a>' : '')).'</td>';   break;
                     }
-/*
-            'col_order_id' => 'ID',
-            'col_order_user_id' => 'Пользователь',
-            'col_order_number' => 'Номер счета',
-            'col_order_dt_create' => 'Дата создания',
-            'col_order_tbl_type' => 'Рубрика',
-            'col_order_tbl_id' => 'ID заявки',
-            'col_order_cost' => 'Сумма',
-            'col_order_currency' => 'Валюта',
- 
- */                    
                 }
 
                 //Закрываем строку
@@ -256,7 +249,7 @@ add_action('admin_menu', 't3s_add_menu_items');
 /***************************** Отрисовка таблицы на странице ********************************/
 function t3s_render_new_order_list_page() {
     //Инициализация класса и заполнение таблицы в классе полями
-    $wp_list_table = new Orders_List_Table(0);
+    $wp_list_table = new Orders_List_Table(0, array(0));
     $wp_list_table->prepare_items();
     
     // Вывод таблицы с элементами
@@ -265,7 +258,7 @@ function t3s_render_new_order_list_page() {
 
 function t3s_render_pay_order_list_page() {
     //Инициализация класса и заполнение таблицы в классе полями
-    $wp_list_table = new Orders_List_Table(1);
+    $wp_list_table = new Orders_List_Table(1, array(4));
     $wp_list_table->prepare_items();
     
     // Вывод таблицы с элементами
