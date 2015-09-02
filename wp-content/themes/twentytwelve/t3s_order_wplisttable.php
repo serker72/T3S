@@ -47,7 +47,7 @@ class Orders_List_Table extends WP_List_Table {
         //Код добавляет разметку после таблицы
             echo "Список неоплаченных счетов";
             
-            if ($this->order_status == 0) {
+            //if ($this->order_status == 0) {
             ?>
         <!-- Modal -->
         <div id="OrderPayModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -56,7 +56,7 @@ class Orders_List_Table extends WP_List_Table {
                 <h3 id="myModalLabel">Ручной перевод счета в оплаченные</h3>
             </div>
             <div class="modal-body">
-                <h4>Укажите дату и время оплаты счета:</h4>
+                <div id="OrderPayCaption"><h4>Укажите дату и время оплаты счета:</h4></div>
                 <form id="OrderPayForm" method="post" action="" class="pr_edit_form">
                     <div class="pr_edit_form_line">
                         <label for="order_id">ID заявки</label>
@@ -70,6 +70,7 @@ class Orders_List_Table extends WP_List_Table {
                         <label for="order_dt_pay">Дата и время оплаты</label>
                         <input type="text" id="order_dt_pay" name="order_dt_pay" value="">
                     </div>
+                    <input type="hidden" id="order_status" name="order_status" value=""/>
                 </form>
                 <div id="OrderPayInfo"></div>
             </div>
@@ -79,7 +80,7 @@ class Orders_List_Table extends WP_List_Table {
             </div>
         </div>
             <?php
-            }
+            //}
         }
     }
 
@@ -224,7 +225,7 @@ class Orders_List_Table extends WP_List_Table {
                         //case "col_order_tbl_id": echo '<td '.$attributes.'>'.stripslashes($rec->tbl_id).'</td>';   break;
                         case "col_order_dt_pay": echo '<td '.$attributes.'>'.($rec->dt_pay ? convert_time($rec->dt_pay) : '').'</td>';   break;
                         case "col_order_cost": echo '<td '.$attributes.'>'.stripslashes($rec->cost).' '.$GLOBALS['tzs_curr'][$rec->currency].'</td>';   break;
-                        case "col_order_pay": echo '<td '.$attributes.'>'.($this->order_status == 0 ? '<a href="JavaScript:promptOrderPay('.$rec->id.', \''.$rec->number.'\')">В оплаченные</a>' : ($this->pay_method == 4 ? '<a href="JavaScript:promptOrderUnPay('.$rec->id.', \''.$rec->number.'\')">В НЕоплаченные</a>' : '')).'</td>';   break;
+                        case "col_order_pay": echo '<td '.$attributes.'>'.($rec->status == 0 ? '<a href="JavaScript:promptOrderPay('.$rec->id.', \''.$rec->number.'\')">Оплатить</a>' : ($rec->pay_method == 4 ? '<a href="javascript:promptOrderUnPay('.$rec->id.', \''.$rec->number.'\')">Отменить</a>' : '')).'</td>';   break;
                     }
                 }
 
@@ -238,9 +239,15 @@ class Orders_List_Table extends WP_List_Table {
 
 /** ************************ Регистрация тестовой страницы *****************************/
 function t3s_add_menu_items(){
-    add_menu_page('Plugin Orders List Table', 'Список счетов', 'activate_plugins', 't3s_new_order_list_page');
-    add_submenu_page('t3s_new_order_list_page', 'Plugin Orders List Table', 'Неоплаченные счета', 'activate_plugins', 't3s_new_order_list_page', 't3s_render_new_order_list_page');
-    add_submenu_page('t3s_new_order_list_page', 'Plugin Orders List Table', 'Оплаченные счета', 'activate_plugins', 't3s_pay_order_list_page', 't3s_render_pay_order_list_page');
+    add_menu_page('Plugin Orders List Table', 'Список счетов', 'activate_plugins', 't3s_new_order_list_page', 't3s_render_new_order_list_page');
+    $page1 = add_submenu_page('t3s_new_order_list_page', 'Список неоплаченных счетов', 'Неоплаченные', 'activate_plugins', 't3s_new_order_list_page', 't3s_render_new_order_list_page');
+    $page2 = add_submenu_page('t3s_new_order_list_page', 'Список оплаченных счетов', 'Оплаченные', 'activate_plugins', 't3s_pay_order_list_page', 't3s_render_pay_order_list_page');
+    
+    add_action('admin_print_scripts-'.$page1, 't3s_order_list_page_header');
+    add_action('admin_print_scripts-'.$page2, 't3s_order_list_page_header');
+    
+    add_action('admin_footer-'.$page1, 't3s_order_list_page_footer');
+    add_action('admin_footer-'.$page2, 't3s_order_list_page_footer');
 } 
 
 add_action('admin_menu', 't3s_add_menu_items');
@@ -266,7 +273,11 @@ function t3s_render_pay_order_list_page() {
 }
 
 function t3s_order_list_page_header() {
-    wp_enqueue_script('jquery');
+    wp_enqueue_script('jquery',
+        get_bloginfo('template_url') . '/js/jquery.js',
+        array('jquery')
+    );
+    
     wp_enqueue_script("bootstrap",
         get_bloginfo('template_url') . '/js/bootstrap.min.js',
         array('jquery')
@@ -308,7 +319,8 @@ function t3s_order_list_page_header() {
     <?php
 }
 //add_action('in_admin_header', 't3s_order_list_page_header');
-add_action('admin_print_scripts-toplevel_page_t3s_new_order_list_page', 't3s_order_list_page_header');
+//add_action('admin_print_scripts-toplevel_page_t3s_new_order_list_page', 't3s_order_list_page_header');
+//add_action('admin_print_scripts', 't3s_order_list_page_header');
 
 function t3s_order_list_page_footer() {
     //if (!empty($_GET["page"]) && ($_GET["page"] === 't3s_order_list_page')) {
@@ -316,7 +328,7 @@ function t3s_order_list_page_footer() {
         <script type='text/javascript'>
             jQuery(document).ready(function($){
                 //jQuery.datetimepicker.setDefaults(jQuery.datepicker.regional['ru']);
-                jQuery("#OrderPaySubmit").attr('enabled', 'enabled');
+                jQuery("#OrderPaySubmit").removeAttr('disabled');
                 jQuery( "#order_dt_pay" ).datetimepicker({
                     closeText: 'Закрыть',
                     prevText: '&#x3c;Пред',
@@ -333,7 +345,7 @@ function t3s_order_list_page_footer() {
                     dateFormat: "dd.mm.yy",
                     firstDay: 1,
                     isRTL: false,
-                    showMonthAfterYear: false,
+                    showMonthAfterYear: true,
                     yearSuffix: '',                
                     amNames: ['AM', ''],
                     pmNames: ['PM', ''],
@@ -351,8 +363,21 @@ function t3s_order_list_page_footer() {
             });
             
             function promptOrderPay(order_id, order_number) {
+                jQuery("#OrderPayCaption").html('<h4>Укажите дату и время оплаты счета:</h4>');
+                jQuery("#order_status").attr('value', '1');
                 jQuery("#order_id").attr('value', order_id);
                 jQuery("#order_number").attr('value', order_number);
+                jQuery("#order_dt_pay").removeAttr('disabled');
+                jQuery("#OrderPaySubmit").removeAttr('disabled');
+                jQuery("#OrderPayModal").modal('show');
+            }
+            
+            function promptOrderUnPay(order_id, order_number) {
+                jQuery("#OrderPayCaption").html('<h4>Вернуть счет в неоплаченные:</h4>');
+                jQuery("#order_status").attr('value', '0');
+                jQuery("#order_id").attr('value', order_id);
+                jQuery("#order_number").attr('value', order_number);
+                jQuery("#order_dt_pay").attr('disabled', 'disabled');
                 jQuery("#OrderPaySubmit").removeAttr('disabled');
                 jQuery("#OrderPayModal").modal('show');
             }
@@ -360,7 +385,7 @@ function t3s_order_list_page_footer() {
             function doOrderPay() {
                 jQuery("#OrderPaySubmit").attr('disabled', 'disabled');
                 jQuery('#OrderPayInfo').html('Подождите, идет обновление счета на оплату...');
-                fd = 'order_id=' + jQuery("#order_id").val() + '&order_dt_pay=' + jQuery("#order_dt_pay").val();
+                fd = 'order_id=' + jQuery("#order_id").val() + '&order_dt_pay=' + jQuery("#order_dt_pay").val() + '&order_status=' + jQuery("#order_status").val();
                 jQuery.ajax({
                     url: "/wp-admin/admin-ajax.php?action=tzs_order_hand_pay",
                     type: "POST",
@@ -386,5 +411,8 @@ function t3s_order_list_page_footer() {
     //}
 }
 
-//add_action('in_admin_footer', 't3s_order_list_page_footer');
-add_action('admin_footer-toplevel_page_t3s_new_order_list_page', 't3s_order_list_page_footer');
+//add_action('admin_print_scripts', 't3s_order_list_page_footer');
+//add_action('admin_footer', 't3s_order_list_page_footer');
+//add_action('admin_footer-toplevel_page_t3s_new_order_list_page', 't3s_order_list_page_footer');
+//add_action('admin_footer-список-счетов_page_t3s_new_order_list_page', 't3s_order_list_page_footer');
+//add_action('admin_footer--d1-81-d0-bf-d0-b8-d1-81-d0-be-d0-ba--d1-81-d1-87-d0-b5-d1-82-d0-be-d0-b2_page_t3s_new_order_list_page', 't3s_order_list_page_footer');

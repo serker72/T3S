@@ -142,13 +142,22 @@ function tzs_hand_pay_order() {
     
     $order_id = get_param('order_id');
     $order_dt_pay = get_param('order_dt_pay');
-    $ts = strtotime($order_dt_pay);
-    $dt = date('Y-m-d H:i:s', $ts);
+    $order_status = get_param('order_status');
+    if ($order_status == '1') {
+        $ts = strtotime($order_dt_pay);
+        $dt = date('Y-m-d H:i:s', $ts);
+        $order_pay_method = 4;
+    } else {
+        $dt = 'null';
+        $order_pay_method = 0;
+    }
 
     $sql = $wpdb->prepare("UPDATE ".TZS_ORDERS_TABLE." SET ".
-            " dt_pay=%s, status=1, pay_method=4".
+            " dt_pay=%s, status=%d, pay_method=%d".
             " WHERE id=%d AND user_id=%d;",
-            stripslashes_deep($dt), intval($order_id), $user_id);
+            stripslashes_deep($dt), intval($order_status), intval($order_pay_method), 
+            intval($order_id), $user_id);
+    $sql = str_replace("dt_pay='null',", "dt_pay=null,", $sql);
     
     if (false === $wpdb->query($sql)) {
         array_push($errors, "Не удалось обновить счет. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -156,6 +165,7 @@ function tzs_hand_pay_order() {
     } else {
         array_push($errors, "Удачно обновлен счет.");
         array_push($errors, "Подождите, выполняется обновление страницы...");
+        //array_push($errors, $sql);
     }
     
     
