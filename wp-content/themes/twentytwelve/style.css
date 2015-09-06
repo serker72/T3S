@@ -728,53 +728,58 @@ input[type=text], input[type=password], select {
 }*/
 #menu-item-78 {
 	background-image: url(images/edit.png);
-	background-position: top 12px left 18px;
+	background-position: top 12px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-74 {
 	background-image: url(images/add.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-75 {
 	background-image: url(images/add.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-491 {
 	background-image: url(images/add.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-76 {
 	background-image: url(images/star.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-77 {
 	background-image: url(images/star.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-177 {
 	background-image: url(images/star.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-item-178 {
 	background-image: url(images/star.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
     border-right: 0 !important;
 }
 #menu-item-213 {
 	background-image: url(images/star.png);
-	background-position: top 13px left 18px;
+	background-position: top 13px left 8px;
+	background-repeat: no-repeat;
+}
+#menu-item-600 {
+	background-image: url(images/star.png);
+	background-position: top 13px left 8px;
 	background-repeat: no-repeat;
 }
 #menu-profile a {
 	line-height: 41px;
-	padding: 0 10px 0 45px;
+	padding: 0 10px 0 30px;
 	display: block;
 	color: #939393;
 	text-decoration: none;

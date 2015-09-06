@@ -146,18 +146,22 @@ function tzs_hand_pay_order() {
     if ($order_status == '1') {
         $ts = strtotime($order_dt_pay);
         $dt = date('Y-m-d H:i:s', $ts);
+        $tse = new DateTime($dt);
+        date_add($tse, date_interval_create_from_date_string((get_option('t3s_setting_record_pickup_days') + 1).' days'));
+        $dte = date_format($tse, 'Y-m-d');
         $order_pay_method = 4;
     } else {
         $dt = 'null';
+        $dte = 'null';
         $order_pay_method = 0;
     }
 
     $sql = $wpdb->prepare("UPDATE ".TZS_ORDERS_TABLE." SET ".
-            " dt_pay=%s, status=%d, pay_method=%d".
+            " dt_pay=%s, dt_expired=%s, status=%d, pay_method=%d".
             " WHERE id=%d AND user_id=%d;",
-            stripslashes_deep($dt), intval($order_status), intval($order_pay_method), 
+            stripslashes_deep($dt), stripslashes_deep($dte), intval($order_status), intval($order_pay_method), 
             intval($order_id), $user_id);
-    $sql = str_replace("dt_pay='null',", "dt_pay=null,", $sql);
+    $sql = str_replace("'null'", "null", $sql);
     
     if (false === $wpdb->query($sql)) {
         array_push($errors, "Не удалось обновить счет. Свяжитесь, пожалуйста, с администрацией сайта");
