@@ -50,7 +50,7 @@ class Orders_List_Table extends WP_List_Table {
             //if ($this->order_status == 0) {
             ?>
         <!-- Modal -->
-        <div id="OrderPayModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div id="OrderPayModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="top: 130px;">
             <div class="modal-header">
                 <button id="OrderPayModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="myModalLabel">Ручной перевод счета в оплаченные</h3>
@@ -329,22 +329,23 @@ function t3s_order_list_page_footer() {
             jQuery(document).ready(function($){
                 //jQuery.datetimepicker.setDefaults(jQuery.datepicker.regional['ru']);
                 jQuery("#OrderPaySubmit").removeAttr('disabled');
-                jQuery( "#order_dt_pay" ).datetimepicker({
+                jQuery("#order_dt_pay").datetimepicker({
+                    //changeYear: true,
                     closeText: 'Закрыть',
                     prevText: '&#x3c;Пред',
                     nextText: 'След&#x3e;',
                     currentText: 'Сегодня',
-                    monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь',
-                    'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-                    monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн',
-                    'Июл','Авг','Сен','Окт','Ноя','Дек'],
+                    monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                    monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
                     dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
                     dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
                     dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
                     weekHeader: 'Не',
                     dateFormat: "dd.mm.yy",
+                    maxDate: 0,
                     firstDay: 1,
                     isRTL: false,
+                    showButtonPanel:true,
                     showMonthAfterYear: true,
                     yearSuffix: '',                
                     amNames: ['AM', ''],
@@ -360,6 +361,8 @@ function t3s_order_list_page_footer() {
                     timezoneText: 'Часовой пояс',                     
                     showSecond: true 
                 });
+                
+                jQuery("#ui-datepicker-div").css({'top': '55px'});
             });
             
             function promptOrderPay(order_id, order_number) {
@@ -383,6 +386,11 @@ function t3s_order_list_page_footer() {
             }
             
             function doOrderPay() {
+                if ((jQuery("#order_status").val() == '1') && (jQuery("#order_dt_pay").val() == '')) {
+                    alert('Необходимо указать дату !');
+                    return false;
+                }
+                
                 jQuery("#OrderPaySubmit").attr('disabled', 'disabled');
                 jQuery('#OrderPayInfo').html('Подождите, идет обновление счета на оплату...');
                 fd = 'order_id=' + jQuery("#order_id").val() + '&order_dt_pay=' + jQuery("#order_dt_pay").val() + '&order_status=' + jQuery("#order_status").val();
