@@ -69,6 +69,22 @@ function t3s_settings_api_init() {
             'general', // страница
             't3s_setting_section' // секция
     );
+    
+    add_settings_field(
+            't3s_setting_merchant_id',
+            'ID мерчанта в Приват-24',
+            't3s_setting_callback_function7',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_merchant_pass',
+            'Пароль мерчанта в Приват-24',
+            't3s_setting_callback_function8',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
 
     // Регистрируем опции, чтобы они сохранялись при отправке 
     // $_POST параметров и чтобы callback функции опций выводили их значение.
@@ -78,6 +94,8 @@ function t3s_settings_api_init() {
     register_setting( 'general', 't3s_setting_pr_publication_min_days' );
     register_setting( 'general', 't3s_setting_record_pickup_days' );
     register_setting( 'general', 't3s_setting_record_pickup_cost' );
+    register_setting( 'general', 't3s_setting_merchant_id' );
+    register_setting( 'general', 't3s_setting_merchant_pass' );
 }
 
 // ------------------------------------------------------------------
@@ -150,6 +168,24 @@ function t3s_setting_callback_function6() {
 		name="t3s_setting_record_pickup_cost"  
 		type="text" 
 		value="' . get_option( 't3s_setting_record_pickup_cost' ) . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function7() {
+	echo '<input 
+		name="t3s_setting_merchant_id"  
+		type="text" 
+		value="' . get_option( 't3s_setting_merchant_id' ) . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function8() {
+	echo '<input 
+		name="t3s_setting_merchant_pass"  
+		type="text" 
+		value="' . get_option( 't3s_setting_merchant_pass' ) . '" 
 		class="code2"
 	 />';
 }

@@ -260,6 +260,9 @@ add_shortcode('tzs-my-orders', 'tzs_front_end_my_orders_handler');
 include_once(TZS_PLUGIN_DIR.'/front-end/tzs.view.order.php');
 add_shortcode('tzs-view-order', 'tzs_front_end_view_order_handler');
 
+include_once(TZS_PLUGIN_DIR.'/front-end/tzs.order.php');
+add_shortcode('tzs-pay-order', 'tzs_front_end_order_handler');
+
 // AUCTIONS
 /*include_once(TZS_PLUGIN_DIR.'/front-end/tzs.auctions.php');
 add_shortcode('tzs-view-auctions', 'tzs_front_end_auctions_handler');
