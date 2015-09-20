@@ -36,7 +36,7 @@ function tzs_print_pay_order_form($errors, $edit=false) {
     ?>
                 <div style="clear: both;"></div>
                 <!-- Новый вид формы, навеяно http://xiper.net/collect/html-and-css-tricks/verstka-form/blochnaya-verstka-form -->
-                <form class="pr_edit_form" action="https://api.privatbank.ua/p24api/ishop" method="POST" accept-charset="UTF-8">
+                <form id="PayOrderForm" class="pr_edit_form" action="https://api.privatbank.ua/p24api/ishop" method="POST" accept-charset="UTF-8">
                     <div class="pr_edit_form_line">
                         <label for="amt">Сумма платежа</label>
                         <input type="text" name="amt" value="<?php echo $row->cost; ?>" disabled="disabled"/>
@@ -45,6 +45,7 @@ function tzs_print_pay_order_form($errors, $edit=false) {
                         <label for="ccy">Валюта платежа</label>
                         <input type="text" name="ccy" value="UAH" disabled="disabled"/>
                     </div>
+                    <input type="hidden" name="merchant" value="<?php echo get_option('t3s_setting_merchant_id');?>" />
                     <div class="pr_edit_form_line">
                         <label for="order">Номер счета</label>
                         <input type="text" name="order" value="<?php echo $row->number; ?>" disabled="disabled"/>
@@ -52,20 +53,33 @@ function tzs_print_pay_order_form($errors, $edit=false) {
                     <div class="pr_edit_form_line">
                         <label for="details">Назначение платежа</label>
                         <input type="text" id="pr_edit_text_big" name="details" value="Оплата услуги поднятия объявления <?php echo $row->tbl_type.'.'.$row->tbl_id; ?> на портале t3s.biz" disabled="disabled"/>
+                        <!--id="pr_edit_text_big"-->
                     </div>
                     <div class="pr_edit_form_line">
                         <label for="ext_details">ID объявления</label>
                         <input type="text" name="ext_details" value="<?php echo $row->tbl_id; ?>" disabled="disabled"/>
                     </div>
 
-                        <input type="hidden" name="merchant" value="<?php echo get_option('t3s_setting_merchant_id');?>" />
-                        <input type="hidden" name="pay_way" value="privat24" />
-                        <input type="hidden" name="return_url" value="<?php echo get_site_url().'/account/pay-order/'; ?>" />
-                        <input type="hidden" name="server_url" value="" />
-                        <input type="hidden" name="signature" value="<?php echo $signature; ?>" />
+                    <input type="hidden" name="pay_way" value="privat24" />
+                    <input type="hidden" name="return_url" value="https://t3s.biz/account/pay-order/" />
+                    <input type="hidden" name="server_url" value="" />
+                    <input type="hidden" name="signature" value="<?php echo $signature; ?>" />
 
-                      <input type="submit" id="addpostsub" value="Оплатить" />
+                    <!--input type="submit" id="addpostsub" value="Оплатить" /-->
+                    <button id="addpostsub" onClick="doPayOrder();">Оплатить</button>
                 </form>
+                <script>
+                    function doPayOrder() {
+                        jQuery('[name=amt]').removeAttr('disabled');
+                        jQuery('[name=ccy]').removeAttr('disabled');
+                        jQuery('[name=order]').removeAttr('disabled');
+                        jQuery('[name=details]').removeAttr('disabled');
+                        jQuery('[name=ext_details]').removeAttr('disabled');
+                        fd = jQuery('#PayOrderForm').serialize();
+                        alert(fd);
+                        jQuery('#PayOrderForm').submit();
+                    }
+                </script>
     <?php
             }
     }
