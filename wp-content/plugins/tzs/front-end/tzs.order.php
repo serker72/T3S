@@ -1,5 +1,7 @@
 <?php
 
+//include_once(TZS_PLUGIN_DIR.'/functions/p24api.php');
+
 /*
  * Вывод формы для оплаты счета
  */
@@ -89,15 +91,53 @@ function tzs_print_pay_order_form($errors, $edit=false) {
  * Оплата счета
  */
 function tzs_pay_order() {
+    global $wpdb;
+    
     $errors = array();
     
     $user_id = get_current_user_id();
     
+    $order_id = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
+
+    if ($order_id <= 0) {
+            print_error('Счет не найден');
+    } else {
+            $sql = "SELECT * FROM ".TZS_ORDERS_TABLE." WHERE id=$order_id;";
+            $row = $wpdb->get_row($sql);
+            if (count($row) == 0 && $wpdb->last_error != null) {
+                    print_error('Не удалось отобразить информацию о счете. Свяжитесь, пожалуйста, с администрацией сайта.');
+            } else if ($row == null) {
+                    print_error('Счет не найден');
+            } else {
+                $PrivatAPI = new p24api(get_option('t3s_setting_merchant_id'), get_option('t3s_setting_merchant_pass'), 'https://api.privatbank.ua/p24api/ishop');
+                $payments = array();
+                $payments[0] = array(
+                    'id' => 1,
+                    'amt' => $row->cost,
+                    'ccy' => 'UAH',
+                    'merchant' => get_option('t3s_setting_merchant_id'),
+                    'order' => $row->number,
+                    'details' => 'Оплата услуги поднятия объявления '.$row->tbl_type.'.'.$row->tbl_id.' на портале t3s.biz',
+                    'ext_details' => $row->tbl_id,
+                );
+                echo '<p><pre>';
+                print_r($payments);
+                
+                $pay_status = $PrivatAPI->sendCmtRequest($payments, 60, true);
+                
+                print_r($pay_status);
+                print_r($PrivatAPI->getErrMessage());
+                echo '</pre></p>';
+            }
+    }
+
+/*    
     $pr_payment = get_param('payment');
     $pr_signature = get_param('signature');
     
     echo '<p>payment = '.$pr_payment.'</p>';
     echo '<p>signature = '.$pr_signature.'</p>';
+ */
 }
 
 function tzs_front_end_order_handler($atts) {
@@ -108,7 +148,8 @@ function tzs_front_end_order_handler($atts) {
     } else if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['payment']) && !empty($_POST['signature'])) {
         tzs_pay_order();
     } else {
-        tzs_print_pay_order_form(null);
+        //tzs_print_pay_order_form(null);
+        tzs_pay_order();
     }
 
     $output = ob_get_contents();

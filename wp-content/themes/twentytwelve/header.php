@@ -82,7 +82,7 @@
                 function HeaderClockUpdate() {
                     var newDate = new Date();
                     var v_day = newDate.getDate();
-                    var v_month = newDate.getMonth();
+                    var v_month = newDate.getMonth()+1;
                     var v_year = newDate.getFullYear();
                     var v_hour = newDate.getHours();
                     var v_minute = newDate.getMinutes();

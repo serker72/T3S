@@ -802,6 +802,17 @@ function tzs_order_hand_pay() {
 add_action("wp_ajax_tzs_order_hand_pay", "tzs_order_hand_pay");
 add_action("wp_ajax_nopriv_tzs_order_hand_pay", "tzs_order_hand_pay");
 
+/**
+ * Проверка существования счета в Приват-24 с помощью Ajax
+ */
+function tzs_check_order_p24() {
+    $output = tzs_check_order_exist_p24();
+    echo json_encode($output);
+    wp_die();
+}
+add_action("wp_ajax_tzs_check_order_p24", "tzs_check_order_p24");
+add_action("wp_ajax_nopriv_tzs_check_order_p24", "tzs_check_order_p24");
+
 include_once 't3s_functions.php';
 
 //include_once 'list-table-example.php';

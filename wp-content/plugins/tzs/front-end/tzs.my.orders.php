@@ -110,7 +110,7 @@ function tzs_front_end_my_orders_handler($atts) {
                                         <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
                                                 <ul>
                                                     <?php if ($status === '0') { ?>
-                                                        <a href="/account/pay-order/?id=<?php echo $row->id;?>">Оплатить</a>
+                                                        <a href="/account/view-order/?id=<?php echo $row->id;?>">Оплатить</a>
                                                     <?php } ?>
                                                         <a href="/account/view-order/?id=<?php echo $row->id;?>">Смотреть</a>
                                                 </ul>
