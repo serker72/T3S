@@ -184,8 +184,8 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
         $output_tbody .= 'расстояние '.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
     }
 
-    $output_tbody .= ' (см. карту)</div>
-                </td>
+    $output_tbody .= ' (см. карту)</div>';
+    $output_tbody .='            </td>
             </tr>
             <tr style="border: none;">
                 <td style="text-align: right; border: none; border-right: 1px solid #CDE;">

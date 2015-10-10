@@ -7,10 +7,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
 	
     print_errors($errors);
     ?>
+		<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
+		<script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
 
-    <script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
-    <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
-    
     <div style="clear: both;"></div>
     <form enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
 
@@ -84,7 +83,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             
             <div class="pr_edit_form_line">
                 <label for="sh_city_from">Населенный пункт погрузки<span class="form_field_required">*</span></label>
-                <input autocomplete="city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on">
+                <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on">
             </div>
             
             <div class="pr_edit_form_line">
@@ -135,7 +134,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             
             <div class="pr_edit_form_line">
                 <label for="sh_city_to">Населенный пункт выгрузки<span class="form_field_required">*</span></label>
-                <input autocomplete="city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on">
+                <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on">
             </div>
             
             <div class="pr_edit_form_line">
@@ -196,7 +195,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
         
         <div style="clear: both;"></div>
-        
         <div>
             <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "Разместить" ?>"/>
         </div>
@@ -218,7 +216,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     echo "tzs_tr2_types[$key] = '$val[1]';\n";
                 }
             ?>
-            
+
 		function setEnabledByInstance(cl, el, enabled) {
 			if (enabled) {
 				el.removeAttr('disabled');
@@ -555,7 +553,19 @@ function tzs_edit_shipment($id) {
 		$sh_date_from = date('Y-m-d', mktime(0, 0, 0, $sh_date_from['month'], $sh_date_from['day'], $sh_date_from['year']));
 		$sh_date_to = date('Y-m-d', mktime(0, 0, 0, $sh_date_to['month'], $sh_date_to['day'], $sh_date_to['year']));
 		
-		$dis = tzs_calculate_distance(array($sh_city_from, $sh_city_to));
+		$temp = $from_info['city_id'];
+		$sql = "SELECT lat,lng FROM ".TZS_CITIES_TABLE." WHERE city_id=$temp;";
+		$row1 = $wpdb->get_row($sql);
+
+		$temp = $to_info['city_id'];
+		$sql = "SELECT lat,lng FROM ".TZS_CITIES_TABLE." WHERE city_id=$temp;";
+		$row2 = $wpdb->get_row($sql);
+
+		//print("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$lng1,$lat1&destinations=$lng2,$lat2&language=en-EN&sensor=false");
+		//print("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lng,$row1->lat&destinations=$row2->lng,$row2->lat&language=ru-RU&sensor=false");echo '<br>';
+		$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lng,$row1->lat&destinations=$row2->lng,$row2->lat&language=ru-RU&sensor=false");
+		$data = json_decode($data);
+		$dis = $data->rows[0]->elements[0]->distance->value / 1000;
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_SHIPMENT_TABLE.
@@ -563,17 +573,17 @@ function tzs_edit_shipment($id) {
 				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d);",
 				$user_id, $sh_date_from, $sh_date_to, stripslashes_deep($sh_city_from), stripslashes_deep($sh_city_to),
 				stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume), floatval($sh_length),
-				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), stripslashes_deep(json_encode($price_json)), round($dis['distance'] / 1000),
+				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), stripslashes_deep(json_encode($price_json)), $dis,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
                                 floatval($price_val), intval($cost_curr));
 		
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось опубликовать Ваш груз. Свяжитесь, пожалуйста, с администрацией сайта");
 				array_push($errors, $wpdb->last_error);
-				$errors = array_merge($errors, $dis['errors']);
+				//$errors = array_merge($errors, $dis['errors']);
 				tzs_print_shipment_form($errors, false);
 			} else {
-				print_errors($dis['errors']);
+				//print_errors($dis['errors']);
 				echo "Ваш груз опубликован!";
 				echo "<br/>";
 				echo '<a href="/view-shipment/?id='.tzs_find_latest_shipment_rec().'&spis=new">Просмотреть груз</a>';

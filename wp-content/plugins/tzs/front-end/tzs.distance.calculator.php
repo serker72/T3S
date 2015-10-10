@@ -3,8 +3,8 @@
 function print_distance_calculator_form($errors, $city, $map, $form) {
 	print_errors($errors);
 	?>
-	
 	<?php if ($form) {?>
+	
 	<script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
 	<form id="cpost" class="post-form" action="">
 	<table id="calc_form">
@@ -26,22 +26,65 @@ function print_distance_calculator_form($errors, $city, $map, $form) {
 	</script>
 	
 	<?php if ($map && $city != null) {?>
+	<p class="route">Маршрут: <span class="route_node1"></span>&nbsp;&nbsp;-&nbsp;&nbsp;<span class="route_node2"></span></p>
+	<p class="distance"></p>
 	<div id="map_canvas"></div>
 	<script>
 		var directionsService;
 		var directionsDisplay;
-		var map;
-	
-		jQuery(document).ready(function(){
-			if (typeof google === 'object' && typeof google.maps === 'object') {
+		var map,mapRoute;
+				
+		//ymaps.ready(init);
+        function init(){ 
+            map = new ymaps.Map("map_canvas", {
+                center: [55.76, 37.64],
+                zoom: 5
+            });	  		  
+        } 
+		function createRoute() {
+        // Удаление старого маршрута
+        if (mapRoute) {
+          map.geoObjects.remove(mapRoute);
+        } 
+		
+		var routeFrom = city[0];
+		var routeTo = city[1];
+		
+		ymaps.route([routeFrom, routeTo], {mapStateAutoApply:true}).then(
+          function(route) {
+            map.geoObjects.add(route);
+			var length = route.getHumanLength().replace(/&#160;/,' ');
+			var time = route.getHumanTime().replace(/&#160;/g,' ');
+			
+			jQuery('.route_node1').text(routeFrom);
+			jQuery('.route_node2').text(routeTo);
+			jQuery('.distance').text('Длина маршрута: '+ length +', '+ 'приблизительное время в пути: ' + time);
+            mapRoute = route;
+          },
+          function(error) {
+            alert('Невозможно построить маршрут');
+			return;
+          }
+        ); 
+      }
+		
+  		
+		 jQuery(document).ready(function(){
+		 	/* if (typeof google === 'object' && typeof google.maps === 'object') {
 				initialize();
 			} else {
 				loadScript();
-			}
-		});
-	
+			}    */
+			
+			ymaps.ready(init);
+			createRoute();
+						
+			//createRoute();			
+		}); 
+		//createRoute();		
+			
 		function initialize() {
-			directionsService = new google.maps.DirectionsService();
+ 			directionsService = new google.maps.DirectionsService();
 			directionsDisplay = new google.maps.DirectionsRenderer();
 			var map_canvas = document.getElementById('map_canvas');
 			var map_options = {
@@ -51,7 +94,8 @@ function print_distance_calculator_form($errors, $city, $map, $form) {
 			}
 			map = new google.maps.Map(map_canvas, map_options);
 			displayRoute();
-			redraw();
+			redraw(); 
+			
 		}
 		
 		function redraw() {
@@ -213,7 +257,6 @@ function print_distance_calculator_form($errors, $city, $map, $form) {
 
 function tzs_front_end_distance_calculator_handler($atts) {
 	ob_start();
-	
 	$errors = array();
 	
 	$city = null;
@@ -230,13 +273,15 @@ function tzs_front_end_distance_calculator_handler($atts) {
 			} elseif (count($city) > 10) {
 				array_push($errors, 'Слишком много точек для расчета расстояния');
 			} else {
-				$res = tzs_calculate_distance($city);
+				//$res = tzs_calculate_distance($city);
 				
-				$errors = array_merge($errors, $res['errors']);
-				print_errors($errors);
+				$res = array();
+				
+				/*$errors = array_merge($errors, $res['errors']);
+				print_errors($errors);*/
 				$errors = null;
 				
-				if ($res['results'] > 0) {
+				/* if ($res['results'] > 0) {
 				?>
 					<div id="calc_result">
 						<div id="distance_result">
@@ -247,7 +292,7 @@ function tzs_front_end_distance_calculator_handler($atts) {
 						</div>
 					</div>
 				<?php
-				}
+				} */
 				
 				$map = true;
 				$form = false;

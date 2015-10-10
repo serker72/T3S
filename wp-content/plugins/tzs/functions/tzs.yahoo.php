@@ -17,19 +17,87 @@ function tzs_yahoo_get_id() {
 	return $appid;
 }
 
+function find($array,$sNeededKey){
+	/* $sResult = '';
+	array_walk_recursive($array, function($sValue, $sKey) use ($sNeededKey,&$sResult)
+	{
+	   if($sKey == $sNeededKey)
+	   {
+		  $sResult = $sValue;
+		  return $sResult;
+	   }
+	});
+	return $sResult; */
+	//$rgKeys = array('key0'=>'file0', 'child0'=>array('key1'=>'file1', 'key2'=>'file2'), 'child1'=>array('child2'=>array('key3'=>'file3')));
+ 
+	preg_match('/s\:[\d]+\:\"'.preg_quote($sNeededKey).'\";s\:[\d]+\:\"(.*?)\"/', serialize($array), $rgMatches);
+	$sResult    = $rgMatches[1];
+	return $sResult;
+}
+
 function tzs_yahoo_convert0($key, $city_str) {
-	$url = "http://where.yahooapis.com/v1/places.q('".urlencode($city_str)."')?format=json&lang=ru&appid=$key";
-	//echo $url;
+	//$url = "http://where.yahooapis.com/v1/places.q('".urlencode($city_str)."')?format=json&lang=ru&appid=$key";
+	
+	//print($city_str."<br>");
+	$url = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=$city_str";
+	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_URL, $url);
 	$result=curl_exec($ch);
 	curl_close($ch);
-	
+		
 	$res = json_decode($result, true);
 	
-	if (isset($res["error"])) {
+	//print($city_str."<br>");
+	//print_r($res);
+	//return;
+	
+	$country = find($res,'CountryName');
+	$country_code = find($res,'CountryNameCode');
+	$country_id = (int)substr(preg_replace('~\D+~','',sha1(md5($country))),0,8);
+	
+	$region = find($res,'AdministrativeAreaName');
+	$region_id = (int)substr(preg_replace('~\D+~','',sha1(md5($region))),0,8);
+	
+	$city = find($res,'LocalityName');
+	
+	$latitude_longitude = $pieces = explode(" ", find($res,'pos'));
+	$lat = $latitude_longitude[0];
+	$lng = $latitude_longitude[1];
+	
+	$city_id = (int)substr(preg_replace('~\D+~','',sha1(md5($city.$lat.$lng))),0,8);
+	
+	
+	/*print($country.' + '.$country_code.' + '.$country_id);print("<br>");
+	print($region.' + '.$region_id);print("<br>");
+	print($city.' + '.$city_id);print("<br>");
+	print($latitude_longitude[0]." + ".$latitude_longitude[1]);print("<br>");*/
+	
+	//$country = isset($rec["CountryName"]) ? $rec["CountryName"] : NULL;
+	//$country_code = isset($rec["country attrs"]) && isset($rec["country attrs"]["code"]) ? $rec["country attrs"]["code"] : NULL;
+	//$country_id = isset($rec["country attrs"]) && isset($rec["country attrs"]["woeid"]) ? $rec["country attrs"]["woeid"] : NULL;
+	
+	//$country = $rec['response']['GeoObjectCollection']['featureMember']['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['CountryName'];
+	//$country_code = $rec['response']['GeoObjectCollection']['featureMember']['GeoObject']['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['CountryNameCode'];
+	
+	/* print(isset($res['Country']));
+	print(array_key_exists ('Country',$res)); */
+	
+	//$country = search_element($res,'CountryName');
+
+	
+	
+	//print_r(array_keys($res['response']['GeoObjectCollection']['featureMember']['0']['GeoObject']));
+	//print($country."___".$country_code);
+	//return;
+		
+		
+	
+	
+	
+	/* if (isset($res["error"])) {
 		return array("error" => $res["error"]["description"]);
 	}
 	
@@ -58,15 +126,17 @@ function tzs_yahoo_convert0($key, $city_str) {
         $lng = isset($rec["centroid"]) && isset($rec["centroid"]["longitude"])? $rec["centroid"]["longitude"] : NULL;
 
         // KSK - добавляем проверку данных города, полученных от сервиса Yahoo
+		
 	if ($country_id == NULL || $city_id == NULL) {
 		return array("error" => "Совпадений не найдено");
 		//return array("error" => "Сервис Yahoo не располагает информацией о населенном пункте ".$city_str);
-	}
+	} */
         
 	$result = array("country" => $country, "country_code" => $country_code, "country_id" => $country_id,
 		"region" => $region, "region_id" => $region_id, "city" => $city, "city_id" => $city_id,
                 "lat" => $lat, "lng" => $lng);
 	
+	//print_r($result);
 	return $result;
 }
 
@@ -139,12 +209,14 @@ function tzs_add_city($rec) {
 	return ($wpdb->query($sql) !== false);
 }
 
-function tzs_yahoo_info($id, $lang) {
+function tzs_yahoo_info($id, $lang, $rec) {
 	$key = tzs_yahoo_get_id();
 	if ($key == NULL)
 		return false;
 	
-	$url = "http://where.yahooapis.com/v1/place/$id?format=json&lang=$lang&appid=$key";
+	//$url = "http://where.yahooapis.com/v1/place/$id?format=json&lang=$lang&appid=$key";
+	$city_str = $rec['country'].','.$rec['region'].','.$rec['city'];
+	$url = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=$city_str&lang=en_US";
 	
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -155,7 +227,23 @@ function tzs_yahoo_info($id, $lang) {
 	
 	$res = json_decode($result, true);
 	
-	if (isset($res["error"])) {
+	
+	$country = find($res,'CountryName');
+	$country_code = find($res,'CountryNameCode');
+	$country_id = $rec['country_id'];
+	
+	$region = find($res,'AdministrativeAreaName');
+	$region_id = $rec['region_id'];
+	
+	$city = find($res,'LocalityName');
+	$city_id = $rec['city_id'];
+	
+	
+/* 	print($country.' + '.$country_code.' + '.$country_id);print("<br>");
+	print($region.' + '.$region_id);print("<br>");
+	print($city.' + '.$city_id);print("<br>"); */
+	
+/* 	if (isset($res["error"])) {
 		return false;
 	}
 	
@@ -173,7 +261,7 @@ function tzs_yahoo_info($id, $lang) {
 	$region_id = isset($rec["admin1 attrs"]) && isset($rec["admin1 attrs"]["woeid"]) ? $rec["admin1 attrs"]["woeid"] : NULL;
 	
 	$city = isset($rec["locality1"]) ? $rec["locality1"] : NULL;
-	$city_id = isset($rec["locality1 attrs"]) && isset($rec["locality1 attrs"]["woeid"]) ? $rec["locality1 attrs"]["woeid"] : NULL;
+	$city_id = isset($rec["locality1 attrs"]) && isset($rec["locality1 attrs"]["woeid"]) ? $rec["locality1 attrs"]["woeid"] : NULL; */
 	
 	$result = array("country" => $country, "country_code" => $country_code, "country_id" => $country_id,
 		"region" => $region, "region_id" => $region_id, "city" => $city, "city_id" => $city_id);
@@ -196,7 +284,8 @@ function tzs_yahoo_fill($rec) {
 	//$ua = tzs_yahoo_info($id, "ua");
 	//if ($ua === false)
 	//	return false;
-	$en = tzs_yahoo_info($id, "en");
+	
+	$en = tzs_yahoo_info($id, "en_US",$rec);
 	if ($en === false)
 		return false;
 	//$rec["country_ua"] = $ua["country"];
@@ -212,6 +301,7 @@ function tzs_yahoo_fill($rec) {
 	$rec["region_en"] = $en["region"];
 	$rec["city_en"] = $en["city"];
 	
+	//print_r($rec);
 	return $rec;
 }
 
@@ -430,6 +520,7 @@ function tzs_city_from_radius_to_ids($city, $region_id, $country_id, $radius_val
     }
     // Запись не обнаружена - поищем в yahoo и возьмем координаты
     else {
+		print("<br>".$city_str."<br>");
         $res = tzs_yahoo_convert($city_str);
         ksk_debug($res, 'tzs_city_from_radius_to_ids: Запись не обнаружена - поищем в yahoo и возьмем координаты');
         if (isset($res["error"])) {
@@ -470,7 +561,7 @@ function tzs_city_from_radius_to_ids($city, $region_id, $country_id, $radius_val
 }
 //*******************************************************************************
 
-function tzs_yahoo_convert1($key, $city_str) {
+/*function tzs_yahoo_convert1($key, $city_str) {
 	$url = "http://where.yahooapis.com/v1/places.q('".urlencode($city_str)."');start=0;count=1000?format=json&lang=ru&appid=$key";
 	
 	$ch = curl_init();
@@ -496,7 +587,7 @@ function tzs_yahoo_convert1($key, $city_str) {
 		}
 	}
 	return array('ids' => $ids);
-}
+}*/
 
 function ksk_debug($val, $label = null) {
     $file_name = ABSPATH . 'ksk_debug.log.html';

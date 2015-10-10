@@ -311,14 +311,14 @@ function tzs_calculate_distance($city) {
 			$to = urlencode($c);
 			$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$from&destinations=$to&language=en-EN&sensor=false");
 			$data = json_decode($data);
-			
+	
 			if ($data->status == 'OK' && $data->rows[0]->elements[0]->status == 'OK') {
 				$distance += $data->rows[0]->elements[0]->distance->value;
 				$time += $data->rows[0]->elements[0]->duration->value;
 				$results++;
-			} else {
+			 } else {
 				array_push($errors, "Не удалось рассчитать расстояние между ".stripslashes_deep($prev)." и ".stripslashes_deep($c));
-			}
+			} 
 		}
 		$prev = $c;
 	}

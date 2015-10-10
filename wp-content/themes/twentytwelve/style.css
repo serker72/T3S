@@ -1298,8 +1298,33 @@ a:hover {
 	color: #515151;
 }
 
+.route {
+	font-family: "Open Sans";
+	font-size: 13px;
+	color: black;
+}
+
+.route_node1 {
+	font-family: "Open Sans";
+	font-size: 13px;
+	color: red;
+}
+
+.route_node2 {
+	font-family: "Open Sans";
+	font-size: 13px;
+	color: #228B22;
+}
+
+.distance {
+	font-family: "Open Sans";
+	font-size: 12px;
+	color: gray;
+}
 #map_canvas {
 	height: 400px;
+	width: 800px;
+	margin: 0 auto;
 }
 
 #footer {

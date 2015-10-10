@@ -85,7 +85,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             
             <div class="pr_edit_form_line">
                 <label for="tr_city_from">Населенный пункт погрузки<span class="form_field_required">*</span></label>
-                <input autocomplete="city" type="text" size="35" name="tr_city_from" value="<?php echo_val('tr_city_from'); ?>" autocomplete="on">
+                <input autocomplete="city" id="first_city" type="text" size="35" name="tr_city_from" value="<?php echo_val('tr_city_from'); ?>" autocomplete="on">
             </div>
             
             <div class="pr_edit_form_line">
@@ -136,7 +136,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             
             <div class="pr_edit_form_line">
                 <label for="tr_city_to">Населенный пункт выгрузки<span class="form_field_required">*</span></label>
-                <input autocomplete="city" type="text" size="35" name="tr_city_to" value="<?php echo_val('tr_city_to'); ?>" autocomplete="on">
+                <input autocomplete="city" id="second_city" type="text" size="35" name="tr_city_to" value="<?php echo_val('tr_city_to'); ?>" autocomplete="on">
             </div>
             
             <div class="pr_edit_form_line">
