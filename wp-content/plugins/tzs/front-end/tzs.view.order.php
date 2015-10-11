@@ -68,7 +68,7 @@ function tzs_front_end_view_order_handler($atts) {
                                 <input type="hidden" name="ext_details" value="<?php echo $row->tbl_type.'.'.$row->tbl_id; ?>"/>
                                 <input type="hidden" name="pay_way" value="privat24" />
                                 <input type="hidden" name="return_url" value="http://t3s.biz/account/view-order/" />
-                                <input type="hidden" name="server_url" value="" />
+                                <input type="hidden" name="server_url" value="http://t3s.biz/account/pay-order/" />
                                 <input type="hidden" name="signature" value="<?php echo $signature; ?>" />
                             </form>
                             <!--a id="view_edit"  onClick="javascript: window.location.href = '/account/pay-order/?id=<?php //echo $row->id;?>';">Оплатить</a-->

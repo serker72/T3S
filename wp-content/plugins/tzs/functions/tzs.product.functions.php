@@ -199,7 +199,13 @@ function tzs_pay_order_p24($order_pay_method) {
     $order_status = 1;
 
     $PrivatAPI = new privat24api(get_option('t3s_setting_merchant_id'), get_option('t3s_setting_merchant_pass'));
-    $pay_res = $PrivatAPI->GetPaymentResult();
+    if ($order_pay_method == 1) {
+        $pay_res = $PrivatAPI->GetPaymentResult();
+    } elseif ($order_pay_method == 2) {
+        $pay_res = $PrivatAPI->GetPaymentStatus();
+    } else {
+        $pay_res = array();
+    }
     
     // Если результирующий массив пустой
     if (count($pay_res) > 0) {

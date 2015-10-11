@@ -1,6 +1,6 @@
 <?php
 
-//include_once(TZS_PLUGIN_DIR.'/functions/p24api.php');
+include_once(TZS_PLUGIN_DIR.'/functions/privat24api.php');
 
 /*
  * Вывод формы для оплаты счета
@@ -140,7 +140,7 @@ function tzs_pay_order() {
  */
 }
 
-function tzs_front_end_order_handler($atts) {
+function tzs_front_end_order_handler_0($atts) {
     ob_start();
 	
     if ( !is_user_logged_in() ) {
@@ -152,6 +152,23 @@ function tzs_front_end_order_handler($atts) {
         tzs_pay_order();
     }
 
+    $output = ob_get_contents();
+    
+    ob_end_clean();
+	
+    return $output;
+}
+
+function tzs_front_end_order_handler($atts) {
+    ob_start();
+    
+    // Получен ответ от Приват-24
+    if (!empty($_POST) && !empty($_POST["payment"]) && !empty($_POST["signature"])) {
+        $res_arr = tzs_pay_order_p24(2);
+    } else {
+        echo '<p>Нет ответа от Приват-24</p>';
+    }
+    
     $output = ob_get_contents();
     
     ob_end_clean();
