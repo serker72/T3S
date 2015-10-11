@@ -76,7 +76,7 @@
         ymaps.route([routeFrom, routeTo], {mapStateAutoApply:true}).then(
           function(route) {
             map.geoObjects.add(route);
-            document.getElementById('route-length').innerHTML = 'Длина маршрута!!!! = ' + route.getHumanLength();
+            document.getElementById('route-length').innerHTML = 'Длина маршрута = ' + route.getHumanLength();
             mapRoute = route;
           },
           function(error) {
