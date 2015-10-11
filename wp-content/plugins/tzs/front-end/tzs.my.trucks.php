@@ -201,7 +201,7 @@ function tzs_front_end_my_trucks_handler($atts) {
                                         <a href="javascript:doDisplay(<?php echo $row->id;?>);" at="<?php echo $row->id;?>" id="icon_set">Действия</a>
                                         <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
                                                 <ul>
-                                                        <a href="/account/view-truck/?id=<?php echo $row->id;?>&link=my-trucks">Смотреть</a>
+                                                        <a href="/account/view-truck/?id=<?php echo $row->id;?>&link=my-trucks&active=<?php echo $active; ?>">Смотреть</a>
                                                         <a href="/account/edit-truck/?id=<?php echo $row->id;?>">Изменить</a>
                                                     <?php if ($row->active && ($row->order_status === null)) { ?>
                                                         <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'TR');">В ТОП</a>
@@ -232,7 +232,7 @@ function tzs_front_end_my_trucks_handler($atts) {
                                 var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                                 var id = this.parentNode.getAttribute("rid");
                                 if (!nonclickable)
-                                        document.location = "/account/view-truck/?id="+id+"&link=my-trucks";
+                                        document.location = "/account/view-truck/?id="+id+"&link=my-trucks&active=<?php echo $active; ?>";
                         });
                         
                         jQuery("#tbl_products").stickyTableHeaders();

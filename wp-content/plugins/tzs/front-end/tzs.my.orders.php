@@ -110,9 +110,9 @@ function tzs_front_end_my_orders_handler($atts) {
                                         <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
                                                 <ul>
                                                     <?php if ($status === '0') { ?>
-                                                        <a href="/account/view-order/?id=<?php echo $row->id;?>&link=my-orders">Оплатить</a>
+                                                        <a href="/account/view-order/?id=<?php echo $row->id;?>&link=my-orders&status=<?php echo $status; ?>">Оплатить</a>
                                                     <?php } ?>
-                                                        <a href="/account/view-order/?id=<?php echo $row->id;?>&link=my-orders">Смотреть</a>
+                                                        <a href="/account/view-order/?id=<?php echo $row->id;?>&link=my-orders&status=<?php echo $status; ?>">Смотреть</a>
                                                 </ul>
                                         </div>
                                 </td>
@@ -132,7 +132,7 @@ function tzs_front_end_my_orders_handler($atts) {
                                 var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                                 var id = this.parentNode.getAttribute("rid");
                                 if (!nonclickable)
-                                        document.location = "/account/view-order/?id="+id+"&link=my-orders";
+                                        document.location = "/account/view-order/?id="+id+"&link=my-orders&status=<?php echo $status; ?>";
                         });
                         
                         jQuery("#tbl_products").stickyTableHeaders();
