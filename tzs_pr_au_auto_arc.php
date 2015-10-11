@@ -1,7 +1,7 @@
 <?php
 
 /* 
- * Скрипт для автоматического переноса в архив товаров и тендеров,
+ * Скрипт для автоматического переноса в архив записей,
  * у которых завершен срок публикации.
  */
 
@@ -178,7 +178,7 @@ date_default_timezone_set($time_zone);
 $EOF = "\r\n";
 $admin_email = 'info@t3s.biz, serker72@gmail.com';
 $from_email = 'info@t3s.biz';
-$msg_subject = 'Transfer of the archive expired products and tenders - '.date('d.m.Y H:i:s');
+$msg_subject = 'Transfer of the archive expired records - '.date('d.m.Y H:i:s');
 $msg_body = '';
 
 //sys_get_temp_dir()
@@ -187,8 +187,9 @@ $csv_file_path = __DIR__ . '//';
 $pr_csv_file = $csv_file_path.'pr_arch.csv';
 $tr_csv_file = $csv_file_path.'tr_arch.csv';
 $sh_csv_file = $csv_file_path.'sh_arch.csv';
+$or_csv_file = $csv_file_path.'or_arch.csv';
 
-// Удалим файлы
+// Удалим старые файлы
 if (file_exists($pr_csv_file)) {
     unlink($pr_csv_file);
 }
@@ -199,6 +200,10 @@ if (file_exists($tr_csv_file)) {
 
 if (file_exists($sh_csv_file)) {
     unlink($sh_csv_file);
+}
+
+if (file_exists($or_csv_file)) {
+    unlink($or_csv_file);
 }
 
 // Подключим файл wp-config.php для определния параметров подключения к БД
@@ -467,6 +472,59 @@ if ($cnt > 0) {
     
     // Обновим записи
     $query = "UPDATE wp_tzs_shipments SET active=0, last_edited=now() WHERE active=1 AND sh_date_to IS NOT NULL AND sh_date_to <= NOW();";
+    $cursor = mysqli_query($connection, $query);
+    if (!$cursor) {
+        $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
+        ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
+    }
+}
+
+// Счета
+$query = "SELECT COUNT(*) as cnt FROM wp_tzs_orders WHERE status=1 AND dt_expired IS NOT NULL AND dt_expired <= NOW();";
+$cursor = mysqli_query($connection, $query);
+if (!$cursor) {
+    $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
+    ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
+}
+
+$row = mysqli_fetch_assoc($cursor);
+$cnt = $row['cnt'];
+
+$msg_body .= 'Количество счетов, у которых завершился срок действия: '.$cnt.$EOF;
+
+if ($cnt > 0) {
+    // Сформируем табличку в csv-файле
+    $query = "SELECT wto.id, wto.user_id, wu.user_login, wum.meta_value AS fio,
+  wto.tbl_type, wto.tbl_id, wto.number, wto.cost,
+  CASE wto.currency
+    WHEN 1 THEN 'грн'
+    WHEN 2 THEN 'грн/м.кв.'
+    WHEN 3 THEN 'грн/м.куб.'
+    WHEN 4 THEN 'грн/м.пог.'
+    WHEN 5 THEN 'грн/кг'
+    WHEN 6 THEN 'грн/т'
+    WHEN 7 THEN 'грн/л'
+    WHEN 8 THEN 'грн/ч'
+    ELSE ''
+  END AS t_currency,
+  wto.dt_create, wto.dt_pay, wto.dt_expired
+  FROM wp_tzs_orders wto, wp_users wu, wp_usermeta wum
+  WHERE wto.status=1
+  AND wto.dt_expired IS NOT NULL
+  AND wto.dt_expired <= NOW()
+  AND wu.ID = wto.user_id
+  AND wum.user_id = wto.user_id
+  AND wum.meta_key = 'fio'
+  ;";
+    
+    $res = ksk_saveQueryResultsToCSV($connection, $query, $or_csv_file);
+    $msg_body .= $res[1] . $EOF;
+    if (!$res[0]) {
+        ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body);
+    }
+    
+    // Обновим записи
+    $query = "UPDATE wp_tzs_orders SET status=2, last_edited=now() WHERE status=1 AND dt_expired IS NOT NULL AND dt_expired <= NOW();";
     $cursor = mysqli_query($connection, $query);
     if (!$cursor) {
         $msg_body .= "Ошибка при выполнении запроса \"".$query."\" : ".  mysqli_error().$EOF;
