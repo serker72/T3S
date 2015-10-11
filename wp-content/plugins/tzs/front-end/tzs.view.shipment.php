@@ -21,8 +21,15 @@ function tzs_front_end_view_shipment_handler($atts) {
 			$type = isset($GLOBALS['tzs_tr_types'][$row->trans_type]) ? $GLOBALS['tzs_tr_types'][$row->trans_type] : "";
 			?>
 			<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
-			<?php if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-shipments/'>Назад к списку</a> <div style='clear: both'></div>";
-            else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>"; ?>
+			<?php 
+                        if(isset($_GET['spis'])) {
+                            echo "<a id='edit_search' href='/account/my-shipments/'>Назад к списку</a> <div style='clear: both'></div>";
+                        } elseif (isset($_GET['link'])) {
+                            echo "<a id='edit_search' href='/".$_GET['link']."/'>Назад к списку</a> <div style='clear: both'></div>";
+                        } else {
+                            echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
+                        }
+                        ?>
             <table border="0" id="view_ship">
 			<tr>
 				<td>Номер груза</td>

@@ -23,8 +23,15 @@ function tzs_front_end_view_truck_handler($atts) {
 			
 			?>
 			<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
-            <?php if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-trucks/'>Назад к списку</a> <div style='clear: both'></div>";
-            else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>"; ?>
+                        <?php 
+                        if(isset($_GET['spis'])) {
+                            echo "<a id='edit_search' href='/account/my-trucks/'>Назад к списку</a> <div style='clear: both'></div>";
+                        } elseif (isset($_GET['link'])) {
+                            echo "<a id='edit_search' href='/".$_GET['link']."/'>Назад к списку</a> <div style='clear: both'></div>";
+                        } else {
+                            echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
+                        }
+                        ?>
 			<table border="0" id="view_ship">
 			<tr>
 				<td>Номер транспорта</td>

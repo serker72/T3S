@@ -180,7 +180,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                                         <a href="javascript:doDisplay(<?php echo $row->id;?>);" at="<?php echo $row->id;?>" id="icon_set">Действия</a>
                                         <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
                                                 <ul>
-                                                        <a href="/account/view-shipment/?id=<?php echo $row->id;?>">Смотреть</a>
+                                                        <a href="/account/view-shipment/?id=<?php echo $row->id;?>&link=my-shipments">Смотреть</a>
                                                         <a href="/account/edit-shipment/?id=<?php echo $row->id;?>">Изменить</a>
                                                     <?php if ($row->active && ($row->order_status === null)) { ?>
                                                         <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'SH');">В ТОП</a>
@@ -212,7 +212,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                                     var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                                     var id = this.parentNode.getAttribute("rid");
                                     if (!nonclickable)
-                                            document.location = "/account/view-shipment/?id="+id;
+                                            document.location = "/account/view-shipment/?id="+id+"&link=my-shipments";
                             });
                         
                             jQuery("#tbl_products").stickyTableHeaders();

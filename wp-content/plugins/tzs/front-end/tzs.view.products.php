@@ -54,9 +54,14 @@ function tzs_front_end_view_productsd_handler($atts) {
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
                     <?php 
-                if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
-                    else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
-            ?>
+                    if(isset($_GET['spis'])) {
+                        echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
+                    } elseif (isset($_GET['link'])) {
+                        echo "<a id='edit_search' href='/".$_GET['link']."/'>Назад к списку</a> <div style='clear: both'></div>";
+                    } else {
+                        echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
+                    }
+                    ?>
             <?php if (($user_id != $row->user_id) && ($user_id != 0) && ($row->fixed_or_tender == 2) && ($cnt_rate <= 0)) {?>
                 <button   id="bet_button" type="button" onclick="bet_click();" <?php echo ($user_id === 0) ? 'disabled="disabled"' : ''; ?>>Сделать ставку</button>
             <?php } ?>

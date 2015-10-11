@@ -29,8 +29,15 @@ function tzs_front_end_view_shipment_handler($atts) {
                         $form_type = 'shipments';
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
-                    <?php if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-shipments/'>Назад к списку</a> <div style='clear: both'></div>";
-                        else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>"; ?>
+                    <?php
+                    if(isset($_GET['spis'])) {
+                        echo "<a id='edit_search' href='/account/my-shipments/'>Назад к списку</a> <div style='clear: both'></div>";
+                    } elseif (isset($_GET['link'])) {
+                        echo "<a id='edit_search' href='/".$_GET['link']."/'>Назад к списку</a> <div style='clear: both'></div>";
+                    } else {
+                        echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
+                    }
+                    ?>
             <?php if (($user_id == $row->user_id)) {?>
                 <div style="margin-top: 15px;">
                     <a id="view_edit"  onClick="javascript: window.location.href = '/account/edit-shipment/?id=<?php echo $row->id;?>';">Изменить</a>

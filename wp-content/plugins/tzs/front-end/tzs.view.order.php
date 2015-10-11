@@ -45,8 +45,10 @@ function tzs_front_end_view_order_handler($atts) {
             <div class="row-fluid" id="contact-block-right" >
                 <div class="span2 offset10">
                     <?php 
-                    if(isset($_GET['spis'])) {
-                        echo "<a id='edit_search' href='/account/my-".$tbl_type_link."s/'>Назад к списку</a> <div style='clear: both'></div>";
+                    if (isset($_GET['spis'])) {
+                        echo "<a id='edit_search' href='/account/my-orders/'>Назад к списку</a> <div style='clear: both'></div>";
+                    } elseif (isset($_GET['link'])) {
+                        echo "<a id='edit_search' href='/".$_GET['link']."/'>Назад к списку</a> <div style='clear: both'></div>";
                     } else {
                         echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
                     }
