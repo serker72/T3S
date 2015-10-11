@@ -57,7 +57,7 @@ function tzs_front_end_view_productsd_handler($atts) {
                     if(isset($_GET['spis'])) {
                         echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
                     } elseif (isset($_GET['link'])) {
-                        echo "<a id='edit_search' href='/".$_GET['link']."/'>Назад к списку</a> <div style='clear: both'></div>";
+                        echo "<a id='edit_search' href='/".$_GET['link'].(isset($_GET['active']) ? "/?active=".$_GET['active'] : "/")."'>Назад к списку</a> <div style='clear: both'></div>";
                     } else {
                         echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
                     }
