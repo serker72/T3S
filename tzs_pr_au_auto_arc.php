@@ -533,4 +533,4 @@ if ($cnt > 0) {
 }
 
 //ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file, $tr_csv_file));
-ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file, $tr_csv_file, $sh_csv_file));
+ksk_sendMailAttachmentsAndExit($admin_email, $from_email, $msg_subject, $msg_body, '', array($pr_csv_file, $tr_csv_file, $sh_csv_file, $or_csv_file));
