@@ -15,73 +15,108 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 	if (!$conn)
 		die('Could not connect: ' . mysql_error());
 	mysql_select_db("t3s",$conn);
-	
-	
-	
-	$tables_names = array();
-  	$sql_tables = mysql_query("SHOW TABLES");
-	while($tables = mysql_fetch_array($sql_tables,MYSQL_NUM)){
-		$tables_names[] = $tables[0];
-	}
+
 	$sql = "SELECT * FROM ".TZS_COUNTRIES_TABLE;
 	$result = mysql_query($sql,$conn);
 
-	while($row = mysql_fetch_array($result)) {
-		print_r($row); print('<br>');
+	/* Замена id-шек стран
+	 */
+	while($row_country = mysql_fetch_array($result)) {
+		$country_id_new = (int)substr(preg_replace('~\D+~','',sha1(md5($row_country['title_ru']))),0,8);
+		$country_id_old = $row_country['country_id'];
+
+		if($country_id_new != $country_id_old){
+			//echo 'false '; echo $country_id_new; echo ' ';echo $country_id_old; echo '<br>';
+			
+ 			$sql = "UPDATE ".TZS_COUNTRIES_TABLE." SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
+ 			mysql_query($sql,$conn);
+			
+			$sql = "UPDATE ".TZS_REGIONS_TABLE." SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
+			mysql_query($sql,$conn);
+			
+			$sql = "UPDATE ".TZS_CITIES_TABLE." SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
+			mysql_query($sql,$conn);
+			
+			$sql = "UPDATE ".TZS_TRUCK_TABLE." SET from_cid=".$country_id_new." WHERE from_cid=".$country_id_old;
+			mysql_query($sql,$conn);
+			
+			$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET from_cid=".$country_id_new." WHERE from_cid=".$country_id_old;
+			mysql_query($sql,$conn);
+			
+		}
 	}
-	
-	
-	
-	/*$table="calls";
-	for($i = 0; $i<10;$i++){
-		$column_types = array();
-		$column_names = array();
-		$sql = "SELECT * FROM $table";
+
+		/* Замена id-шек регионов
+		 */
+		$sql = "SELECT * FROM ".TZS_REGIONS_TABLE;
 		$result = mysql_query($sql,$conn);
-		while($field = mysql_fetch_field($result)) {
-			$column_types[] = $field->type;
-			$column_names[] = $field->name;
-		}
-
-		$field_values = array();
-		foreach($column_types as $type){
-			switch($type){
-				case "int": $res = rand(1,99999);break;
-				case "string": $res = "'".generateRandomString()."'";break;
-				case "date": $res = "'".randomDate()."'";break;
-				default: $res = 0; break;
+		
+		while($row_region = mysql_fetch_array($result)) {
+			$region_id_new = (int)substr(preg_replace('~\D+~','',sha1(md5($row_region['title_ru']))),0,8);
+			$region_id_old = $row_region['region_id'];
+		
+			if($region_id_new != $region_id_old){
+				//echo 'false '; echo $country_id_new; echo ' ';echo $country_id_old; echo '<br>';
+					
+				$sql = "UPDATE ".TZS_REGIONS_TABLE." SET region_id=".$region_id_new." WHERE region_id=".$region_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_CITIES_TABLE." SET region_id=".$region_id_new." WHERE region_id=".$region_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_TRUCK_TABLE." SET from_rid=".$region_id_new." WHERE from_rid=".$region_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET from_rid=".$region_id_new." WHERE from_rid=".$region_id_old;
+				mysql_query($sql,$conn);
+					
 			}
-			$field_values[] = $res;
-		}
-		$into = "";
-		for($j=0;$j<count($column_names);$j++)
-			$into.=$column_names[$j].",";
-		$into = substr($into,0,-1);
-
 		
-		for($k=0;$k<count($field_values);$k++){
-			$field_values[1] = rand(1,10);
-			$field_values[6] = rand(1,10);
 		}
 		
-		$values = "";
-		for($k=1;$k<count($field_values);$k++)
-			$values.=$field_values[$k].",";
-		$values = substr($values,0,-1);
-
-		//Корректировка внешнего ключа
-
+		/* Замена id-шек городов
+		 */
+		$sql = "SELECT * FROM ".TZS_CITIES_TABLE;
+		$result = mysql_query($sql,$conn);
 		
-		$request=<<<"HERE"
-		INSERT INTO  $table($into)
-		VALUES (NULL,$values);	
-HERE;
-
-		$sql = $request;
-		//$result = mysql_query($sql,$conn);
-		print $sql."<br>";
-
-	}*/
+		while($row_city = mysql_fetch_array($result)) {
+			$city_id_new = (int)substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru'].$row_city['lat'].$row_city['lng']))),0,8);
+			$city_id_old = $row_city['city_id'];
+		
+			if($city_id_new != $city_id_old){
+										
+				$sql = "UPDATE ".TZS_CITIES_TABLE." SET city_id=".$city_id_new." WHERE city_id=".$city_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_TRUCK_TABLE." SET from_cid=".$city_id_new." WHERE from_cid=".$city_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET from_cid=".$city_id_new." WHERE from_cid=".$city_id_old;
+				mysql_query($sql,$conn);
+					
+			}
+		
+		}
+				
+		/* Замена в таблице ids
+		 */
+		
+		//Будет после дальнейшего согласования
+		
+		// 		$city_str='Теплик Украина';
+		// 		$url = "https://geocode-maps.yandex.ru/1.x/?format=json&kind=locality&geocode=$city_str";
+		
+		// 		$ch = curl_init();
+		// 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		// 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// 		curl_setopt($ch, CURLOPT_URL, $url);
+		// 		$result=curl_exec($ch);
+		// 		curl_close($ch);
+		
+		// 		$res = json_decode($result, true);
+		
+		// 		print_r($res);
+			
 }
 
 normalize_ids();

@@ -64,8 +64,8 @@ function tzs_yahoo_convert0($key, $city_str) {
 	$city = find($res,'LocalityName');
 	
 	$latitude_longitude = $pieces = explode(" ", find($res,'pos'));
-	$lat = $latitude_longitude[0];
-	$lng = $latitude_longitude[1];
+	$lat = substr($latitude_longitude[0],0,6);
+	$lng = substr($latitude_longitude[1],0,6);
 	
 	$city_id = (int)substr(preg_replace('~\D+~','',sha1(md5($city.$lat.$lng))),0,8);
 	
