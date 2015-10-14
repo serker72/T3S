@@ -52,13 +52,14 @@ function autocomplete(element) {
         //массив, в который будем записывать результаты поиска
         search_result = [];
         //делаем запрос к геокодеру
-        jQuery.getJSON('http://geocode-maps.yandex.ru/1.x/?format=json&kind=streetcallback=?&geocode='+search_query, function(data) {
+        jQuery.getJSON('http://geocode-maps.yandex.ru/1.x/?format=json&kind=locality&callback=?&geocode='+search_query, function(data) {
             //геокодер возвращает объект, который содержит в себе результаты поиска
             //для каждого результата возвращаются географические координаты и некоторая дополнительная информация
             //ответ геокодера легко посмотреть с помощью console.log();
             for(var i = 0; i < data.response.GeoObjectCollection.featureMember.length; i++) {
                 //записываем в массив результаты, которые возвращает нам геокодер
-                search_result.push({
+                if(data.response.GeoObjectCollection.featureMember[i].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'locality')
+            	search_result.push({
                     label: data.response.GeoObjectCollection.featureMember[i].GeoObject.description+' - '+data.response.GeoObjectCollection.featureMember[i].GeoObject.name,
                     value:data.response.GeoObjectCollection.featureMember[i].GeoObject.description+' - '+data.response.GeoObjectCollection.featureMember[i].GeoObject.name,
                     longlat:data.response.GeoObjectCollection.featureMember[i].GeoObject.Point.pos});
