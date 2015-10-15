@@ -11,6 +11,139 @@ function tzs_print_shipment_form($errors, $edit=false) {
 		<script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
 
     <div style="clear: both;"></div>
+    
+    <!-- test new form -->
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span3" style="background: #04a4cc;">
+            <input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', $d); ?>" placeholder="дата погрузки">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+            <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="населенный пункт погрузки">
+        </div>
+        <div class="span1" style="background: #04a4cc;">
+        </div>
+        <div class="span2" style="background: #04a4cc;">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+        </div>
+    </div>
+    
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span3" style="background: #04a4cc;">
+            <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', $d); ?>" placeholder="дата выгрузки">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+            <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="населенный пункт выгрузки">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+        </div>
+    </div>
+                    
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span3" style="background: #04a4cc;">
+            <select name="sh_type" placeholder="тип груза">
+            <?php
+                foreach ($GLOBALS['tzs_sh_types'] as $key => $val) {
+                        echo '<option value="'.$key.'" ';
+                        if ((isset($_POST['sh_type']) && $_POST['sh_type'] == $key) || (!isset($_POST['sh_type']) && $key == 0)) {
+                                echo 'selected="selected"';
+                        }
+                        echo '>'.$val.'</option>';
+                }
+            ?>
+            </select>
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+            <input type="text" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="описание груза">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+            <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="комментарии">
+        </div>
+        <div class="span3" style="background: #04a4cc; text-align: right; float: right;">
+            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;&nbsp;Указать габариты груза (м):
+        </div>
+    </div>
+    
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span3" style="background: #04a4cc;">
+            <select name="trans_type">
+            <?php
+                foreach ($GLOBALS['tzs_tr_types'] as $key => $val) {
+                        echo '<option value="'.$key.'" ';
+                        if ((isset($_POST['trans_type']) && $_POST['trans_type'] == $key) || (!isset($_POST['trans_type']) && $key == 0)) {
+                                echo 'selected="selected"';
+                        }
+                        echo '>'.$val.'</option>';
+                }
+            ?>
+            </select>
+        </div>
+        <div class="span3">
+            <span><img id="trans_type_img" src="" alt=""></img></span>&nbsp;&nbsp;
+            <span>Кол-во машин:</span>
+            <input type="text" size="5" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "1" style="width: 50px;">
+        </div>
+        <div class="span3" style="background: #04a4cc;">
+            <span>Вес груза:</span>
+            <input type="text" size="5" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5" style="width: 50px;">
+            <span>т</span>
+        </div>
+        <div class="span3" style="background: #04a4cc; text-align: right; float: right;">
+            <input type="text" size="3" name="sh_length" id="sh_length" value="<?php echo_val('sh_length'); ?>" maxlength = "5" placeholder="длина" style="width: 50px;">&nbsp;&nbsp;
+            <input type="text" size="3" name="sh_width" id="sh_width" value="<?php echo_val('sh_width'); ?>" maxlength = "5" placeholder="ширина" style="width: 50px;">&nbsp;&nbsp;
+            <input type="text" size="3" name="sh_height" id="sh_height" value="<?php echo_val('sh_height'); ?>" maxlength = "5" placeholder="высота" style="width: 50px;">
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span4" style="background: #04a4cc;">
+            <span>Стоимость перевозки:</span>&nbsp;&nbsp;
+            <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10" style="width: 100px;">&nbsp;
+            <span>грн</span>
+        </div>
+        <div class="span4" style="background: #04a4cc;">
+            <span>Цена = </span>&nbsp;
+            <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10" disabled="disabled" style="width: 100px;">&nbsp;
+            <span>грн/км</span>
+        </div>
+        <div class="span4" style="background: #04a4cc; text-align: right; float: right;">
+            <span>Объем груза = </span>&nbsp;
+            <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10" disabled="disabled" style="width: 100px;">&nbsp;
+            <span>м<sup>3</sup></span>
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span8" style="background: #04a4cc;">
+            <span>Форма расчета (можно указать несколько способов одновременно):</span>
+        </div>
+        <div class="span4" style="background: #04a4cc; text-align: right;">
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span2" style="background: #04a4cc;">
+        </div>
+        <div class="span2" style="background: #04a4cc; text-align: right;">
+        </div>
+        <div class="span2" style="background: #04a4cc; text-align: right;">
+        </div>
+        <div class="span2" style="background: #04a4cc; text-align: right;">
+        </div>
+        <div class="span2" style="background: #04a4cc; text-align: right;">
+        </div>
+        <div class="span2" style="background: #04a4cc; text-align: right;">
+        </div>
+    </div>
+    
+    <div class="clearfix">&nbsp;</div>
+    
+    <!-- test new form END -->
+    
+    <div style="clear: both;"></div>
+    
     <form enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
 
         <div id="cost_div" style="display:none;">
