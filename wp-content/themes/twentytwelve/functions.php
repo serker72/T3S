@@ -646,6 +646,7 @@ function tzs_tables_reload() {
     $output = tzs_front_end_tables_reload();
     //echo 'Test tzs_products_reload';
     echo json_encode($output);
+	//print_r($output);
     wp_die();
 }
 add_action("wp_ajax_tzs_tables_reload", "tzs_tables_reload");

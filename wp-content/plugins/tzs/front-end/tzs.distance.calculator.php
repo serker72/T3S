@@ -38,7 +38,8 @@ function print_distance_calculator_form($errors, $city, $map, $form) {
         function init(){ 
             map = new ymaps.Map("map_canvas", {
                 center: [55.76, 37.64],
-                zoom: 5
+                zoom: 5,
+                controls: ['zoomControl','typeSelector']
             });	  		  
         } 
 		function createRoute() {

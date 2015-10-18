@@ -578,7 +578,7 @@ function tzs_front_end_search_tr_form($form_type) {
                     <div style="text-align:right; vertical-aligment: middle;">
                         <a href="JavaScript:tblTHeadShowSearchForm();" title="Скрыть форму изменения условий поиска"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/form_hide.png" width="150px" height="26px"></a>&nbsp;&nbsp;
                         <a href="javascript:onTblTheadButtonClearClick();" title="Очистить все условия фильтра"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/eraser.png" width="24px" height="24px"></a>&nbsp;&nbsp;
-                        <a href="javascript:onTblSearchButtonClick();" title="Выполнить поиск по текущим условиям фильтра"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/find-1.png" width="24px" height="24px"></a>
+						<a href="javascript:onTblSearchButtonClick();" title="Выполнить поиск по текущим условиям фильтра"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/find-1.png" width="24px" height="24px"></a>
                     </div>
                 </td>
             </tr>

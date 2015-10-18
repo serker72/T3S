@@ -17,6 +17,30 @@ function tzs_yahoo_get_id() {
 	return $appid;
 }
 
+function find_all_1($array,$sNeededKey){
+	$places = find_all($array,$sNeededKey);
+//	print_r($places); echo '<br>';
+	$kinds = find_all($array,'kind');
+//	print_r($kinds); echo '<br>';
+	$result = array();
+	
+	for($i = 0; $i < count($kinds); $i++)
+		if($kinds[$i] == 'locality')
+			$result[] = $places[$i];
+	return $result;
+}
+
+function find_all($array,$sNeededKey){
+	$all_values = array();
+	array_walk_recursive($array, function($sValue, $sKey) use ($sNeededKey,&$all_values)
+	{
+	   if($sKey == $sNeededKey)
+	   {
+		  $all_values[] = $sValue;
+	   }
+	});
+	return $all_values;
+}
 function find($array,$sNeededKey){
 	/* $sResult = '';
 	array_walk_recursive($array, function($sValue, $sKey) use ($sNeededKey,&$sResult)
@@ -61,7 +85,7 @@ function tzs_yahoo_convert0($key, $city_str) {
 	$region = find($res,'AdministrativeAreaName');
 	$region_id = (int)substr(preg_replace('~\D+~','',sha1(md5($region))),0,8);
 	
-	$city = find($res,'LocalityName');
+	$city = find($res,'name');
 	
 	$latitude_longitude = $pieces = explode(" ", find($res,'pos'));
 	$lat = substr($latitude_longitude[0],0,6);
@@ -388,6 +412,7 @@ function tzs_city_to_ids($city, $region_id, $country_id) {
 	
 	$city_str = $city;
 	
+	
 	global $wpdb;
 	
 	if ($region_id > 0) {
@@ -415,6 +440,8 @@ function tzs_city_to_ids($city, $region_id, $country_id) {
 	}
 	
 	$res = tzs_city_ids_from_db($city_str);
+	//print_r($res);
+		
 	if (!isset($res["error"]) && !isset($res["ids"])) {
 		$res = tzs_yahoo_convert1($key, $city_str);
 		if (!isset($res["error"])) {
@@ -453,7 +480,7 @@ function tzs_city_ids_from_db($city) {
 				array_push($ids, floatval($id));
 			}
 		}
-                
+  
 		return array('ids' => $ids);
 	}
 }
@@ -535,14 +562,15 @@ function tzs_city_from_radius_to_ids($city, $region_id, $country_id, $radius_val
     //* Поищем в таблице населенные пункты в указанном радиусе от указанного
     //******************************
     $sql  = "SELECT city_id, title_ru, lat, lng,";
-    $sql .= " (6371.009 * acos(sin(RADIANS(lat)) * sin(RADIANS(".$lat.")) + cos(RADIANS(lat)) * cos(RADIANS(".$lat.")) * cos(RADIANS(lng) - RADIANS(".$lng.")))) as distance";
-    $sql .= " FROM ".TZS_CITIES_TABLE." WHERE lat IS NOT NULL AND lng IS NOT NULL";
+    //$sql .= " (6371.009 * acos(sin(RADIANS(lat)) * sin(RADIANS(".$lat.")) + cos(RADIANS(lat)) * cos(RADIANS(".$lat.")) * cos(RADIANS(lng) - RADIANS(".$lng.")))) as distance";
+    $sql .= " (6371.009 * acos(sin(RADIANS(lng)) * sin(RADIANS(".$lng.")) + cos(RADIANS(lng)) * cos(RADIANS(".$lng.")) * cos(RADIANS(lat) - RADIANS(".$lat.")))) as distance";
+	$sql .= " FROM ".TZS_CITIES_TABLE." WHERE lat IS NOT NULL AND lng IS NOT NULL";
     $sql .= " HAVING distance < ".$radius;
     $rows = $wpdb->get_results($sql);
     if ($wpdb->last_error != null) {
         return array("error" => "При поиске пунктов погрузки в радиусе ".$radius_value." км от населенного пункта '".$city_str."' возникла ошибка :".$wpdb->last_error);
     }
-    
+
     $ids = array();
     ksk_debug($rows, 'tzs_city_from_radius_to_ids: населенные пункты в указанном радиусе от указанного');
   
@@ -561,33 +589,70 @@ function tzs_city_from_radius_to_ids($city, $region_id, $country_id, $radius_val
 }
 //*******************************************************************************
 
-/*function tzs_yahoo_convert1($key, $city_str) {
-	$url = "http://where.yahooapis.com/v1/places.q('".urlencode($city_str)."');start=0;count=1000?format=json&lang=ru&appid=$key";
+ function tzs_yahoo_convert1($key, $city_str) {
 	
+	//print("<h1>$city_str</h1>");
+	//$url = "http://where.yahooapis.com/v1/places.q('".urlencode($city_str)."');start=0;count=1000?format=json&lang=ru&appid=$key";
+
+	$url = "https://geocode-maps.yandex.ru/1.x/?format=json&results=1000&geocode=$city_str";
+
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_URL, $url);
 	$result=curl_exec($ch);
 	curl_close($ch);
-	
+
 	$res = json_decode($result, true);
 	
-	if (isset($res["error"])) {
-		return array("error" => $res["error"]["description"]);
-	}
+
 	
+	if(find($res,'found') == 0)
+		return array("error" => 'Город на найден');
+	
+	$cities = find_all_1($res,'name'); echo '<br>';
+	//print_r($cities); echo '<br>';
+	
+	$latitude_longitude = find_all_1($res,'pos'); echo '<br>';
+	//print_r($latitude_longitude); echo '<br>';
 	$ids = array();
-	
-	if (isset($res["places"]) && isset($res["places"]["count"]) && $res["places"]["count"] > 0) {
-		foreach ($res["places"]["place"] as $rec) {
-			$city_id = isset($rec["locality1 attrs"]) && isset($rec["locality1 attrs"]["woeid"]) ? $rec["locality1 attrs"]["woeid"] : NULL;
-			if ($city_id != null)
-				array_push($ids, $city_id);
-		}
+	for($i = 0; $i < count($cities); $i++){
+		$pieces = explode(' ',$latitude_longitude[$i]);
+		$lat = substr($pieces[0],0,6);
+		$lng = substr($pieces[1],0,6);
+		$ids[] = (int)substr(preg_replace('~\D+~','',sha1(md5($cities[$i].$lat.$lng))),0,8);	
 	}
+	
+	//print_r($ids); echo '<br>';
+	
 	return array('ids' => $ids);
-}*/
+
+// 	$url = "http://where.yahooapis.com/v1/places.q('".urlencode($city_str)."');start=0;count=1000?format=json&lang=ru&appid=$key";
+	
+// 	$ch = curl_init();
+// 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// 	curl_setopt($ch, CURLOPT_URL, $url);
+// 	$result=curl_exec($ch);
+// 	curl_close($ch);
+	
+// 	$res = json_decode($result, true);
+	
+// 	if (isset($res["error"])) {
+// 		return array("error" => $res["error"]["description"]);
+// 	}
+	
+// 	$ids = array();
+	
+// 	if (isset($res["places"]) && isset($res["places"]["count"]) && $res["places"]["count"] > 0) {
+// 		foreach ($res["places"]["place"] as $rec) {
+// 			$city_id = isset($rec["locality1 attrs"]) && isset($rec["locality1 attrs"]["woeid"]) ? $rec["locality1 attrs"]["woeid"] : NULL;
+// 			if ($city_id != null)
+// 				array_push($ids, $city_id);
+// 		}
+// 	}
+// 	return array('ids' => $ids);
+} 
 
 function ksk_debug($val, $label = null) {
     $file_name = ABSPATH . 'ksk_debug.log.html';

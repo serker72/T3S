@@ -483,7 +483,8 @@ function tzs_front_end_tables_reload() {
         's_sql' => $s_sql,
     );
 
-    //echo json_encode($output);
+   //echo json_encode($output);
+  // print_r($output_tbody);
     return $output;
 }
 ?>
