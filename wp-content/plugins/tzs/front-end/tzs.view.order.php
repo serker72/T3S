@@ -204,7 +204,7 @@ function tzs_front_end_view_order_handler($atts) {
                         data: fd,
                         dataType: 'json',
                         success: function(data) {
-                            alert('output_error='+data.output_error+'\norder_status='+data.order_status+'\norder_id='+data.order_id+'\norder_state='+data.output_state);
+                            //alert('output_error='+data.output_error+'\norder_status='+data.order_status+'\norder_id='+data.order_id+'\norder_state='+data.output_state);
 
                             if (data.order_status == '0') {
                                 jQuery('[name=order]').attr('value', data.order_new_number);

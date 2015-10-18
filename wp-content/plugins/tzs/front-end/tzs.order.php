@@ -78,7 +78,7 @@ function tzs_print_pay_order_form($errors, $edit=false) {
                         jQuery('[name=details]').removeAttr('disabled');
                         jQuery('[name=ext_details]').removeAttr('disabled');
                         fd = jQuery('#PayOrderForm').serialize();
-                        alert(fd);
+                        //alert(fd);
                         jQuery('#PayOrderForm').submit();
                     }
                 </script>
