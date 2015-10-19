@@ -87,11 +87,14 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 		$result = mysql_query($sql,$conn);
 		
 		while($row_city = mysql_fetch_array($result)) {
-			$city_id_new = (int)substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru'].$row_city['lat'].$row_city['lng']))),0,8);
+			$city_id_new = substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru'].number_format($row_city['lat'],3).number_format($row_city['lng'],3)))),0,8);
 			$city_id_old = $row_city['city_id'];
+			//echo number_format($row_city['lat'], 3).'<br>';
 		
 			if($city_id_new != $city_id_old){
-										
+				
+				
+				
 				$sql = "UPDATE ".TZS_CITIES_TABLE." SET city_id=".$city_id_new." WHERE city_id=".$city_id_old;
 				mysql_query($sql,$conn);
 					
