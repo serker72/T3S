@@ -88,10 +88,10 @@ function tzs_yahoo_convert0($key, $city_str) {
 	$city = find($res,'name');
 	
 	$latitude_longitude = $pieces = explode(" ", find($res,'pos'));
-	$lat = substr($latitude_longitude[0],0,6);
-	$lng = substr($latitude_longitude[1],0,6);
-	
-	$city_id = (int)substr(preg_replace('~\D+~','',sha1(md5($city.$lat.$lng))),0,8);
+	$lat = substr($latitude_longitude[1],0,6);
+	$lng = substr($latitude_longitude[0],0,6);
+	echo $lat.' '.$lng.'<br>';
+	$city_id = (int)substr(preg_replace('~\D+~','',sha1(md5($city/*.$lat.$lng*/))),0,8);
 	
 	
 	/*print($country.' + '.$country_code.' + '.$country_id);print("<br>");
@@ -610,10 +610,10 @@ function tzs_city_from_radius_to_ids($city, $region_id, $country_id, $radius_val
 	if(find($res,'found') == 0)
 		return array("error" => 'Город на найден');
 	
-	$cities = find_all_1($res,'name'); echo '<br>';
+	$cities = find_all_1($res,'name');
 	//print_r($cities); echo '<br>';
 	
-	$latitude_longitude = find_all_1($res,'pos'); echo '<br>';
+	$latitude_longitude = find_all_1($res,'pos');
 	//print_r($latitude_longitude); echo '<br>';
 	$ids = array();
 	for($i = 0; $i < count($cities); $i++){

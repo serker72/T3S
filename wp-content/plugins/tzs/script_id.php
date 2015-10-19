@@ -19,7 +19,7 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 
 	$sql = "SELECT * FROM ".TZS_COUNTRIES_TABLE;
 	$result = mysql_query($sql,$conn);
-
+	
 	/* Замена id-шек стран
 	 */
 	while($row_country = mysql_fetch_array($result)) {
@@ -45,6 +45,15 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 			mysql_query($sql,$conn);
 			
 			$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET from_cid=".$country_id_new." WHERE from_cid=".$country_id_old;
+			mysql_query($sql,$conn);
+			
+			$sql = "UPDATE ".TZS_TRUCK_TABLE." SET to_cid=".$country_id_new." WHERE to_cid=".$country_id_old;
+			mysql_query($sql,$conn);
+				
+			$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET to_cid=".$country_id_new." WHERE to_cid=".$country_id_old;
+			mysql_query($sql,$conn);
+				
+			$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET to_cid=".$country_id_new." WHERE to_cid=".$country_id_old;
 			mysql_query($sql,$conn);
 			
 		}
@@ -76,9 +85,17 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 				
 				$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET from_rid=".$region_id_new." WHERE from_rid=".$region_id_old;
 				mysql_query($sql,$conn);
+				
+				$sql = "UPDATE ".TZS_TRUCK_TABLE." SET to_rid=".$region_id_new." WHERE to_rid=".$region_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET to_rid=".$region_id_new." WHERE to_rid=".$region_id_old;
+				mysql_query($sql,$conn);
+				
+				$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET to_rid=".$region_id_new." WHERE to_rid=".$region_id_old;
+				mysql_query($sql,$conn);
 					
 			}
-		
 		}
 		
 		/* Замена id-шек городов
@@ -87,74 +104,94 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 		$result = mysql_query($sql,$conn);
 		
 		while($row_city = mysql_fetch_array($result)) {
-			$city_id_new = substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru'].number_format($row_city['lat'],3).number_format($row_city['lng'],3)))),0,8);
-			$city_id_old = $row_city['city_id'];
-			//echo number_format($row_city['lat'], 3).'<br>';
+				
+			$sql = "UPDATE ".TZS_CITIES_TABLE." SET lat=".substr($row_city['lat'],0, 6)." WHERE lat=".$row_city['lat'];
+			mysql_query($sql,$conn);
 		
+			$sql = "UPDATE ".TZS_CITIES_TABLE." SET lng=".substr($row_city['lng'],0, 6)." WHERE lng=".$row_city['lng'];
+			mysql_query($sql,$conn);
+		}
+		
+		$sql = "SELECT * FROM ".TZS_CITIES_TABLE;
+		$result = mysql_query($sql,$conn);
+
+		while($row_city = mysql_fetch_array($result)) {
+				
+				$city_id_new = substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru']/*.number_format($row_city['lat'],3).number_format($row_city['lng'],3)*/))),0,8);
+				$city_id_old = $row_city['city_id'];
+
+				
 			if($city_id_new != $city_id_old){
-				
-				
 				
 				$sql = "UPDATE ".TZS_CITIES_TABLE." SET city_id=".$city_id_new." WHERE city_id=".$city_id_old;
 				mysql_query($sql,$conn);
 					
-				$sql = "UPDATE ".TZS_TRUCK_TABLE." SET from_cid=".$city_id_new." WHERE from_cid=".$city_id_old;
+				$sql = "UPDATE ".TZS_TRUCK_TABLE." SET from_sid=".$city_id_new." WHERE from_sid=".$city_id_old;
 				mysql_query($sql,$conn);
 					
-				$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET from_cid=".$city_id_new." WHERE from_cid=".$city_id_old;
+				$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET from_sid=".$city_id_new." WHERE from_sid=".$city_id_old;
 				mysql_query($sql,$conn);
 				
-				$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET from_cid=".$city_id_new." WHERE from_cid=".$city_id_old;
+				$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET from_sid=".$city_id_new." WHERE from_sid=".$city_id_old;
+				mysql_query($sql,$conn);
+				
+				$sql = "UPDATE ".TZS_TRUCK_TABLE." SET to_sid=".$city_id_new." WHERE to_sid=".$city_id_old;
+				mysql_query($sql,$conn);
+					
+				$sql = "UPDATE ".TZS_SHIPMENT_TABLE." SET to_sid=".$city_id_new." WHERE to_sid=".$city_id_old;
+				mysql_query($sql,$conn);
+				
+				$sql = "UPDATE ".TZS_PRODUCTS_TABLE." SET to_sid=".$city_id_new." WHERE to_sid=".$city_id_old;
 				mysql_query($sql,$conn);
 					
 			}
 		
 		}
 		
-		/* Замена в таблице ids
-		 */
-			$sql = "SELECT * FROM ".TZS_CITY_IDS_TABLE;
-			$result = mysql_query($sql,$conn);
+// 		/* Замена в таблице ids
+// 		 */
+// 			$sql = "SELECT * FROM ".TZS_CITY_IDS_TABLE;
+// 			$result = mysql_query($sql,$conn);
 	
-			while($row_title = mysql_fetch_array($result)) {
-				$ids_old = $row_title['ids'];
-				$city_str = $row_title['title'];
+// 			while($row_title = mysql_fetch_array($result)) {
+// 				$ids_old = $row_title['ids'];
+// 				$city_str = $row_title['title'];
 				
-				$url = "https://geocode-maps.yandex.ru/1.x/?format=json&results=1000&geocode=$city_str";
+// 				$url = "https://geocode-maps.yandex.ru/1.x/?format=json&results=1000&geocode=$city_str";
 		
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_URL, $url);
-				$result_=curl_exec($ch);
-				curl_close($ch);
+// 				$ch = curl_init();
+// 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+// 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// 				curl_setopt($ch, CURLOPT_URL, $url);
+// 				$result_=curl_exec($ch);
+// 				curl_close($ch);
 		
-				$res = json_decode($result_, true);
+// 				$res = json_decode($result_, true);
 				
-				$cities = find_all_1($res,'name');	
-				$kinds = find_all_1($res,'kind');
+// 				$cities = find_all_1($res,'name');	
+// 				$kinds = find_all_1($res,'kind');
 		
-				$latitude_longitude = find_all_1($res,'pos');
-				$ids = array();
-				for($i = 0; $i < count($cities); $i++){
-					$pieces = explode(' ',$latitude_longitude[$i]);
-					$lat = substr($pieces[0],0,6);
-					$lng = substr($pieces[1],0,6);
-					$ids[] = (int)substr(preg_replace('~\D+~','',sha1(md5($cities[$i].$lat.$lng))),0,8);
-				}
+// 				$latitude_longitude = find_all_1($res,'pos');
+// 				$ids = array();
+// 				for($i = 0; $i < count($cities); $i++){
+// 					$pieces = explode(' ',$latitude_longitude[$i]);
+// 					$lat = substr($pieces[0],0,6);
+// 					$lng = substr($pieces[1],0,6);
+// 					$ids[] = (int)substr(preg_replace('~\D+~','',sha1(md5($cities[$i].$lat.$lng))),0,8);
+// 				}
 				
-				$ids_new = implode(' ',$ids);
-				//echo $ids; echo '<br>';
-				//echo $ids_old; echo '-'; echo $ids_new; echo '<br>';
+// 				$ids_new = implode(' ',$ids);
+// 				//echo $ids; echo '<br>';
+// 				//echo $ids_old; echo '-'; echo $ids_new; echo '<br>';
 				
-				if($ids_new != $ids_old){
-					$sql = "UPDATE ".TZS_CITY_IDS_TABLE." SET ids='".$ids_new."' WHERE title='".$city_str."'";
-				//	echo $city_str; echo ' '; echo $sql; echo '<br>';
- 					mysql_query($sql,$conn);
+// 				if($ids_new != $ids_old){
+// 					$sql = "UPDATE ".TZS_CITY_IDS_TABLE." SET ids='".$ids_new."' WHERE title='".$city_str."'";
+// 				//	echo $city_str; echo ' '; echo $sql; echo '<br>';
+//  					mysql_query($sql,$conn);
 
- 				}
+//  				}
 		
-			}
+// 			}
 				
 			
 }
