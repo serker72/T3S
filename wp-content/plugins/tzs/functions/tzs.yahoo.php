@@ -91,7 +91,7 @@ function tzs_yahoo_convert0($key, $city_str) {
 	$lat = substr($latitude_longitude[1],0,6);
 	$lng = substr($latitude_longitude[0],0,6);
 	echo $lat.' '.$lng.'<br>';
-	$city_id = (int)substr(preg_replace('~\D+~','',sha1(md5($city/*.$lat.$lng*/))),0,8);
+	$city_id = (int)substr(preg_replace('~\D+~','',sha1(md5($city.$lat.$lng))),0,8);
 	
 	
 	/*print($country.' + '.$country_code.' + '.$country_id);print("<br>");

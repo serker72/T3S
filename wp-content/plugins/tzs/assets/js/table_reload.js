@@ -195,7 +195,6 @@
                 data: fd,
                 dataType: 'json',
                 success: function(data) {
-				alert(data.output_tbody);
                     if ((data.output_tbody !== 'undefined') && (data.output_tbody !== '')) {
                         jQuery("#tbl_products tbody").html(data.output_tbody);
                     }

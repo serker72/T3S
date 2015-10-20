@@ -98,26 +98,20 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 			}
 		}
 		
+		
+		normalize_coordinates($conn);
+		
+		
 		/* Замена id-шек городов
 		 */
-		$sql = "SELECT * FROM ".TZS_CITIES_TABLE;
-		$result = mysql_query($sql,$conn);
-		
-		while($row_city = mysql_fetch_array($result)) {
-				
-			$sql = "UPDATE ".TZS_CITIES_TABLE." SET lat=".substr($row_city['lat'],0, 6)." WHERE lat=".$row_city['lat'];
-			mysql_query($sql,$conn);
-		
-			$sql = "UPDATE ".TZS_CITIES_TABLE." SET lng=".substr($row_city['lng'],0, 6)." WHERE lng=".$row_city['lng'];
-			mysql_query($sql,$conn);
-		}
+
 		
 		$sql = "SELECT * FROM ".TZS_CITIES_TABLE;
 		$result = mysql_query($sql,$conn);
 
 		while($row_city = mysql_fetch_array($result)) {
 				
-				$city_id_new = substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru']/*.number_format($row_city['lat'],3).number_format($row_city['lng'],3)*/))),0,8);
+				$city_id_new = substr(preg_replace('~\D+~','',sha1(md5($row_city['title_ru'].number_format($row_city['lat'],3).number_format($row_city['lng'],3)))),0,8);
 				$city_id_old = $row_city['city_id'];
 
 				
@@ -148,52 +142,109 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 		
 		}
 		
-// 		/* Замена в таблице ids
-// 		 */
-// 			$sql = "SELECT * FROM ".TZS_CITY_IDS_TABLE;
-// 			$result = mysql_query($sql,$conn);
+		/* Замена в таблице ids
+		 */
+			$sql = "SELECT * FROM ".TZS_CITY_IDS_TABLE;
+			$result = mysql_query($sql,$conn);
 	
-// 			while($row_title = mysql_fetch_array($result)) {
-// 				$ids_old = $row_title['ids'];
-// 				$city_str = $row_title['title'];
+			while($row_title = mysql_fetch_array($result)) {
+				$ids_old = $row_title['ids'];
+				$city_str = $row_title['title'];
 				
-// 				$url = "https://geocode-maps.yandex.ru/1.x/?format=json&results=1000&geocode=$city_str";
+				$url = "https://geocode-maps.yandex.ru/1.x/?format=json&results=1000&geocode=$city_str";
 		
-// 				$ch = curl_init();
-// 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-// 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-// 				curl_setopt($ch, CURLOPT_URL, $url);
-// 				$result_=curl_exec($ch);
-// 				curl_close($ch);
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_URL, $url);
+				$result_=curl_exec($ch);
+				curl_close($ch);
 		
-// 				$res = json_decode($result_, true);
+				$res = json_decode($result_, true);
 				
-// 				$cities = find_all_1($res,'name');	
-// 				$kinds = find_all_1($res,'kind');
+				$cities = find_all_1($res,'name');	
+				$kinds = find_all_1($res,'kind');
 		
-// 				$latitude_longitude = find_all_1($res,'pos');
-// 				$ids = array();
-// 				for($i = 0; $i < count($cities); $i++){
-// 					$pieces = explode(' ',$latitude_longitude[$i]);
-// 					$lat = substr($pieces[0],0,6);
-// 					$lng = substr($pieces[1],0,6);
-// 					$ids[] = (int)substr(preg_replace('~\D+~','',sha1(md5($cities[$i].$lat.$lng))),0,8);
-// 				}
+				$latitude_longitude = find_all_1($res,'pos');
+				$ids = array();
+				for($i = 0; $i < count($cities); $i++){
+					$pieces = explode(' ',$latitude_longitude[$i]);
+					$lat = substr($pieces[0],0,6);
+					$lng = substr($pieces[1],0,6);
+					$ids[] = (int)substr(preg_replace('~\D+~','',sha1(md5($cities[$i].$lat.$lng))),0,8);
+				}
 				
-// 				$ids_new = implode(' ',$ids);
-// 				//echo $ids; echo '<br>';
-// 				//echo $ids_old; echo '-'; echo $ids_new; echo '<br>';
+				$ids_new = implode(' ',$ids);
+				//echo $ids; echo '<br>';
+				//echo $ids_old; echo '-'; echo $ids_new; echo '<br>';
 				
-// 				if($ids_new != $ids_old){
-// 					$sql = "UPDATE ".TZS_CITY_IDS_TABLE." SET ids='".$ids_new."' WHERE title='".$city_str."'";
-// 				//	echo $city_str; echo ' '; echo $sql; echo '<br>';
-//  					mysql_query($sql,$conn);
-
-//  				}
+				if($ids_new != $ids_old){
+					$sql = "UPDATE ".TZS_CITY_IDS_TABLE." SET ids='".$ids_new."' WHERE title='".$city_str."'";
+				//	echo $city_str; echo ' '; echo $sql; echo '<br>';
+ 					mysql_query($sql,$conn);
+ 				}
 		
-// 			}
+			}
 				
 			
+}
+
+function normalize_coordinates($conn){
+	
+	$sql = "SELECT * FROM ".TZS_CITIES_TABLE;
+	$result = mysql_query($sql,$conn);
+	
+	while($row_city = mysql_fetch_array($result)) {
+		//echo $row_city['lat'].' '.$row_city['lng'].'<br>';
+		
+		$sql = "SELECT title_ru FROM ".TZS_COUNTRIES_TABLE.' WHERE country_id='.$row_city['country_id'];
+		$cresult = mysql_query($sql,$conn);
+		$row = mysql_fetch_assoc($cresult);
+		$city_str = $row['title_ru'];
+		
+		$sql = "SELECT title_ru FROM ".TZS_REGIONS_TABLE.' WHERE country_id='.$row_city['country_id'].' AND region_id='.$row_city['region_id'];
+	//	echo $sql.'<br>';
+		$cresult = mysql_query($sql,$conn);
+		if (!$cresult)
+			die('Ошибка: ' . mysql_error());
+		$row = mysql_fetch_assoc($cresult);
+		$city_str = $city_str.' '.$row['title_ru'];
+		
+		$city_str = $city_str." ".$row_city['title_ru'];
+		
+		
+	//	echo $city_str.'<br>';
+		
+		$url = "https://geocode-maps.yandex.ru/1.x/?format=json&results=1000&geocode=$city_str";
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$result_=curl_exec($ch);
+		curl_close($ch);
+
+		$res = json_decode($result_, true);
+		
+		$coords = $pieces = explode(" ", find($res,'pos'));
+		$lat = substr($coords[1],0,6);
+		$lng = substr($coords[0],0,6);
+		
+		//echo $row_city['lat'].' '.$row_city['lng'].' -> '.$lat.' '.$lng.'<br>';
+			
+		$sql = "UPDATE ".TZS_CITIES_TABLE." SET lat=".$lat." WHERE lat=".$row_city['lat'];
+		mysql_query($sql,$conn);
+	
+		$sql = "UPDATE ".TZS_CITIES_TABLE." SET lng=".$lng." WHERE lng=".$row_city['lng'];
+		mysql_query($sql,$conn);
+	}
+	
+}
+
+function find($array,$sNeededKey){
+	preg_match('/s\:[\d]+\:\"'.preg_quote($sNeededKey).'\";s\:[\d]+\:\"(.*?)\"/', serialize($array), $rgMatches);
+	$sResult    = $rgMatches[1];
+	return $sResult;
 }
 
 
