@@ -696,7 +696,7 @@ function tzs_edit_shipment($id) {
 
 		//print("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$lng1,$lat1&destinations=$lng2,$lat2&language=en-EN&sensor=false");
 		//print("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lng,$row1->lat&destinations=$row2->lng,$row2->lat&language=ru-RU&sensor=false");echo '<br>';
-		$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lng,$row1->lat&destinations=$row2->lng,$row2->lat&language=ru-RU&sensor=false");
+		$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lat,$row1->lng&destinations=$row2->lat,$row2->lng&language=ru-RU&sensor=false");
 		$data = json_decode($data);
 		$dis = $data->rows[0]->elements[0]->distance->value / 1000;
 		
