@@ -23,19 +23,21 @@ function normalize_ids($url="localhost",$login="root",$password=""){
 	/* Замена id-шек стран
 	 */
 	while($row_country = mysql_fetch_array($result)) {
-		$country_id_new = (int)substr(preg_replace('~\D+~','',sha1(md5($row_country['title_ru']))),0,8);
+		$country_id_new = substr(preg_replace('~\D+~','',sha1(md5($row_country['title_ru']))),0,8);
 		$country_id_old = $row_country['country_id'];
-
+		
 		if($country_id_new != $country_id_old){
 			//echo 'false '; echo $country_id_new; echo ' ';echo $country_id_old; echo '<br>';
 			
- 			$sql = "UPDATE ".TZS_COUNTRIES_TABLE." SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
+ 			$sql = "UPDATE `".TZS_COUNTRIES_TABLE."` SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
+ 			echo $sql.'<br>';
  			mysql_query($sql,$conn);
 			
 			$sql = "UPDATE ".TZS_REGIONS_TABLE." SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
 			mysql_query($sql,$conn);
 			
 			$sql = "UPDATE ".TZS_CITIES_TABLE." SET country_id=".$country_id_new." WHERE country_id=".$country_id_old;
+			//echo $sql.'<br>';
 			mysql_query($sql,$conn);
 			
 			$sql = "UPDATE ".TZS_TRUCK_TABLE." SET from_cid=".$country_id_new." WHERE from_cid=".$country_id_old;
@@ -246,7 +248,6 @@ function find($array,$sNeededKey){
 	$sResult    = $rgMatches[1];
 	return $sResult;
 }
-
 
 function find_all_1($array,$sNeededKey){
 	$places = find_all($array,$sNeededKey);
