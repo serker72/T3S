@@ -23,6 +23,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span1" style="background: #04a4cc;">
         </div>
         <div class="span2" style="background: #04a4cc;">
+            <input type="text" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" placeholder="км" disabled="disabled" style="width: 50px;">
         </div>
         <div class="span3" style="background: #04a4cc;">
         </div>
@@ -35,7 +36,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span3" style="background: #04a4cc;">
             <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="населенный пункт выгрузки">
         </div>
-        <div class="span3" style="background: #04a4cc;">
+        <div class="span1" style="background: #04a4cc;">
+        </div>
+        <div class="span2" style="background: #04a4cc;">
         </div>
         <div class="span3" style="background: #04a4cc;">
         </div>
@@ -125,16 +128,57 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span2" style="background: #04a4cc;">
+            <input type="checkbox" name="cash" <?php isset($_POST['payment_way_debark']) ? 'checked="checked"' : ''; ?>>Наличная
         </div>
-        <div class="span2" style="background: #04a4cc; text-align: right;">
+        <div class="span2" style="background: #04a4cc;">
+            <input type="checkbox" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>>Безналичная
         </div>
-        <div class="span2" style="background: #04a4cc; text-align: right;">
+        <div class="span2" style="background: #04a4cc;">
+            <input type="checkbox" name="payment_way_ship" <?php isset($_POST['payment_way_ship']) ? 'checked="checked"' : ''; ?>>При погрузке
         </div>
-        <div class="span2" style="background: #04a4cc; text-align: right;">
+        <div class="span2" style="background: #04a4cc;">
+            <input type="checkbox" name="payment_way_debark" <?php isset($_POST['payment_way_debark']) ? 'checked="checked"' : ''; ?>>При выгрузке
         </div>
-        <div class="span2" style="background: #04a4cc; text-align: right;">
+        <div class="span2" style="background: #04a4cc;">
+            <input type="checkbox" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>>Софт
         </div>
-        <div class="span2" style="background: #04a4cc; text-align: right;">
+        <div class="span2" style="background: #04a4cc; float: right;">
+            <input type="checkbox" name="payment_way_prepay" <?php isset($_POST['payment_way_prepay']) ? 'checked="checked"' : ''; ?>>Предоплата
+            <input type="text" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"> <span id="opt_prepayment">%</span>
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span8" style="background: #04a4cc;">
+            <div class="span8" style="margin-bottom: 20px;">
+                <input type="checkbox" name="set_price" <?php isset($_POST['set_price']) ? 'checked="checked"' : ''; ?>>Не указывать стоимость (цена договорная)
+            </div>
+            <div class="span8">
+                <input name="addpost" type="submit" id="" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?>"/>
+                <input name="addpost" type="submit" id="" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "ОЧИСТИТЬ ВСЕ ПОЛЯ" ?>"/>
+                <input name="addpost" type="submit" id="" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "ВЫХОД" ?>"/>
+            </div>
+        </div>
+        <div class="span4" style="background: #04a4cc; float: right; padding: 2px;">
+            <div class="" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px;">
+                ошибки<br>
+                ошибки<br>
+                ошибки<br>
+                ошибки<br>
+                ошибки<br>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span12" style="background: #04a4cc;">
+            <span>После нажатия кнопки "РАЗМЕСТИТЬ ЗАЯВКУ" заявка будет опубликована в базе транспорта, после нажатия кнопки "ВЫХОД" заявка не сохраняется.</span>
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+        <div class="span12" style="background: #04a4cc;">
+            <span>Напоминаем: заявка будет удалена из базы активных заявок и перенесена в архив на следующий день после указанного Вами дня выгрузки</span>
         </div>
     </div>
     
