@@ -455,26 +455,30 @@ function tzs_cost_to_str($cost_str, $split_flag = false) {
         else {	return $str1.', '.$str; }
 }
 
-function tzs_print_array_options($arr, $capt, $name) {
-	$count = count($arr);
-	$counter = 0;
-	foreach ($arr as $key) {
-		echo '<option value="'.$key.'" ';
-		if ((isset($_POST[$name]) && $_POST[$name] == $key) || (!isset($_POST[$name]) && $key == 0)) {
-			echo 'selected="selected"';
-		}
-		echo '>';
-		if ($key == 0) {
-			echo '...';
-		} else {
-			if ($counter == $count-1) {
-				echo ">";
-			}
-			echo $key.$capt;
-		}
-		echo '</option>';
-		$counter++;
-	}
+function tzs_print_array_options($arr, $capt, $name, $capt0) {
+    $count = count($arr);
+    $counter = 0;
+    foreach ($arr as $key => $val) {
+        echo '<option value="'.$key.'" ';
+        if ((isset($_POST[$name]) && $_POST[$name] == $key) || (!isset($_POST[$name]) && $key == 0)) {
+            echo 'selected="selected"';
+        }
+        echo '>';
+        if ($key == 0) {
+            if ($capt0) {
+                echo $capt0;
+            } else {
+                echo '...';
+            }
+        } else {
+            if ($counter == $count-1) {
+                //echo ">";
+            }
+            echo $val.$capt;
+        }
+        echo '</option>';
+        $counter++;
+    }
 }
 
 function tzs_copy_get_to_post() {

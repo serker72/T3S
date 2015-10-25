@@ -13,14 +13,12 @@ function tzs_print_shipment_form($errors, $edit=false) {
     <div style="clear: both;"></div>
     
     <!-- test new form -->
-    <form enctype="multipart/form-data" method="post" id="form_shipment" class="" action="">
-        
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span3" style="background: #04a4cc;">
-            <input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', ''); ?>" placeholder="Дата погрузки">
+            <input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', $d); ?>" placeholder="дата погрузки">
         </div>
         <div class="span3" style="background: #04a4cc;">
-            <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
+            <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="населенный пункт погрузки">
         </div>
         <div class="span1" style="background: #04a4cc;">
         </div>
@@ -33,10 +31,10 @@ function tzs_print_shipment_form($errors, $edit=false) {
     
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span3" style="background: #04a4cc;">
-            <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', ''); ?>" placeholder="Дата выгрузки">
+            <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', $d); ?>" placeholder="дата выгрузки">
         </div>
         <div class="span3" style="background: #04a4cc;">
-            <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
+            <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="населенный пункт выгрузки">
         </div>
         <div class="span1" style="background: #04a4cc;">
         </div>
@@ -48,17 +46,23 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span3" style="background: #04a4cc;">
-            <select name="sh_type" placeholder="Тип груза">
+            <select name="sh_type" placeholder="тип груза">
             <?php
-                tzs_print_array_options($GLOBALS['tzs_sh_types'], '', 'sh_type', 'Тип груза');
+                foreach ($GLOBALS['tzs_sh_types'] as $key => $val) {
+                        echo '<option value="'.$key.'" ';
+                        if ((isset($_POST['sh_type']) && $_POST['sh_type'] == $key) || (!isset($_POST['sh_type']) && $key == 0)) {
+                                echo 'selected="selected"';
+                        }
+                        echo '>'.$val.'</option>';
+                }
             ?>
             </select>
         </div>
         <div class="span3" style="background: #04a4cc;">
-            <input type="text" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="Описание груза">
+            <input type="text" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="описание груза">
         </div>
         <div class="span3" style="background: #04a4cc;">
-            <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий">
+            <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="комментарии">
         </div>
         <div class="span3" style="background: #04a4cc; text-align: right; float: right;">
             <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;&nbsp;Указать габариты груза (м):
@@ -69,7 +73,13 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span3" style="background: #04a4cc;">
             <select name="trans_type">
             <?php
-                tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
+                foreach ($GLOBALS['tzs_tr_types'] as $key => $val) {
+                        echo '<option value="'.$key.'" ';
+                        if ((isset($_POST['trans_type']) && $_POST['trans_type'] == $key) || (!isset($_POST['trans_type']) && $key == 0)) {
+                                echo 'selected="selected"';
+                        }
+                        echo '>'.$val.'</option>';
+                }
             ?>
             </select>
         </div>
@@ -80,30 +90,30 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
         <div class="span3" style="background: #04a4cc;">
             <span>Вес груза:</span>
-            <input type="text" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5" style="width: 50px;">
+            <input type="text" size="5" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5" style="width: 50px;">
             <span>т</span>
         </div>
         <div class="span3" style="background: #04a4cc; text-align: right; float: right;">
-            <input type="text" name="sh_length" id="sh_length" value="<?php echo_val('sh_length'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Длина" style="width: 50px;">&nbsp;&nbsp;
-            <input type="text" name="sh_width" id="sh_width" value="<?php echo_val('sh_width'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Ширина" style="width: 50px;">&nbsp;&nbsp;
-            <input type="text" name="sh_height" id="sh_height" value="<?php echo_val('sh_height'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Высота" style="width: 50px;">
+            <input type="text" size="3" name="sh_length" id="sh_length" value="<?php echo_val('sh_length'); ?>" maxlength = "5" placeholder="длина" style="width: 50px;">&nbsp;&nbsp;
+            <input type="text" size="3" name="sh_width" id="sh_width" value="<?php echo_val('sh_width'); ?>" maxlength = "5" placeholder="ширина" style="width: 50px;">&nbsp;&nbsp;
+            <input type="text" size="3" name="sh_height" id="sh_height" value="<?php echo_val('sh_height'); ?>" maxlength = "5" placeholder="высота" style="width: 50px;">
         </div>
     </div>
 
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span4" style="background: #04a4cc;">
             <span>Стоимость перевозки:</span>&nbsp;&nbsp;
-            <input type="text" name="price" value="<?php echo_val('price'); ?>" size="10" style="width: 100px;">&nbsp;
+            <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10" style="width: 100px;">&nbsp;
             <span>грн</span>
         </div>
         <div class="span4" style="background: #04a4cc;">
             <span>Цена = </span>&nbsp;
-            <input type="text" name="cost" value="<?php echo_val('cost'); ?>" size="10" disabled="disabled" style="width: 100px;">&nbsp;
+            <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10" disabled="disabled" style="width: 100px;">&nbsp;
             <span>грн/км</span>
         </div>
         <div class="span4" style="background: #04a4cc; text-align: right; float: right;">
             <span>Объем груза = </span>&nbsp;
-            <input type="text" id="volume" name="volume" value="<?php echo_val('volume'); ?>" disabled="disabled" style="width: 80px;">&nbsp;
+            <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10" disabled="disabled" style="width: 100px;">&nbsp;
             <span>м<sup>3</sup></span>
         </div>
     </div>
@@ -118,43 +128,44 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span2" style="background: #04a4cc;">
-            <input type="checkbox" name="cash" <?php isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><span class="">Наличная</span>
+            <input type="checkbox" name="cash" <?php isset($_POST['payment_way_debark']) ? 'checked="checked"' : ''; ?>>Наличная
         </div>
         <div class="span2" style="background: #04a4cc;">
-            <input type="checkbox" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><span class="">Безналичная</span>
+            <input type="checkbox" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>>Безналичная
         </div>
         <div class="span2" style="background: #04a4cc;">
-            <input type="checkbox" name="way_ship" <?php isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><span class="">При погрузке</span>
+            <input type="checkbox" name="payment_way_ship" <?php isset($_POST['payment_way_ship']) ? 'checked="checked"' : ''; ?>>При погрузке
         </div>
         <div class="span2" style="background: #04a4cc;">
-            <input type="checkbox" name="way_debark" <?php isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><span class="">При выгрузке</span>
+            <input type="checkbox" name="payment_way_debark" <?php isset($_POST['payment_way_debark']) ? 'checked="checked"' : ''; ?>>При выгрузке
         </div>
         <div class="span2" style="background: #04a4cc;">
-            <input type="checkbox" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><span class="">Софт</span>
+            <input type="checkbox" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>>Софт
         </div>
         <div class="span2" style="background: #04a4cc; float: right;">
-            <input type="checkbox" id="way_prepay" name="way_prepay" <?php isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?>><span class="">Предоплата</span>
-            <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"> <span id="opt_prepayment">%</span>
+            <input type="checkbox" name="payment_way_prepay" <?php isset($_POST['payment_way_prepay']) ? 'checked="checked"' : ''; ?>>Предоплата
+            <input type="text" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"> <span id="opt_prepayment">%</span>
         </div>
     </div>
 
     <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span8" style="background: #04a4cc;">
-            <div class="span12" style="margin-bottom: 20px;">
-                <input type="checkbox" id="price_query" name="price_query" <?php isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>><span class="">Не указывать стоимость (цена договорная)</span>
+            <div class="span8" style="margin-bottom: 20px;">
+                <input type="checkbox" name="set_price" <?php isset($_POST['set_price']) ? 'checked="checked"' : ''; ?>>Не указывать стоимость (цена договорная)
             </div>
-            <div class="span4" style="background: #F00;">
-                <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
-            </div>
-            <div class="span4" style="background: #F00;">
-                <button id="form_button2">ОЧИСТИТЬ ВСЕ ПОЛЯ</button>
-            </div>
-            <div class="span4" style="background: #F00;">
-                <button id="form_button3">ВЫХОД</button>
+            <div class="span8">
+                <input name="addpost" type="submit" id="" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?>"/>
+                <input name="addpost" type="submit" id="" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "ОЧИСТИТЬ ВСЕ ПОЛЯ" ?>"/>
+                <input name="addpost" type="submit" id="" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "ВЫХОД" ?>"/>
             </div>
         </div>
-        <div class="span4" style="float: right; padding: 2px;">
-            <div class="" id="form_error_message" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px 5px; display: none;">
+        <div class="span4" style="background: #04a4cc; float: right; padding: 2px;">
+            <div class="" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px;">
+                ошибки<br>
+                ошибки<br>
+                ошибки<br>
+                ошибки<br>
+                ошибки<br>
             </div>
         </div>
     </div>
@@ -171,6 +182,201 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
     </div>
     
+    <div class="clearfix">&nbsp;</div>
+    
+    <!-- test new form END -->
+    
+    <div style="clear: both;"></div>
+    
+    <form enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
+
+        <div id="cost_div" style="display:none;">
+        <table>
+                <tr>
+                        <td>
+                                <input type="radio" name="set_price" value="1" <?php if (isset($_POST['set_price']) && $_POST['set_price'] == '1') echo 'checked="checked"'; ?>><b>Указать стоимость перевозки и форму оплаты</b><br/>
+                                <input type="text" for="price" name="price" value="<?php echo_val('price'); ?>" size="10">
+                                <select for="price" name="cost_curr">
+                                <?php
+                                        foreach ($GLOBALS['tzs_curr'] as $key => $val) {
+                                                echo '<option value="'.$key.'" ';
+                                                if ($val == '')
+                                                        $val = '-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-';
+                                                if (isset($_POST['cost_curr']) && $_POST['cost_curr'] == $key && $key != 0) {
+                                                        echo 'selected="selected"';
+                                                }
+                                                if ($key == 0) {
+                                                        echo 'disabled="disabled"';
+                                                }
+                                                echo '>'.htmlspecialchars($val).'</option>\n';
+                                        }
+                                ?>
+                                </select><br/>
+                                <input type="radio" for="price" name="payment" value="nocash" <?php tzs_cost_print_option('payment', 'nocash'); ?>/> <span id="opt_nocash">без нал.</span>
+                                <input type="radio" for="price" name="payment" value="cash" <?php tzs_cost_print_option('payment', 'cash'); ?>/> <span id="opt_cash">нал.</span>
+                                <input type="radio" for="price" name="payment" value="mix_cash" <?php tzs_cost_print_option('payment', 'mix_cash'); ?>/> <span id="opt_mix_cash">комбинир.</span><br/>
+                                <input type="radio" for="price" name="payment" value="soft" <?php tzs_cost_print_option('payment', 'soft'); ?>/> <span id="opt_soft">софт</span>
+                                <input type="radio" for="price" name="payment" value="conv" <?php tzs_cost_print_option('payment', 'conv'); ?>/> <span id="opt_conv">удобная</span>
+                                <input type="radio" for="price" name="payment" value="on_card" <?php tzs_cost_print_option('payment', 'on_card'); ?>/> <span id="opt_on_card">на карту</span>
+                        </td>
+
+                        <td>
+                                <input type="checkbox" for="price" opt="true" name="payment_way_nds" value="nds" <?php tzs_cost_print_option_def('payment_way_nds'); ?>> <span id="opt_nds">НДС</span><br/>
+                                <input type="checkbox" for="price" opt="true" name="payment_way_ship" value="ship" <?php tzs_cost_print_option_def('payment_way_ship'); ?>> <span id="opt_ship">При погрузке</span><br/>
+                                <input type="checkbox" for="price" opt="true" name="payment_way_debark" value="debark" <?php tzs_cost_print_option_def('payment_way_debark'); ?>> <span id="opt_debark">При выгрузке</span><br/>
+                                <input type="checkbox" for="price" name="payment_way_prepay" value="prepay" <?php tzs_cost_print_option_def('payment_way_prepay'); ?>> <span id="opt_prepay">Предоплата</span>
+                                <input type="text" for="price" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5"> <span id="opt_prepayment">%</span><br/>
+                                <input type="checkbox" for="price" opt="true" name="payment_way_barg" value="barg" <?php tzs_cost_print_option_def('payment_way_barg'); ?>> <span id="opt_barg">Торг</span><br/>
+                        </td>
+
+                        <td>
+                                <input type="radio" name="set_price" value="0" <?php if ((isset($_POST['set_price']) && $_POST['set_price'] == '0') || !isset($_POST['set_price'])) echo 'checked="checked"'; ?>><b>Не указывать стоимость перевозки</b><br/>(цена договорная)
+                                <input type="checkbox" for="noprice" name="price_query" value="" <?php tzs_cost_print_option_def('price_query'); ?>> <span id="opt_price_query">Запрос цены</span><br/>
+                        </td>
+                </tr>
+        </table>
+        </div>
+
+    <!-- Новый вид формы, навеяно http://xiper.net/collect/html-and-css-tricks/verstka-form/blochnaya-verstka-form -->
+        <div>
+            <!--h4>Размещение информации о свободном транспорте</h4-->
+            <h5>Обязательные к заполнению поля помечены <span class="form_field_required">*</span></h5>
+            <h5>Заявка будет автоматически перенесена в архив на следующий день, после даты выгрузки !</h5>
+            <!--p>Укажите, пожалуйста, категорию, наименование, описание, количество, стоимость, форму оплаты, месторасположение, дату окончания публикации товара и комментарии</p-->
+            <hr/>
+        </div>
+    
+        <!-- Left column form -->
+        <div class="left_form_wrapper">
+            <div class="pr_edit_form_line">
+                <label for="sh_id">Номер заявки</label>
+                <input type="text" id="" name="sh_id" size="15" value="<?php echo_val('id'); ?>" disabled="disabled">
+            </div>
+
+            <div class="pr_edit_form_line">
+                <label for="sh_date_from">Дата погрузки<span class="form_field_required">*</span></label>
+                <input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', $d); ?>">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_city_from">Населенный пункт погрузки<span class="form_field_required">*</span></label>
+                <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="show_dist_link"></label>
+                <a id="show_dist_link" href="javascript:showDistanceDialog();">Расстояние между пунктами</a>
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="set_dim">Указать</label>
+                <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;<span>размеры груза, в метрах</span>
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_length">Длина</label>
+                <input type="text" size="3" name="sh_length" id="sh_length" value="<?php echo_val('sh_length'); ?>" maxlength = "5">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_width">Ширина</label>
+                <input type="text" size="3" name="sh_width" id="sh_width" value="<?php echo_val('sh_width'); ?>" maxlength = "5">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_height">Высота</label>
+                <input type="text" size="3" name="sh_height" id="sh_height" value="<?php echo_val('sh_height'); ?>" maxlength = "5">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="">Стоимость перевозки<br><a href="javascript: showCostForm();">Указать</a></label>
+                <span id="cost_str"></span>
+            </div>
+        </div>
+    
+        <!-- Right column form -->
+        <div class="right_form_wrapper">
+            <div class="pr_edit_form_line">
+                <label for="sh_active">Статус<span class="form_field_required">*</span></label>
+                <select name="sh_active">
+                    <option value="1" <?php if (isset($_POST["sh_active"]) && ($_POST["sh_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
+                    <option value="0" <?php if (isset($_POST["sh_active"]) && ($_POST["sh_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
+                </select>
+            </div>
+
+            <div class="pr_edit_form_line">
+                <label for="sh_date_to">Дата выгрузки<span class="form_field_required">*</span></label>
+                <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', $d); ?>">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_city_to">Населенный пункт выгрузки<span class="form_field_required">*</span></label>
+                <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_type">Тип груза<span class="form_field_required">*</span></label>
+                <select name="sh_type">
+                <?php
+                    foreach ($GLOBALS['tzs_sh_types'] as $key => $val) {
+                            echo '<option value="'.$key.'" ';
+                            if ((isset($_POST['sh_type']) && $_POST['sh_type'] == $key) || (!isset($_POST['sh_type']) && $key == 0)) {
+                                    echo 'selected="selected"';
+                            }
+                            echo '>'.$val.'</option>';
+                    }
+                ?>
+                </select>
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="trans_type">Тип транспортного средства</label>
+                <select name="trans_type">
+                <?php
+                    foreach ($GLOBALS['tzs_tr_types'] as $key => $val) {
+                            echo '<option value="'.$key.'" ';
+                            if ((isset($_POST['trans_type']) && $_POST['trans_type'] == $key) || (!isset($_POST['trans_type']) && $key == 0)) {
+                                    echo 'selected="selected"';
+                            }
+                            echo '>'.$val.'</option>';
+                    }
+                ?>
+                </select>
+                &nbsp;&nbsp;<span><img id="trans_type_img" src="" alt=""></img></span>
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="trans_count">Количество машин</label>
+		<input type="text" size="5" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "1">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_weight">Вес груза (т)</label>
+		<input type="text" size="5" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_volume">Объём груза (м³)</label>
+		<input type="text" size="5" name="sh_volume" value="<?php echo_val('sh_volume'); ?>" maxlength = "7">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="sh_descr">Описание груза</label>
+                <input type="text" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255">
+            </div>
+            
+            <div class="pr_edit_form_line">
+                <label for="comment">Комментарии</label>
+		<input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255">
+            </div>
+        </div>
+        
+        <div style="clear: both;"></div>
+        <div>
+            <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "Разместить" ?>"/>
+        </div>
+        
+	
 	<?php if ($edit) {?>
 		<input type="hidden" name="action" value="editshipment"/>
 		<input type="hidden" name="id" value="<?php echo_val('id'); ?>"/>
@@ -179,12 +385,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 	<?php } ?>
 	<input type="hidden" name="formName" value="shipment" />
     </form>
-    <div class="clearfix">&nbsp;</div>
-    
-    <!-- test new form END -->
-    
 	
-        <script src="/wp-content/plugins/tzs/assets/js/jquery.maskedinput.min.js"></script>
 	<script>
             tzs_tr2_types = [];
             <?php
@@ -192,7 +393,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     echo "tzs_tr2_types[$key] = '$val[1]';\n";
                 }
             ?>
-/*
+
 		function setEnabledByInstance(cl, el, enabled) {
 			if (enabled) {
 				el.removeAttr('disabled');
@@ -223,7 +424,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 			jQuery(cl).find('[for=noprice]').each(function() {
 				setEnabledByInstance(cl, jQuery(this), !price);
 			});
-			var prepay = jQuery(cl).find('input[name=way_prepay]').is(':checked');
+			var prepay = jQuery(cl).find('input[name=payment_way_prepay]').is(':checked');
 			setEnabled(cl, 'prepayment', price && prepay);
 			
 			if (price && prepay) {
@@ -245,7 +446,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 			jQuery(cl).find('input[name=set_price]').click(function () {
 				showHide(cl);
 			});
-			jQuery(cl).find('input[name=way_prepay]').click(function () {
+			jQuery(cl).find('input[name=payment_way_prepay]').click(function () {
 				showHide(cl);
 			});
 			showHide(cl);
@@ -302,7 +503,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 					}
 				});
 				
-				if (jQuery('input[name=way_prepay]').is(':checked')) {
+				if (jQuery('input[name=payment_way_prepay]').is(':checked')) {
 					str += ', предоплата: ';
 					str += jQuery('input[name=prepayment]').val();
 					str += '%';
@@ -314,156 +515,45 @@ function tzs_print_shipment_form($errors, $edit=false) {
 			}
 			jQuery('#cost_str').html(str);
 		}
-*/		
+		
 		function onSetDim(ch) {
-                    if (ch) {
-                        jQuery("#sh_length, #sh_width, #sh_height").removeAttr("disabled");
-                        //jQuery("#sh_length, #sh_width, #sh_height").attr('required', 'required');
-                    } else {
-                        //jQuery("#sh_length, #sh_width, #sh_height").removeAttr('required');
-                        jQuery("#sh_length, #sh_width, #sh_height").attr("disabled", "disabled");
-                        jQuery("#sh_length, #sh_width, #sh_height").attr('value', '');
-                        jQuery("#volume").attr('value', '');
-                    }
+			if (ch) {
+				jQuery("#sh_length").removeAttr("disabled");
+				jQuery("#sh_width").removeAttr("disabled");
+				jQuery("#sh_height").removeAttr("disabled");
+			} else {
+				jQuery("#sh_length").attr("disabled", "disabled");
+				jQuery("#sh_width").attr("disabled", "disabled");
+				jQuery("#sh_height").attr("disabled", "disabled");
+			}
 		}
 		
 		function showDistanceDialog() {
-                    displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
+			displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
 		}
 
 		function onTransTypeChange() {
-                    jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
+			jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
 		}
-                
-                function onPriceQueryChange() {
-                    if (jQuery("#price_query").is(':checked')) {
-                        jQuery("[name=price]").attr('value', '');
-                        jQuery("[name=cost]").attr('value', '');
-                        jQuery("[name=prepayment]").attr('value', '');
-                        
-                        jQuery("[name=cash]").prop('checked', false);
-                        jQuery("[name=nocash]").prop('checked', false);
-                        jQuery("[name=way_ship]").prop('checked', false);
-                        jQuery("[name=way_debark]").prop('checked', false);
-                        jQuery("[name=soft]").prop('checked', false);
-                        jQuery("[name=way_prepay]").prop('checked', false);
-                        
-                        jQuery("[name=price]").attr("disabled", "disabled");
-                        jQuery("[name=prepayment]").attr("disabled", "disabled");
-                        jQuery("[name=cash]").attr("disabled", "disabled");
-                        jQuery("[name=nocash]").attr("disabled", "disabled");
-                        jQuery("[name=way_ship]").attr("disabled", "disabled");
-                        jQuery("[name=way_debark]").attr("disabled", "disabled");
-                        jQuery("[name=soft]").attr("disabled", "disabled");
-                        jQuery("#way_prepay").attr("disabled", "disabled");
-                        jQuery("#prepayment").attr("disabled", "disabled");
-                    } else {
-                        jQuery("[name=price]").removeAttr("disabled");
-                        jQuery("[name=prepayment]").removeAttr("disabled");
-                        jQuery("[name=cash]").removeAttr("disabled");
-                        jQuery("[name=nocash]").removeAttr("disabled");
-                        jQuery("[name=way_ship]").removeAttr("disabled");
-                        jQuery("[name=way_debark]").removeAttr("disabled");
-                        jQuery("[name=soft]").removeAttr("disabled");
-                        jQuery("#way_prepay").removeAttr("disabled");
-                        
-                        jQuery("#prepayment").attr("disabled", "disabled");
-                    }
-                }
-                
-                function onWayPrepayChange() {
-                    if (jQuery("#way_prepay").is(':checked')) {
-                        jQuery("#prepayment").attr('value', '');
-                        jQuery("#prepayment").removeAttr("disabled");
-                    } else {
-                        jQuery("#prepayment").attr('value', '');
-                        jQuery("#prepayment").attr("disabled", "disabled");
-                    }
-                }
-
-		function onVolumeCalculate() {
-                    if ((jQuery('#sh_length').val().length > 0) && (jQuery('#sh_width').val().length > 0) && (jQuery('#sh_height').val().length > 0)) {
-                        var vol = jQuery('#sh_length').val() * jQuery('#sh_width').val() * jQuery('#sh_height').val();
-                        jQuery('#volume').attr('value', vol);
-                    } else {
-                        jQuery('#volume').attr('value', '');
-                    }
-		}
-
-                function resetForm(selector) {
-                    jQuery(':text, :password, :file, textarea', selector).val('');
-                    jQuery(':input, select option', selector)
-                            .removeAttr('checked')
-                            .removeAttr('selected');
-                    jQuery('select option:first', selector).attr('selected',true);
-                }
-
-		function onFormValidate() {
-                    //var ErrorMsg1 = 'Список ошибок:<ul>';
-                    var ErrorMsg1 = '<p>';
-                    var ErrorMsg2 = '';
-                    var ErrorMsg3 = '</p>';
-                    if (jQuery('#set_dim').prop('checked')) {
-                        if (jQuery('#sh_length').val().length == 0) {
-                            ErrorMsg2 = ErrorMsg2 + 'Не указана длина груза.<br>\n';
-                            jQuery('#sh_length').addClass('form_error_input');
-                        }
-                        if (jQuery('#sh_width').val().length == 0) {
-                            ErrorMsg2 = ErrorMsg2 + 'Не указана ширина груза.<br>\n';
-                            jQuery('#sh_width').addClass('form_error_input');
-                        }
-                        if (jQuery('#sh_height').val().length == 0) {
-                            ErrorMsg2 = ErrorMsg2 + 'Не указана высота груза.<br>\n';
-                            jQuery('#sh_height').addClass('form_error_input');
-                        }
-                    }
-                    
-                    if (ErrorMsg2.length > 0) {
-                        jQuery("#form_error_message").html(ErrorMsg1 + ErrorMsg2 + ErrorMsg3);
-                        jQuery("#form_error_message").show();
-                    }
-                }
-
+		
 		jQuery(document).ready(function(){
-                    jQuery('#set_dim').click(function() {
-                            onSetDim(this.checked);
-                    });
-
-                    jQuery('#bpost').submit(function() {
-                            jQuery('#addpostsub').attr('disabled','disabled');
-                            return true;
-                    });
-                    jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
-                    jQuery( "#datepicker1" ).datepicker({ dateFormat: "dd.mm.yy" });
-                    jQuery( "#datepicker2" ).datepicker({ dateFormat: "dd.mm.yy" });
-                    onSetDim(jQuery('#set_dim').prop('checked'));
-                    jQuery("[name=trans_type]").change(function() { onTransTypeChange(); });
-                    jQuery("[name=trans_type]").keyup(function() { onTransTypeChange(); });
-
-                    //updateCostValue();
-                    onTransTypeChange();
-                    onWayPrepayChange();
-
-                    //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
-                    jQuery("#sh_length, #sh_width, #sh_height").bind("change keyup input click", function() {
-                        if (this.value.match(/[^0-9.]/g)) {
-                            this.value = this.value.replace(/[^0-9.]/g, '');
-                        }
-                    });
-                    jQuery("#sh_length, #sh_width, #sh_height").change(function() { onVolumeCalculate(); });
-                    jQuery("#price_query").change(function() { onPriceQueryChange(); });
-                    jQuery("#way_prepay").change(function() { onWayPrepayChange(); });
-                    
-                    jQuery("#form_button2").click(function(event) { 
-                        event.preventDefault();
-                        resetForm("form[id='form_shipment']");
-                        onSetDim(jQuery('#set_dim').prop('checked'));
-                    });
-                    
-                    jQuery("#form_button3").click(function(event) { 
-                        event.preventDefault();
-                        onFormValidate(); 
-                    });
+                        jQuery('#set_dim').click(function() {
+                                onSetDim(this.checked);
+                        });
+		
+			jQuery('#bpost').submit(function() {
+				jQuery('#addpostsub').attr('disabled','disabled');
+				return true;
+			});
+			jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
+			jQuery( "#datepicker1" ).datepicker({ dateFormat: "dd.mm.yy" });
+			jQuery( "#datepicker2" ).datepicker({ dateFormat: "dd.mm.yy" });
+			onSetDim(jQuery('#set_dim').prop('checked'));
+                        jQuery("[name=trans_type]").change(function() { onTransTypeChange(); });
+                        jQuery("[name=trans_type]").keyup(function() { onTransTypeChange(); });
+                        
+			updateCostValue();
+                        onTransTypeChange();
 		});
 	</script>
 <?php
@@ -535,15 +625,15 @@ function tzs_edit_shipment($id) {
 		
 		if (isset($_POST['payment_way_nds']))
 			$price_json['payment_way_nds'] = true;
-		if (isset($_POST['way_ship']))
-			$price_json['way_ship'] = true;
-		if (isset($_POST['way_debark']))
-			$price_json['way_debark'] = true;
+		if (isset($_POST['payment_way_ship']))
+			$price_json['payment_way_ship'] = true;
+		if (isset($_POST['payment_way_debark']))
+			$price_json['payment_way_debark'] = true;
 		if (isset($_POST['payment_way_barg']))
 			$price_json['payment_way_barg'] = true;
 			
-		if (isset($_POST['way_prepay'])) {
-			$price_json['way_prepay'] = true;
+		if (isset($_POST['payment_way_prepay'])) {
+			$price_json['payment_way_prepay'] = true;
 			$prepayment = get_param_def('prepayment', '0');
 			if (!is_valid_num($prepayment) || floatval($prepayment) > 100) {
 				array_push($errors, "Неверно задан размер предоплаты");
