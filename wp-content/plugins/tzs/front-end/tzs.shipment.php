@@ -26,7 +26,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <img id ="first_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2" style="background: #04a4cc;">
-            <input type="text" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" disabled="disabled" style="width: 50px;">&nbsp;&nbsp;км
+            <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" disabled="disabled" style="width: 50px;">&nbsp;&nbsp;км
         </div>
         <div class="span3" style="background: #04a4cc;">
         </div>
@@ -339,6 +339,14 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
 		}
                 
+		function onCityChange() {
+                    if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+                        jQuery('#sh_distance').attr('value', 'vol');
+                    } else {
+                        jQuery('#sh_distance').attr('value', '');
+                    }
+		}
+                
                 function onPriceQueryChange() {
                     if (jQuery("#price_query").is(':checked')) {
                         jQuery("[name=price]").attr('value', '');
@@ -447,13 +455,15 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     //updateCostValue();
                     onTransTypeChange();
                     onWayPrepayChange();
+                    
+                    jQuery('#first_city, #second_city').change(function() { onCityChange(); });
 
                     //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
-                    jQuery("#sh_length, #sh_width, #sh_height").bind("change keyup input click", function() {
+                    /*jQuery("#sh_length, #sh_width, #sh_height").bind("change keyup input click", function() {
                         if (this.value.match(/[^0-9.]/g)) {
                             this.value = this.value.replace(/[^0-9.]/g, '');
                         }
-                    });
+                    });*/
                     jQuery("#sh_length, #sh_width, #sh_height").change(function() { onVolumeCalculate(); });
                     jQuery("#price_query").change(function() { onPriceQueryChange(); });
                     jQuery("#way_prepay").change(function() { onWayPrepayChange(); });
