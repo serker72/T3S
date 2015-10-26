@@ -23,9 +23,10 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
         </div>
         <div class="span1" style="background: #04a4cc;">
+            <img id ="first_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2" style="background: #04a4cc;">
-            <input type="text" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" placeholder="км" disabled="disabled" style="width: 50px;">
+            <input type="text" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" disabled="disabled" style="width: 50px;">&nbsp;&nbsp;км
         </div>
         <div class="span3" style="background: #04a4cc;">
         </div>
@@ -39,6 +40,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1" style="background: #04a4cc;">
+            <img id ="second_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2" style="background: #04a4cc;">
         </div>
@@ -73,10 +75,12 @@ function tzs_print_shipment_form($errors, $edit=false) {
             ?>
             </select>
         </div>
-        <div class="span3">
+        <div class="span1">
             <span><img id="trans_type_img" src="" alt=""></img></span>&nbsp;&nbsp;
+        </div>
+        <div class="span2">
             <span>Кол-во машин:</span>
-            <input type="text" size="5" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "1" style="width: 50px;">
+            <input type="text" size="5" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "1" style="width: 30px;">
         </div>
         <div class="span3" style="background: #04a4cc;">
             <span>Вес груза:</span>
