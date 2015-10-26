@@ -21,12 +21,13 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
         <div class="span3" style="background: #04a4cc;">
             <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
-        </div>
+	   </div>
         <div class="span1" style="background: #04a4cc;">
             <img id ="first_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2" style="background: #04a4cc;">
             <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" disabled="disabled" style="width: 50px;">&nbsp;&nbsp;км
+			<input type="hidden" name="length" id="route-length">
         </div>
         <div class="span3" style="background: #04a4cc;">
         </div>
@@ -319,6 +320,28 @@ function tzs_print_shipment_form($errors, $edit=false) {
 			jQuery('#cost_str').html(str);
 		}
 */		
+		function calculate_distance() {
+			var length = 0;		
+			var routeFrom = document.getElementById('first_city').value;
+			var routeTo = document.getElementById('second_city').value;
+			// Создание маршрута
+			ymaps.route([routeFrom, routeTo]).then(
+				function(route) {
+					//alert('Длина маршрута = ' + route.getHumanLength());
+					length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
+					jQuery('#sh_distance').attr('value', length);
+					document.getElementById('route-length').value = length;				
+					/*var x = document.getElementsByName('theForm');
+					x[0].submit(); // Form submission */
+				},
+				function(error) {
+				 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
+					document.getElementById('route-length').value = 'Ошибка';
+				}
+			); 
+		}
+
+
 		function onSetDim(ch) {
                     if (ch) {
                         jQuery("#sh_length, #sh_width, #sh_height").removeAttr("disabled");
@@ -340,8 +363,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
 		}
                 
 		function onCityChange() {
+					
                     if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
-                        jQuery('#sh_distance').attr('value', 'vol');
+						calculate_distance();
                     } else {
                         jQuery('#sh_distance').attr('value', '');
                     }
@@ -456,7 +480,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     onTransTypeChange();
                     onWayPrepayChange();
                     
-                    jQuery('#first_city, #second_city').change(function() { onCityChange(); });
+                    jQuery('#first_city, #second_city').on('blur',function() { onCityChange(); });
 
                     //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
                     /*jQuery("#sh_length, #sh_width, #sh_height").bind("change keyup input click", function() {
@@ -664,9 +688,16 @@ function tzs_edit_shipment($id) {
 
 		//print("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$lng1,$lat1&destinations=$lng2,$lat2&language=en-EN&sensor=false");
 		//print("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lng,$row1->lat&destinations=$row2->lng,$row2->lat&language=ru-RU&sensor=false");echo '<br>';
-		$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lat,$row1->lng&destinations=$row2->lat,$row2->lng&language=ru-RU&sensor=false");
+/* 		$data = file_get_contents("http://maps.googleapis.com/maps/api/distancematrix/json?origins=$row1->lat,$row1->lng&destinations=$row2->lat,$row2->lng&language=ru-RU&sensor=false");
 		$data = json_decode($data);
-		$dis = $data->rows[0]->elements[0]->distance->value / 1000;
+		$dis = $data->rows[0]->elements[0]->distance->value / 1000; */
+		/*
+		Не срабатывает это:
+		$sh_distance = get_param('sh_distance');
+		*/
+		
+		$sh_distance = get_param('length');
+		//echo 'Дистанция - '+$sh_distance+'<br>';
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_SHIPMENT_TABLE.
@@ -674,7 +705,7 @@ function tzs_edit_shipment($id) {
 				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d);",
 				$user_id, $sh_date_from, $sh_date_to, stripslashes_deep($sh_city_from), stripslashes_deep($sh_city_to),
 				stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume), floatval($sh_length),
-				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), stripslashes_deep(json_encode($price_json)), $dis,
+				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), stripslashes_deep(json_encode($price_json)), $sh_distance,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
                                 floatval($price_val), intval($cost_curr));
 		
@@ -687,6 +718,7 @@ function tzs_edit_shipment($id) {
 				//print_errors($dis['errors']);
 				echo "Ваш груз опубликован!";
 				echo "<br/>";
+				//echo '<pre>'.print_r($_POST,true).'</pre>';
 				echo '<a href="/view-shipment/?id='.tzs_find_latest_shipment_rec().'&spis=new">Просмотреть груз</a>';
 			}
 		} else {
@@ -706,7 +738,7 @@ function tzs_edit_shipment($id) {
 				$errors = array_merge($errors, $dis['errors']);
 				tzs_print_shipment_form($errors, true);
 			} else {
-				print_errors($dis['errors']);
+				//print_errors($dis['errors']);
 				echo "Ваш груз изменен";
 				echo "<br/>";
 				echo '<a href="/view-shipment/?id='.$id.'&spis=new">Просмотреть груз</a>';
