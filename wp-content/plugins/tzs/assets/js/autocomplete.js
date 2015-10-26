@@ -39,6 +39,7 @@ jQuery(document).ready(function(){
 //        <script src="/wp-content/plugins/tzs/assets/js/jquery-1.8.2.min.js"></script>
  //      <script src="/wp-content/plugins/tzs/assets/js/jquery-ui.min.js"></script>
 var search_result = [];
+var counter = 0;
 
 jQuery(document).ready(function(){
 	autocomplete("#first_city");
@@ -51,6 +52,7 @@ function autocomplete(element) {
         var search_query = jQuery(this).val();
         //массив, в который будем записывать результаты поиска
         search_result = [];
+		
         //делаем запрос к геокодеру
         jQuery.getJSON('http://geocode-maps.yandex.ru/1.x/?format=json&kind=locality&callback=?&geocode='+search_query, function(data) {
             //геокодер возвращает объект, который содержит в себе результаты поиска
@@ -58,17 +60,30 @@ function autocomplete(element) {
             //ответ геокодера легко посмотреть с помощью console.log();
             for(var i = 0; i < data.response.GeoObjectCollection.featureMember.length; i++) {
                 //записываем в массив результаты, которые возвращает нам геокодер
-                if(data.response.GeoObjectCollection.featureMember[i].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'locality')
-            	search_result.push({
-                    label: data.response.GeoObjectCollection.featureMember[i].GeoObject.description+' - '+data.response.GeoObjectCollection.featureMember[i].GeoObject.name,
-                    value:data.response.GeoObjectCollection.featureMember[i].GeoObject.description+' - '+data.response.GeoObjectCollection.featureMember[i].GeoObject.name,
-                    longlat:data.response.GeoObjectCollection.featureMember[i].GeoObject.Point.pos});
-            }
+				if(data.response.GeoObjectCollection.featureMember[i].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'locality')
+					search_result.push({
+						label: data.response.GeoObjectCollection.featureMember[i].GeoObject.description+' - '+data.response.GeoObjectCollection.featureMember[i].GeoObject.name,
+						value:data.response.GeoObjectCollection.featureMember[i].GeoObject.description+' - '+data.response.GeoObjectCollection.featureMember[i].GeoObject.name,
+						flag: data.response.GeoObjectCollection.featureMember[i].GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.CountryNameCode,
+						longlat:data.response.GeoObjectCollection.featureMember[i].GeoObject.Point.pos});
+			}
             //подключаем к текстовому полю виджет autocomplete
             jQuery(element).autocomplete({
                 //в качестве источника результатов указываем массив search_result
                 source: search_result,
-                //onSelect: function(data, value){ }
+                close: function(event, ui){ 
+				 var path = "/wp-content/plugins/tzs/assets/images/flags/";
+				 for(var i = 0; i < search_result.length; i++){
+					if(this.value == search_result[i].label){
+						path = path + search_result[i].flag.toLowerCase()+".png";
+						break;
+						}
+						//alert(this.value+" == "+search_result[i].label+"    "+search_result[i].flag);
+				 }
+				var id = element.substring(1,element.length)+'_flag';
+				document.getElementById(id).src = path;
+				document.getElementById(id).style.visibility = 'visible';
+				}
             });
         });
 	});
@@ -79,6 +94,4 @@ function autocomplete(element) {
         });
     };
 }
-
- 
  

@@ -13,7 +13,7 @@ function tzs_print_truck_form($errors, $edit=false) {
     
     <div style="clear: both;"></div>
     
-    <form enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
+    <form name="theForm" enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
 
         <div id="cost_div" style="display:none;">
         <table>
@@ -86,8 +86,11 @@ function tzs_print_truck_form($errors, $edit=false) {
             <div class="pr_edit_form_line">
                 <label for="tr_city_from">Населенный пункт погрузки<span class="form_field_required">*</span></label>
                 <input autocomplete="city" id="first_city" type="text" size="35" name="tr_city_from" value="<?php echo_val('tr_city_from'); ?>" autocomplete="on">
-            </div>
-            
+				<img id ="first_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
+		   </div>
+		   
+
+			            
             <div class="pr_edit_form_line">
                 <label for="show_dist_link"></label>
                 <a id="show_dist_link" href="javascript:showDistanceDialog();">Расстояние между пунктами</a>
@@ -137,7 +140,8 @@ function tzs_print_truck_form($errors, $edit=false) {
             <div class="pr_edit_form_line">
                 <label for="tr_city_to">Населенный пункт выгрузки<span class="form_field_required">*</span></label>
                 <input autocomplete="city" id="second_city" type="text" size="35" name="tr_city_to" value="<?php echo_val('tr_city_to'); ?>" autocomplete="on">
-            </div>
+				<img id ="second_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
+			</div>
             
             <div class="pr_edit_form_line">
                 <label for="trans_type">Тип транспортного средства<span class="form_field_required">*</span></label>
@@ -184,8 +188,9 @@ function tzs_print_truck_form($errors, $edit=false) {
         <div style="clear: both;"></div>
         
         <div>
-            <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "Разместить" ?>"/>
-        </div>
+            <input name="addpost" type="button" onclick="calculate_distance()" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Сохранить изменения" : "Разместить" ?>"/>
+			<input type="hidden" name="length" id="route-length">
+		</div>
         
 	<?php if ($edit) {?>
 		<input type="hidden" name="action" value="edittruck"/>
@@ -203,7 +208,41 @@ function tzs_print_truck_form($errors, $edit=false) {
                     echo "tzs_tr2_types[$key] = '$val[1]';\n";
                 }
             ?>
-            
+        
+		
+		jQuery("input").on('input', function () {
+			var temp =  document.getElementById(this.id).value;
+			if(temp.length == 0)
+				document.getElementById(this.id+'_flag').style.visibility = 'hidden';
+				
+		});
+		
+/* 		jQuery("#second_city").on('input', function () {
+			var temp =  document.getElementById('second_city').value;
+			if(temp == "")
+				document.getElementById('second_city_flag').src = "";	
+		});	 */
+		
+		function calculate_distance() {	
+			var routeFrom = document.getElementById('first_city').value;
+			var routeTo = document.getElementById('second_city').value;
+			document.getElementById('route-length').value = 'Изначально';
+			// Создание маршрута
+			ymaps.route([routeFrom, routeTo]).then(
+				function(route) {
+					//alert('Длина маршрута = ' + route.getHumanLength());
+					var length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
+					document.getElementById('route-length').value = length;
+					var x = document.getElementsByName('theForm');
+					x[0].submit(); // Form submission
+				},
+				function(error) {
+				 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
+					document.getElementById('route-length').value = 'Ошибка';
+				}
+			); 
+		}
+		 
 		function setEnabledByInstance(cl, el, enabled) {
 			if (enabled) {
 				el.removeAttr('disabled');
@@ -542,7 +581,9 @@ function tzs_edit_truck($id) {
 		$tr_date_from = date('Y-m-d', mktime(0, 0, 0, $tr_date_from['month'], $tr_date_from['day'], $tr_date_from['year']));
 		$tr_date_to = date('Y-m-d', mktime(0, 0, 0, $tr_date_to['month'], $tr_date_to['day'], $tr_date_to['year']));
 		
-		$dis = tzs_calculate_distance(array($tr_city_from, $tr_city_to));
+		//$dis = tzs_calculate_distance(array($tr_city_from, $tr_city_to));
+		$dis = get_param('length');
+		
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_TRUCK_TABLE.
@@ -551,17 +592,17 @@ function tzs_edit_truck($id) {
 				$user_id, $tr_date_from, $tr_date_to, stripslashes_deep($tr_city_from), stripslashes_deep($tr_city_to),
 				floatval($tr_weight), floatval($tr_volume), floatval($tr_length),
 				floatval($tr_height), floatval($tr_width), intval($trans_count), intval($trans_type), intval($tr_active), intval($tr_type),
-				stripslashes_deep(json_encode($price_json)), stripslashes_deep($comment), round($dis['distance'] / 1000),
+				stripslashes_deep(json_encode($price_json)), stripslashes_deep($comment), $dis,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
                                 floatval($price_val), intval($cost_curr), stripslashes_deep($sh_descr));
 		
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось опубликовать Ваш транспорт. Свяжитесь, пожалуйста, с администрацией сайта");
 				array_push($errors, $wpdb->last_error);
-				$errors = array_merge($errors, $dis['errors']);
+			//	$errors = array_merge($errors, $dis['errors']);
 				tzs_print_truck_form($errors, false);
 			} else {
-				print_errors($dis['errors']);
+			//	print_errors($dis['errors']);
 				echo "Ваш транспорт опубликован!";
 				echo "<br/>";
 				echo '<a href="/view-truck/?id='.tzs_find_latest_truck_rec().'&spis=new">Просмотреть транспорт</a>';
@@ -574,7 +615,7 @@ function tzs_edit_truck($id) {
 				" WHERE id=%d AND user_id=%d;", $tr_date_from, $tr_date_to, stripslashes_deep($tr_city_from),
 				stripslashes_deep($tr_city_to), floatval($tr_weight), floatval($tr_volume),
 				floatval($tr_length), floatval($tr_height), floatval($tr_width), intval($trans_count), intval($trans_type),
-				intval($tr_type), stripslashes_deep(json_encode($price_json)), stripslashes_deep($comment), round($dis['distance'] / 1000),
+				intval($tr_type), stripslashes_deep(json_encode($price_json)), stripslashes_deep($comment), $dis,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
                                 intval($tr_active), floatval($price_val), intval($cost_curr), stripslashes_deep($sh_descr),
 				$id, $user_id);
@@ -582,10 +623,10 @@ function tzs_edit_truck($id) {
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось изменить Ваш транспорт. Свяжитесь, пожалуйста, с администрацией сайта");
 				array_push($errors, $wpdb->last_error);
-				$errors = array_merge($errors, $dis['errors']);
+			//	$errors = array_merge($errors, $dis['errors']);
 				tzs_print_truck_form($errors, true);
 			} else {
-				print_errors($dis['errors']);
+			//	print_errors($dis['errors']);
 				echo "Ваш транспорт изменен";
 				echo "<br/>";
 				echo '<a href="/view-truck/?id='.$id.'&spis=new">Просмотреть транспорт</a>';
