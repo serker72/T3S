@@ -1298,6 +1298,18 @@ a:hover {
 	color: #515151;
 }
 
+.ui-menu-item{
+	border-left: 3px solid #C6C82E;
+	font-family: "Open Sans";
+	font-size: 14px;
+	color: black;
+	margin: 1px !important;
+}
+
+.ui-state-focus {
+	background-color: yellow !important;
+}
+
 .route {
 	font-family: "Open Sans";
 	font-size: 13px;
