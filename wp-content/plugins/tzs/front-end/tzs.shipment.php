@@ -25,7 +25,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span1" style="background: #04a4cc;">
             <img id ="first_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
         </div>
-        <div class="span2" style="background: #04a4cc;">
+        <div class="span2">
             <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" disabled="disabled" style="width: 50px;">&nbsp;&nbsp;км
 			<input type="hidden" name="length" id="route-length">
         </div>
@@ -43,7 +43,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span1" style="background: #04a4cc;">
             <img id ="second_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
         </div>
-        <div class="span2" style="background: #04a4cc;">
+        <div class="span2">
+            <a id="show_dist_link" href="javascript:showDistanceDialog();">см. карту</a>
         </div>
         <div class="span3" style="background: #04a4cc;">
         </div>
@@ -355,7 +356,12 @@ function tzs_print_shipment_form($errors, $edit=false) {
 		}
 		
 		function showDistanceDialog() {
-                    displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
+                    if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+                        //displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
+                        displayDistance([jQuery('#first_city').val(), jQuery('#second_city').val()], null);
+                    } else {
+                        
+                    }
 		}
 
 		function onTransTypeChange() {
@@ -365,9 +371,11 @@ function tzs_print_shipment_form($errors, $edit=false) {
 		function onCityChange() {
 					
                     if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
-						calculate_distance();
+			calculate_distance();
+                        jQuery('#show_dist_link').show();
                     } else {
                         jQuery('#sh_distance').attr('value', '');
+                        jQuery('#show_dist_link').hide();
                     }
 		}
                 
@@ -461,6 +469,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 }
 
 		jQuery(document).ready(function(){
+                    jQuery('#show_dist_link').hide();
+                    
                     jQuery('#set_dim').click(function() {
                             onSetDim(this.checked);
                     });
@@ -479,6 +489,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     //updateCostValue();
                     onTransTypeChange();
                     onWayPrepayChange();
+                    onCityChange();
                     
                     jQuery('#first_city, #second_city').on('blur',function() { onCityChange(); });
 

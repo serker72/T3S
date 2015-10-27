@@ -546,23 +546,30 @@ input[disabled=disabled] {
 }
 #show_dist_link {
 	text-align: center;
-	margin: 0 auto;
-	display: block;	
-	background: url(images/menu_profile_bg.gif) repeat-x;
+	/*margin: 0 auto;*/
+	display: block;
+        background-color: #3497CD;
+	/*background: url(images/menu_profile_bg.gif) repeat-x;
 	width: 240px;
 	height: 41px;
 	line-height: 41px;
-	color: #939393;
+	color: #939393;*/
+        width: 85px;
+        padding: 2px;
+        line-height: 25px;
+        color: #DEF4F7;
 	text-decoration: none;
-	text-shadow: 1px 1px #fff;
+/*	text-shadow: 1px 1px #fff;
 	box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
-	border-bottom: 1px solid #B8B8B8;
-	border-radius: 5px;
+	border-bottom: 1px solid #B8B8B8;*/
+	border-radius: 2px;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
 }
 #show_dist_link:hover {
-	color: #515151;
+/*	color: #515151;
 	background:  rgba(163, 191, 212, 0.1) url(images/menu_profile_bg.gif) repeat-x;
-	border-bottom: 1px solid #a3bfd4;
+	border-bottom: 1px solid #a3bfd4;*/
 }
 #date_from_to {
 	margin: 0 auto;
