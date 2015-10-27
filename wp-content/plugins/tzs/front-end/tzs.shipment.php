@@ -38,7 +38,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', ''); ?>" placeholder="Дата выгрузки">
         </div>
         <div class="span3" style="background: #04a4cc;">
-            <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
+            <div id="div_second_city">
+                <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
+            </div>
         </div>
         <div class="span1" style="background: #04a4cc;">
             <img id ="second_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
@@ -369,7 +371,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
 		}
                 
 		function onCityChange() {
-					
                     if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
 			calculate_distance();
                         jQuery('#show_dist_link').show();
@@ -447,6 +448,17 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     var ErrorMsg1 = '<p>';
                     var ErrorMsg2 = '';
                     var ErrorMsg3 = '</p>';
+                    
+                    if (jQuery('#first_city').val().length < 1) {
+                        ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт погрузки.<br>\n';
+                        jQuery('#first_city').addClass('form_error_input');
+                    }
+                    
+                    if (jQuery('#second_city').val().length < 1) {
+                        ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт выгрузки.<br>\n';
+                        jQuery('#div_second_city').addClass('form_error_input');
+                    }
+                    
                     if (jQuery('#set_dim').prop('checked')) {
                         if (jQuery('#sh_length').val().length == 0) {
                             ErrorMsg2 = ErrorMsg2 + 'Не указана длина груза.<br>\n';

@@ -2552,3 +2552,7 @@ height:180px;
 .testblock{
     margin: 0px;
 }
+.form_error_input {
+    border: 2px solid #a00;
+    /*background:yellow;*/
+}
