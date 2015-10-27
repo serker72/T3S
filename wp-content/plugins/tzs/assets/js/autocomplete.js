@@ -46,6 +46,38 @@ jQuery(document).ready(function(){
 	autocomplete("#second_city");
 });
 
+
+function calculate_distance() {
+	var length = 0;		
+	var routeFrom = document.getElementById('first_city').value;
+	var routeTo = document.getElementById('second_city').value;
+	// Создание маршрута
+	ymaps.route([routeFrom, routeTo]).then(
+		function(route) {
+			//alert('Длина маршрута = ' + route.getHumanLength());
+			length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
+			jQuery('#sh_distance').attr('value', length);
+			document.getElementById('route-length').value = length;			
+			/*var x = document.getElementsByName('theForm');
+			x[0].submit(); // Form submission */
+		},
+		function(error) {
+		 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
+			document.getElementById('route-length').value = 'Ошибка';
+		}
+	); 
+}
+
+function onCityChange() {
+			if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+	calculate_distance();
+				jQuery('#show_dist_link').show();
+			} else {
+				jQuery('#sh_distance').attr('value', '');
+				jQuery('#show_dist_link').hide();
+			}
+}
+
 function autocomplete(element) {
 	    jQuery(element).keyup(function(){
         //по мере ввода фразы, событие будет срабатывать всякий раз
@@ -83,6 +115,9 @@ function autocomplete(element) {
 				var id = element.substring(1,element.length)+'_flag';
 				document.getElementById(id).src = path;
 				document.getElementById(id).style.visibility = 'visible';
+				onCityChange();
+				
+				
 				}
             });
         });

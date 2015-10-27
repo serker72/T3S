@@ -323,28 +323,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
 			jQuery('#cost_str').html(str);
 		}
 */		
-		function calculate_distance() {
-			var length = 0;		
-			var routeFrom = document.getElementById('first_city').value;
-			var routeTo = document.getElementById('second_city').value;
-			// Создание маршрута
-			ymaps.route([routeFrom, routeTo]).then(
-				function(route) {
-					//alert('Длина маршрута = ' + route.getHumanLength());
-					length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
-					jQuery('#sh_distance').attr('value', length);
-					document.getElementById('route-length').value = length;				
-					/*var x = document.getElementsByName('theForm');
-					x[0].submit(); // Form submission */
-				},
-				function(error) {
-				 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
-					document.getElementById('route-length').value = 'Ошибка';
-				}
-			); 
-		}
-
-
 		function onSetDim(ch) {
                     if (ch) {
                         jQuery("#sh_length, #sh_width, #sh_height").removeAttr("disabled");
@@ -369,17 +347,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 		function onTransTypeChange() {
                     jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
 		}
-                
-		function onCityChange() {
-                    if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
-			calculate_distance();
-                        jQuery('#show_dist_link').show();
-                    } else {
-                        jQuery('#sh_distance').attr('value', '');
-                        jQuery('#show_dist_link').hide();
-                    }
-		}
-                
+                       
                 function onPriceQueryChange() {
                     if (jQuery("#price_query").is(':checked')) {
                         jQuery("[name=price]").attr('value', '');
@@ -503,7 +471,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     onWayPrepayChange();
                     onCityChange();
                     
-                    jQuery('#first_city, #second_city').on('blur',function() { onCityChange(); });
+                //    jQuery('#first_city, #second_city').on('blur',function() { onCityChange(); });
 
                     //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
                     /*jQuery("#sh_length, #sh_width, #sh_height").bind("change keyup input click", function() {
