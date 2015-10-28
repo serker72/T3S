@@ -79,6 +79,8 @@ function onCityChange() {
 }
 
 function autocomplete(element) {
+
+
 	    jQuery(element).keyup(function(){
         //по мере ввода фразы, событие будет срабатывать всякий раз
         var search_query = jQuery(this).val();
@@ -103,6 +105,9 @@ function autocomplete(element) {
             jQuery(element).autocomplete({
                 //в качестве источника результатов указываем массив search_result
                 source: search_result,
+				create: function(event, ui){ 
+					//alert('Привет');
+				},
                 close: function(event, ui){ 
 				 var path = "/wp-content/plugins/tzs/assets/images/flags/";
 				 for(var i = 0; i < search_result.length; i++){
@@ -116,8 +121,6 @@ function autocomplete(element) {
 				document.getElementById(id).src = path;
 				document.getElementById(id).style.visibility = 'visible';
 				onCityChange();
-				
-				
 				}
             });
         });

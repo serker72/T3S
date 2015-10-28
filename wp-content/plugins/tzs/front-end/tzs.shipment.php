@@ -23,7 +23,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
 	   </div>
         <div class="span1">
-            <img id ="first_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
+            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2">
             <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;">&nbsp;&nbsp;км<!--disabled="disabled"-->
@@ -41,7 +41,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input autocomplete="city" id="second_city" class="form-control" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1">
-            <img id ="second_city_flag" style=" visibility:hidden;" width=18 height=12 alt="Флаг страны">
+            <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2">
             <a id="show_dist_link" href="javascript:showDistanceDialog();">см. карту</a>
@@ -768,8 +768,14 @@ function tzs_front_end_edit_shipment_handler($atts) {
 		tzs_edit_shipment($id);
 	} else {
 		global $wpdb;
-		$sql = "SELECT * FROM ".TZS_SHIPMENT_TABLE." WHERE id=$sh_id AND user_id=$user_id;";
+		$sql = "SELECT * FROM ".TZS_SHIPMENT_TABLE." WHERE id=$sh_id AND user_id=$user_id;";	
 		$row = $wpdb->get_row($sql);
+		
+		$sql_flag1 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->from_cid;
+		$row1 = $wpdb->get_row($sql_flag1);
+		$sql_flag2 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->to_cid;
+		$row2 = $wpdb->get_row($sql_flag2);
+		
 		if (count($row) == 0 && $wpdb->last_error != null) {
 			print_error('Не удалось отобразить информацию о грузе. Свяжитесь, пожалуйста, с администрацией сайта');
 		} else if ($row == null) {
@@ -780,12 +786,16 @@ function tzs_front_end_edit_shipment_handler($atts) {
 				$_POST[$key] = ''.$val;
 			}
 			
+			
+			$_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row1->code).'.png';
+			$_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row2->code).'.png';			
 			$_POST['sh_date_from'] = date("d.m.Y", strtotime($row->sh_date_from));
 			$_POST['sh_date_to'] = date("d.m.Y", strtotime($row->sh_date_to));
 			$_POST['sh_city_from'] = $row->sh_city_from;
 			$_POST['sh_city_to'] = $row->sh_city_to;
 			$_POST['sh_descr'] = $row->sh_descr;
 			$_POST['comment'] = $row->comment;
+			
 			if ($row->sh_weight > 0)
 				$_POST['sh_weight'] = ''.remove_decimal_part($row->sh_weight);
 			if ($row->sh_volume > 0)
