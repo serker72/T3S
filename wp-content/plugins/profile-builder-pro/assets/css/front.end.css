@@ -56,18 +56,34 @@ The global Profile Builder class is: wppb_holder
 	padding-right:15px;
 }
 #wppb_modify input[type=text], #wppb_modify input[type=password], #wppb_modify select, #wppb_modify textarea, #wppb_register input[type=text], #wppb_register input[type=password], #wppb_register select, #wppb_register textarea, #wppb_login input[type=text], #wppb_login input[type=password], #wppb_login select, #wppb_login textarea, #wppb_recover_password input[type=text]{
-	width:60%;
-	margin-bottom:5px;	
+	/*width:60%;*/
+	margin-bottom:5px;
+        margin-bottom:5px;
+        color: #007FFF;
+        border: 1px solid #007FFF;
+        border-radius: 10px;
+        width: 185px;
+        height: 30px;
+        background: white;
+        padding: 0px 5px 0px 5px;
 }
 
 #wppb_modify input[type="checkbox"], #wppb_modify input[type="radio"], #wppb_register input[type="checkbox"], #wppb_register input[type="radio"], #wppb_login input[type="checkbox"], #wppb_login input[type="radio"]{
 	vertical-align:middle;
 	margin:5px;
+        border: 1px solid #007FFF;
 }
 
 #wppb_recover_password input[type="text"], #wppb_recover_password input[type="password"]{
-	width:60%;
-	margin-bottom:5px;	
+	/*width:60%;*/
+	margin-bottom:5px;
+        color: #007FFF;
+        border: 1px solid #007FFF;
+        border-radius: 10px;
+        width: 185px;
+        height: 30px;
+        background: white;
+        padding: 0px 5px 0px 5px;
 }
 
 #wppb_register .send-confirmation-email label{
@@ -377,4 +393,10 @@ text-decoration:none;
     float: left;
     padding-right: 15px;
     width: 30%;
+}
+input[type=submit]{
+    color: white;
+    background: #007FFF;
+    border-radius: 10px;
+    text-transform:uppercase;
 }

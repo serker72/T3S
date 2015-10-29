@@ -2555,3 +2555,24 @@ height:180px;
 .form_text_span {
     vertical-align: middle;
 }
+input[type=text]{
+    color: #007FFF;
+    border: 1px solid #007FFF;
+    border-radius: 10px;
+    width: 185px;
+    height: 30px;
+    background: white;
+    padding: 0px 5px 0px 5px;
+}
+input[type=checkbox]{
+    color: #007FFF;
+    border: 1px solid #007FFF;
+    background: white;
+   
+}
+input[type=radio]{
+    color: #007FFF;
+    border: 1px solid #007FFF;
+    background: white;
+   
+}
