@@ -202,7 +202,47 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     echo "tzs_tr2_types[$key] = '$val[1]';\n";
                 }
             ?>
-                
+        
+	function calculate_distance() {
+		var length = 0;		
+		var routeFrom = document.getElementById('first_city').value;
+		var routeTo = document.getElementById('second_city').value;
+		// Создание маршрута
+		ymaps.route([routeFrom, routeTo]).then(
+			function(route) {
+				//alert('Длина маршрута = ' + route.getHumanLength());
+				length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
+				jQuery('#sh_distance').attr('value', length);
+				document.getElementById('route-length').value = length;			
+				/*var x = document.getElementsByName('theForm');
+				x[0].submit(); // Form submission */
+			},
+			function(error) {
+			 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
+				document.getElementById('route-length').value = 'Ошибка';
+			}
+		); 
+	}
+
+	var delay = (function(){
+	  var timer = 0;
+	  return function(callback, ms){
+		clearTimeout (timer);
+		timer = setTimeout(callback, ms);
+	  };
+	})();
+	
+	function onCityChange() {
+				if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+					calculate_distance();
+					jQuery('#show_dist_link').show();
+				} else {
+					jQuery('#sh_distance').attr('value', '');
+					jQuery('#show_dist_link').hide();
+				}
+	}
+		
+		
 		function onSetDim(ch) {
                     if (ch) {
                         jQuery("#sh_length, #sh_width, #sh_height").removeAttr("disabled");
@@ -450,9 +490,13 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     //updateCostValue();
                     onTransTypeChange();
                     onWayPrepayChange();
-                    onCityChange();
+                   // onCityChange();
                     
-                //    jQuery('#first_city, #second_city').on('blur',function() { onCityChange(); });
+                    jQuery('#first_city, #second_city').on('input',function() { 		
+						delay(function(){
+							onCityChange();
+						  //alert('Time elapsed!');
+						}, 1000 );/*onCityChange();*/ });
 
                     //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
                     jQuery("#sh_length, #sh_width, #sh_height").bind("change keyup input click", function() {
@@ -787,8 +831,8 @@ function tzs_front_end_edit_shipment_handler($atts) {
 			}
 			
 			
-			$_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row1->code).'.png';
-			$_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row2->code).'.png';			
+			$_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags1/".strtolower($row1->code).'.png';
+			$_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags2/".strtolower($row2->code).'.png';			
 			$_POST['sh_date_from'] = date("d.m.Y", strtotime($row->sh_date_from));
 			$_POST['sh_date_to'] = date("d.m.Y", strtotime($row->sh_date_to));
 			$_POST['sh_city_from'] = $row->sh_city_from;

@@ -105,10 +105,7 @@ function autocomplete(element) {
             jQuery(element).autocomplete({
                 //в качестве источника результатов указываем массив search_result
                 source: search_result,
-				create: function(event, ui){ 
-					//alert('Привет');
-				},
-                close: function(event, ui){ 
+                close: function(event, ui){
 				 var path = "/wp-content/plugins/tzs/assets/images/flags/";
 				 for(var i = 0; i < search_result.length; i++){
 					if(this.value == search_result[i].label){
@@ -120,7 +117,7 @@ function autocomplete(element) {
 				var id = element.substring(1,element.length)+'_flag';
 				document.getElementById(id).src = path;
 				document.getElementById(id).style.visibility = 'visible';
-				onCityChange();
+				//onCityChange();
 				}
             });
         });
