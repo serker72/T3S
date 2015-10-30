@@ -69,13 +69,21 @@ function calculate_distance() {
 }
 
 function onCityChange() {
-			if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+    if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
 	calculate_distance();
-				jQuery('#show_dist_link').show();
-			} else {
-				jQuery('#sh_distance').attr('value', '');
-				jQuery('#show_dist_link').hide();
-			}
+        jQuery('#show_dist_link').show();
+    } else {
+        if (jQuery('#first_city').val().length < 1) {
+            jQuery('#first_city_flag').hide();
+        }
+
+        if (jQuery('#second_city').val().length < 1) {
+            jQuery('#second_city_flag').hide();
+        }
+        
+        jQuery('#sh_distance').attr('value', '');
+        jQuery('#show_dist_link').hide();
+    }
 }
 
 function autocomplete(element) {
