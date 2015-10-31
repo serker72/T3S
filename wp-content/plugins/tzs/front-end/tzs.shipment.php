@@ -26,10 +26,15 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
         </div>
         <div class="span2">
-            <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;">&nbsp;&nbsp;км<!--disabled="disabled"-->
+            <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;">&nbsp;&nbsp;км
             <input type="hidden" name="length" id="route-length">
         </div>
-        <div class="span3">
+        <div id="div_sh_active" class="span3">
+            <label for="sh_active">Статус</label>
+            <select id="sh_active" name="sh_active">
+                <option value="1" <?php if (isset($_POST["sh_active"]) && ($_POST["sh_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
+                <option value="0" <?php if (isset($_POST["sh_active"]) && ($_POST["sh_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
+            </select>
         </div>
     </div>
     
@@ -64,7 +69,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span3">
             <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий">
         </div>
-        <div class="span3"><!-- style="text-align: right;"-->
+        <div class="span3 chekbox"><!-- style="text-align: right;"-->
             <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;Указать габариты груза (м):
         </div>
     </div>
@@ -104,14 +109,14 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
         <div class="span4">
             <label for="price">Цена&nbsp;=</label>&nbsp;
-            <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" disabled="disabled" style="width: 100px;">
+            <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
             &nbsp;грн/км
         </div>
         <div class="span1">
         </div>
         <div class="span3"><!-- style="text-align: right; float: right;"-->
-            <label for="volume">Объем груза&nbsp;=</label>&nbsp;
-            <input type="text" id="volume" name="volume" value="<?php echo_val('volume'); ?>" disabled="disabled" style="width: 80px;">
+            <label for="sh_volume">Объем груза&nbsp;=</label>&nbsp;
+            <input type="text" id="sh_volume" name="sh_volume" value="<?php echo_val('sh_volume'); ?>" readonly="true" style="width: 80px;">
             &nbsp;м<sup>3</sup>
         </div>
     </div>
@@ -125,22 +130,22 @@ function tzs_print_shipment_form($errors, $edit=false) {
     </div>
 
     <div class="row-fluid"  style="width: 100%;">
-        <div class="span2">
-            <input type="checkbox" name="cash" <?php isset($_POST['cash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="cash">Наличная</label>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="cash" name="cash" <?php isset($_POST['cash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="cash">Наличная</label>
         </div>
-        <div class="span2">
-            <input type="checkbox" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="nocash">Безналичная</label>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="nocash" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="nocash">Безналичная</label>
         </div>
-        <div class="span2">
-            <input type="checkbox" name="way_ship" <?php isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_ship">При погрузке</label>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="way_ship" name="way_ship" <?php isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_ship">При погрузке</label>
         </div>
-        <div class="span2">
-            <input type="checkbox" name="way_debark" <?php isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_debark">При выгрузке</label>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="way_debark" name="way_debark" <?php isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_debark">При выгрузке</label>
         </div>
-        <div class="span1">
-            <input type="checkbox" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="soft">Софт</label>
+        <div class="span1 chekbox">
+            <input type="checkbox" id="soft" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="soft">Софт</label>
         </div>
-        <div class="span2" style="text-align: right;">
+        <div class="span2 chekbox" style="text-align: right;">
             <input type="checkbox" id="way_prepay" name="way_prepay" <?php isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> >&nbsp;<label for="way_prepay">Предоплата</label>
         </div>
         <div class="span1">
@@ -150,8 +155,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span8">
-            <div class="span12" style="margin-bottom: 20px;">
-                <input type="checkbox" id="price_query" name="price_query" <?php isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;Не указывать стоимость (цена договорная)
+            <div class="span12 chekbox" style="margin-bottom: 20px;">
+                <input type="checkbox" id="price_query" name="price_query" <?php isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
             </div>
             <div class="span4">
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
@@ -268,7 +273,25 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 //jQuery("#sh_length, #sh_width, #sh_height").removeAttr('required');
                 jQuery("#sh_length, #sh_width, #sh_height").attr("disabled", "disabled");
                 jQuery("#sh_length, #sh_width, #sh_height").attr('value', '');
-                jQuery("#volume").attr('value', '');
+                jQuery("#sh_volume").attr('value', '');
+            }
+        }
+
+        // Изменение флага "Наличная"
+        function onSetCash() {
+            if (jQuery("#cash").is(':checked')) {
+                jQuery("#nocash").attr("disabled", "disabled");
+            } else {
+                jQuery("#nocash").removeAttr("disabled");
+            }
+        }
+
+        // Изменение флага "Безналичная"
+        function onSetNoCash() {
+            if (jQuery("#nocash").is(':checked')) {
+                jQuery("#cash").attr("disabled", "disabled");
+            } else {
+                jQuery("#cash").removeAttr("disabled");
             }
         }
 
@@ -307,8 +330,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
         // Изменение флага "Не указывать стоимость (цена договорная)"
         function onPriceQueryChange() {
             if (jQuery("#price_query").is(':checked')) {
-                jQuery("[name=price]").attr('value', '');
                 jQuery("[name=cost]").attr('value', '');
+                jQuery("[name=price]").attr('value', '');
                 jQuery("[name=prepayment]").attr('value', '');
 
                 jQuery("[name=cash]").prop('checked', false);
@@ -318,7 +341,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 jQuery("[name=soft]").prop('checked', false);
                 jQuery("[name=way_prepay]").prop('checked', false);
 
-                jQuery("[name=price]").attr("disabled", "disabled");
+                jQuery("[name=cost]").attr("disabled", "disabled");
                 jQuery("[name=prepayment]").attr("disabled", "disabled");
                 jQuery("[name=cash]").attr("disabled", "disabled");
                 jQuery("[name=nocash]").attr("disabled", "disabled");
@@ -328,7 +351,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 jQuery("#way_prepay").attr("disabled", "disabled");
                 jQuery("#prepayment").attr("disabled", "disabled");
             } else {
-                jQuery("[name=price]").removeAttr("disabled");
+                jQuery("[name=cost]").removeAttr("disabled");
                 jQuery("[name=prepayment]").removeAttr("disabled");
                 jQuery("[name=cash]").removeAttr("disabled");
                 jQuery("[name=nocash]").removeAttr("disabled");
@@ -356,9 +379,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
         function onVolumeCalculate() {
             if ((jQuery('#sh_length').val().length > 0) && (jQuery('#sh_width').val().length > 0) && (jQuery('#sh_height').val().length > 0)) {
                 var vol = jQuery('#sh_length').val() * jQuery('#sh_width').val() * jQuery('#sh_height').val();
-                jQuery('#volume').attr('value', vol);
+                jQuery('#sh_volume').attr('value', vol);
             } else {
-                jQuery('#volume').attr('value', '');
+                jQuery('#sh_volume').attr('value', '');
             }
         }
 
@@ -468,7 +491,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             }
 
             if (jQuery("#price_query").is(':checked')) {
-                jQuery('#price, #prepayment').css({'border': '1px solid #007FFF'});
+                jQuery('#cost, #prepayment').css({'border': '1px solid #007FFF'});
             } else {
                 if (jQuery('#cost').val().length < 1) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана стоимость перевозки.<br>\n';
@@ -487,6 +510,16 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 } else {
                     jQuery('#prepayment').css({'border': '1px solid #007FFF'});
                 }
+            }
+                
+            // Проверка правильности указания переключателей
+            if (jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked')) {
+                jQuery('#cash').css({'border': '2px solid #007FFF'});
+                jQuery('#nocash').css({'border': '2px solid #007FFF'});
+            } else {
+                ErrorMsg2 = ErrorMsg2 + 'Необходимо выбрать тип оплаты: наличная или безналичная.<br>\n';
+                jQuery('#cash').css({'border': '2px solid #F00'});
+                jQuery('#nocash').css({'border': '2px solid #F00'});
             }
 
             if (ErrorMsg2.length > 0) {
@@ -507,6 +540,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
             jQuery('#set_dim').click(function() {
                     onSetDim(this.checked);
             });
+            
+            jQuery('#cash').click(function() { onSetCash(); });
+            jQuery('#nocash').click(function() { onSetNoCash(); });
 
             jQuery('#bpost').submit(function() {
                     jQuery('#addpostsub').attr('disabled','disabled');
@@ -597,8 +633,8 @@ function tzs_edit_shipment($id) {
 	$comment = get_param('comment');
 	
 	$sh_descr = get_param('sh_descr');
-	$sh_weight = get_param_def('sh_weight','0');
-	$sh_volume = get_param_def('sh_volume','0');
+	$sh_weight = get_param_def('sh_weight', '0');
+	$sh_volume = get_param_def('sh_volume', '0');
 	$sh_type = get_param('sh_type');
 	$trans_type = get_param('trans_type');
 	$trans_count = get_param('trans_count');
@@ -607,7 +643,20 @@ function tzs_edit_shipment($id) {
 	$sh_length = get_param('sh_length');
 	$sh_height = get_param('sh_height');
 	$sh_width = get_param('sh_width');
-	
+
+        $cost = get_param('cost');
+        $price = get_param('price');
+        $cost_curr = get_param_def('cost_curr', '1');
+        $prepayment = get_param('prepayment');
+
+        $price_query = isset($_POST['price_query']) ? 1 : 0;
+        $cash = isset($_POST['cash']) ? 1 : 0;
+        $nocash = isset($_POST['nocash']) ? 1 : 0;
+        $way_ship = isset($_POST['way_ship']) ? 1 : 0;
+        $way_debark = isset($_POST['way_debark']) ? 1 : 0;
+        $soft = isset($_POST['soft']) ? 1 : 0;
+        $way_prepay = isset($_POST['way_prepay']) ? 1 : 0;
+        
         // Контроль пересечения дат
         $sh_date_from_str = date("Ymd", strtotime($sh_date_from));
         $sh_date_to_str = date("Ymd", strtotime($sh_date_to));
@@ -621,60 +670,28 @@ function tzs_edit_shipment($id) {
         $sh_length = str_replace(',', '.', $sh_length);
         $sh_height = str_replace(',', '.', $sh_height);
         $sh_width = str_replace(',', '.', $sh_width);
+        $cost = str_replace(',', '.', $cost);
+        $price = str_replace(',', '.', $price);
+        $prepayment = str_replace(',', '.', $prepayment);
 	
 	$errors = array();
 	
-	// cost
-	$price = get_param_def('set_price','0') == '1';
-	$price_json = array();
-	$price_json['set_price'] = $price ? 1 : 0;
-	if ($price) {
-		$price_val = get_param_def('price','0');
-		if (!is_valid_num($price_val)) {
-			array_push($errors, "Неверно задана стоимость");
-		} else {
-			$price_json['price'] = floatval($price_val);
-		}
+
+        if (!is_valid_num($cost)) 
+            array_push($errors, "Неверно задана стоимость");
+        
+        if (!is_valid_num($price)) 
+            array_push($errors, "Неверно задана цена");
+        
+        if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)]))
+            array_push($errors, "Неверно задана валюта");
 		
-		$cost_curr = get_param_def('cost_curr','0');
-		if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)])) {
-			array_push($errors, "Неверно задана валюта");
-		} else {
-			$price_json['cost_curr'] = intval($cost_curr);
-		}
+        if ($way_prepay && (!is_valid_num($prepayment) || floatval($prepayment) > 100))
+            array_push($errors, "Неверно задан размер предоплаты");
+                                
 		
-		$payment = get_param_def('payment', null);
-		if ($payment != null) {
-			if ($payment != 'nocash' && $payment != 'cash' && $payment != 'mix_cash' && $payment != 'soft' && $payment != 'conv' && $payment != 'on_card') {
-				array_push($errors, "Неверно задана форма оплаты");
-			} else {
-				$price_json['payment'] = $payment;
-			}
-		}
-		
-		if (isset($_POST['payment_way_nds']))
-			$price_json['payment_way_nds'] = true;
-		if (isset($_POST['way_ship']))
-			$price_json['way_ship'] = true;
-		if (isset($_POST['way_debark']))
-			$price_json['way_debark'] = true;
-		if (isset($_POST['payment_way_barg']))
-			$price_json['payment_way_barg'] = true;
-			
-		if (isset($_POST['way_prepay'])) {
-			$price_json['way_prepay'] = true;
-			$prepayment = get_param_def('prepayment', '0');
-			if (!is_valid_num($prepayment) || floatval($prepayment) > 100) {
-				array_push($errors, "Неверно задан размер предоплаты");
-			} else {
-				$price_json['prepayment'] = floatval($prepayment);
-			}
-		}
-	} else {
-		if (isset($_POST['price_query']))
-			$price_json['price_query'] = true;
-	}
-	// ----
+        if (!$cash && !$nocash)
+            array_push($errors, "Необходимо выбрать тип оплаты: наличная или безналичная");
 	
 	if ($sh_date_from == null || $sh_date_to == null) {
 		array_push($errors, "Неверный формат даты");
@@ -777,18 +794,20 @@ function tzs_edit_shipment($id) {
 		$sh_distance = get_param('sh_distance');
 		*/
 		
-		$sh_distance = get_param('length');
+                // А теперь на срабатывает это
+		//$sh_distance = get_param('length');
+		$sh_distance = get_param('sh_distance');
 		//echo 'Дистанция - '+$sh_distance+'<br>';
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_SHIPMENT_TABLE.
-				" (time, last_edited, user_id, sh_date_from, sh_date_to, sh_city_from, sh_city_to, sh_descr, sh_weight, sh_volume, sh_length, sh_height, sh_width, trans_count, trans_type, sh_type, active, comment, cost, distance, from_cid, from_rid, from_sid, to_cid, to_rid, to_sid, price, price_val)".
-				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d);",
+				" (time, last_edited, user_id, sh_date_from, sh_date_to, sh_city_from, sh_city_to, sh_descr, sh_weight, sh_volume, sh_length, sh_height, sh_width, trans_count, trans_type, sh_type, active, comment, distance, from_cid, from_rid, from_sid, to_cid, to_rid, to_sid, price, price_val, cost, cash, nocash, way_ship, way_debark, soft, way_prepay, prepayment, price_query)".
+				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d, %f, %d, %d, %d, %d, %d, %d, %f, %d);",
 				$user_id, $sh_date_from, $sh_date_to, stripslashes_deep($sh_city_from), stripslashes_deep($sh_city_to),
 				stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume), floatval($sh_length),
-				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), stripslashes_deep(json_encode($price_json)), $sh_distance,
+				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), $sh_distance,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                floatval($price_val), intval($cost_curr));
+                                floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query));
 		
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось опубликовать Ваш груз. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -804,13 +823,14 @@ function tzs_edit_shipment($id) {
 			}
 		} else {
 			$sql = $wpdb->prepare("UPDATE ".TZS_SHIPMENT_TABLE." SET ".
-				" last_edited=now(), sh_date_from=%s, sh_date_to=%s, sh_city_from=%s, sh_city_to=%s, sh_descr=%s, sh_weight=%f, sh_volume=%f, sh_length=%f, sh_height=%f, sh_width=%f, trans_count=%d, trans_type=%d, sh_type=%d, active=%d, comment=%s, cost=%s, distance=%d, ".
-				" from_cid=%d,from_rid=%d,from_sid=%d,to_cid=%d,to_rid=%d,to_sid=%d, price=%f, price_val=%d".
+				" last_edited=now(), sh_date_from=%s, sh_date_to=%s, sh_city_from=%s, sh_city_to=%s, sh_descr=%s, sh_weight=%f, sh_volume=%f, sh_length=%f, sh_height=%f, sh_width=%f, trans_count=%d, trans_type=%d, sh_type=%d, active=%d, comment=%s, distance=%d, ".
+				" from_cid=%d,from_rid=%d,from_sid=%d,to_cid=%d,to_rid=%d,to_sid=%d, price=%f, price_val=%d,".
+                                " cost=%f, cash=%d, nocash=%d, way_ship=%d, way_debark=%d, soft=%d, way_prepay=%d, prepayment=%f, price_query=%d".
 				" WHERE id=%d AND user_id=%d;", $sh_date_from, $sh_date_to, stripslashes_deep($sh_city_from),
 				stripslashes_deep($sh_city_to), stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume),
-				floatval($sh_length), floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), stripslashes_deep(json_encode($price_json)), round($dis['distance'] / 1000),
+				floatval($sh_length), floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), round($dis['distance'] / 1000),
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                floatval($price_val), intval($cost_curr),
+                                floatval($price_val), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
 				$id, $user_id);
 			
 			if (false === $wpdb->query($sql)) {
@@ -885,11 +905,10 @@ function tzs_front_end_edit_shipment_handler($atts) {
 		} else if ($row == null) {
 			print_error('Груз не найден');
 		} else {
-			$cost = json_decode($row->cost);
+			/*$cost = json_decode($row->cost);
 			foreach ($cost as $key => $val) {
 				$_POST[$key] = ''.$val;
-			}
-			
+			}*/
 			
 			$_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags1/".strtolower($row1->code).'.png';
 			$_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags2/".strtolower($row2->code).'.png';			
@@ -907,12 +926,41 @@ function tzs_front_end_edit_shipment_handler($atts) {
 			$_POST['sh_type'] = ''.$row->sh_type;
 			$_POST['trans_type'] = ''.$row->trans_type;
 			$_POST['trans_count'] = ''.$row->trans_count;
+                        
 			if ($row->sh_length > 0 || $row->sh_height > 0 || $row->sh_width > 0) {
-				$_POST['set_dim'] = '';
+                            $_POST['set_dim'] = '';
+                            
+                            if ($row->sh_width > 0) 
 				$_POST['sh_width'] = ''.remove_decimal_part($row->sh_width);
+                            if ($row->sh_height > 0) 
 				$_POST['sh_height'] = ''.remove_decimal_part($row->sh_height);
+                            if ($row->sh_length > 0) 
 				$_POST['sh_length'] = ''.remove_decimal_part($row->sh_length);
 			}
+                        
+			if ($row->cost > 0)
+				$_POST['cost'] = ''.remove_decimal_part($row->cost);
+			if ($row->price > 0)
+				$_POST['price'] = ''.remove_decimal_part($row->price);
+			if ($row->price_val > 0)
+				$_POST['cost_curr'] = ''.remove_decimal_part($row->price_val);
+			if ($row->cash > 0)
+				$_POST['cash'] = ''.remove_decimal_part($row->cash);
+			if ($row->nocash > 0)
+				$_POST['nocash'] = ''.remove_decimal_part($row->nocash);
+			if ($row->way_ship > 0)
+				$_POST['way_ship'] = ''.remove_decimal_part($row->way_ship);
+			if ($row->way_debark > 0)
+				$_POST['way_debark'] = ''.remove_decimal_part($row->way_debark);
+			if ($row->soft > 0)
+				$_POST['soft'] = ''.remove_decimal_part($row->soft);
+			if ($row->way_prepay > 0)
+				$_POST['way_prepay'] = ''.remove_decimal_part($row->way_prepay);
+			if ($row->prepayment > 0)
+				$_POST['prepayment'] = ''.remove_decimal_part($row->prepayment);
+			if ($row->price_query > 0)
+				$_POST['price_query'] = ''.remove_decimal_part($row->price_query);
+                        
 			$_POST['id'] = ''.$row->id;
 			$_POST['sh_active'] = $row->active;
 			tzs_print_shipment_form(null, true);

@@ -134,7 +134,8 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
     
     $type = trans_types_to_str($row->trans_type, $row->tr_type);
     
-    $cost = tzs_cost_to_str($row->cost, true);
+    //$cost = tzs_cost_to_str($row->cost, true);
+    $cost = tzs_price_query_to_str($row);
     
     $dt_created = convert_time($row->time, "d.m.Y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
@@ -268,20 +269,23 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
     
 
     $output_tbody .= '<td>';
-    if ($row->price > 0) {
-        $output_tbody .= '<div class="price_label" title="Стоимость перевозки груза">'.
-        number_format($row->price, 0, '.', ' ').' '.$GLOBALS['tzs_curr'][$row->price_val].'<div><br>
-                <div class="cost_label" title="Цена за 1 км перевозки груза">('.
-                round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].
-                '/км)</div>'; 
-    } else {
-        $output_tbody .= '<div  class="price_label" title="Стоимость перевозки груза">'.$cost[0].'</div>';
-    }
+    //if ($row->price > 0) {
+//                round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].
+//        number_format($row->cost, 0, '.', ' ').' '.$GLOBALS['tzs_curr'][$row->price_val].'<div><br>
+//                $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].
+//                '/км)</div>'; 
+        $output_tbody .= '<div class="price_label" title="Стоимость перевозки груза">'.$cost[0].'<div><br>';
+        if (strlen($cost[1]) > 0)
+            $output_tbody .= '<div class="cost_label" title="Цена за 1 км перевозки груза">('.$cost[1].')</div>'; 
+    //} else {
+    //    $output_tbody .= '<div  class="price_label" title="Стоимость перевозки груза">'.$cost[0].'</div>';
+    //}
 
+//                <div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.$cost[1].'</div>
     $output_tbody .= '
             </td>
             <td>
-                <div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.$cost[1].'</div>
+                <div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.$cost[2].'</div>
             </td>';
                 //<div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.str_replace(', ', ',<br>', $cost[1]).'</div>
     

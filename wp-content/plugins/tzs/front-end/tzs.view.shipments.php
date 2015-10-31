@@ -178,16 +178,28 @@ function tzs_front_end_view_shipment_handler($atts) {
                         <label><strong>Габариты:</strong></label>
                     </div>
                     <div class="pull-left" style="width: 60%">
-                        Длинна = <?php echo $row->sh_length; ?>м Ширина = <?php echo $row->sh_width; ?>м Высота = <?php echo $row->sh_height; ?>м
+                        Длина = <?php echo $row->sh_length; ?>м<br>Ширина = <?php echo $row->sh_width; ?>м<br>Высота = <?php echo $row->sh_height; ?>м
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>
-                    <?php $cost=tzs_cost_to_str($row->cost); if (strlen($cost) > 0) {?>
+                    <?php 
+                    //$cost = tzs_cost_to_str($row->cost); 
+                    $cost = tzs_price_query_to_str($row); 
+                    if (count($cost) > 0) {?>
                     <div class="pull-left label-txt">
                         <label><strong>Цена:</strong></label>
                     </div>
                     <div class="pull-left" style="width: 60%">
-                        <?php echo $cost;?>
+                        <?php echo $cost[0]; ?>
+                        <?php echo $cost[1] ? ' ('.$cost[1].')' : ''; ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    
+                    <div class="pull-left label-txt">
+                        <label><strong>Форма оплаты:</strong></label>
+                    </div>
+                    <div class="pull-left" style="width: 60%">
+                        <?php echo str_replace(', ', ',<br>', $cost[2]);?>
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>

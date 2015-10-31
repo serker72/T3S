@@ -379,57 +379,6 @@ function tzs_make_distance_link($distance, $meters, $city) {
 	return '<a class="distance_link" href=\'javascript:'.$url.';\' title="Расчет расстояния между пунктами">'.tzs_convert_distance_to_str($distance, $meters).'</a>';
 }
 
-function tzs_price_query_to_str($row) {
-    $str1 = ''; // цена
-    $str2 = ''; // стоимость
-    $str3 = ''; // форма оплаты
-    
-    // Если установлен переключатель "Не указывать стоимость (цена договорная)"
-    if ($row->price_query || ($row->cost == 0)) {
-        $str1 = 'договорная';
-        $str2 = '';
-        $str3 = 'не указана';
-    } else {
-        $str1 = number_format($row->cost, 0, '.', ' ').' '.$GLOBALS['tzs_curr'][$row->price_val];
-        $str2 = $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].'/км';
-        
-        if ($row->cash) {
-            if (strlen($str3) > 0) $str3 .= ', ';
-            $str3 .= 'наличная';
-        }
-        
-        if ($row->nocash) {
-            if (strlen($str3) > 0) $str3 .= ', ';
-            $str3 .= 'безналичная';
-        }
-        
-        if ($row->way_ship) {
-            if (strlen($str3) > 0) $str3 .= ', ';
-            $str3 .= 'при погрузке';
-        }
-        
-        if ($row->way_debark) {
-            if (strlen($str3) > 0) $str3 .= ', ';
-            $str3 .= 'при выгрузке';
-        }
-        
-        if ($row->soft) {
-            if (strlen($str3) > 0) $str3 .= ', ';
-            $str3 .= 'софт';
-        }
-        
-        if ($row->way_prepay) {
-            if (strlen($str3) > 0) $str3 .= ', ';
-            $str3 .= 'предоплата';
-            if ($row->prepayment) {
-                $str3 .= ': '.$row->prepayment.'%';
-            }
-        }
-    }
-    
-    return array($str1, $str2, $str3);
-}
-
 function tzs_cost_to_str($cost_str, $split_flag = false) {
 	$cost = json_decode($cost_str, true);
 	$str = '';
