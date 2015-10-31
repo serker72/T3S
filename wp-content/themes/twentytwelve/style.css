@@ -2555,7 +2555,7 @@ height:180px;
 .form_text_span {
     vertical-align: middle;
 }
-input[type=text]{
+input[type="text"], select{
     color: #007FFF;
     border: 1px solid #007FFF;
     border-radius: 10px;
@@ -2564,15 +2564,49 @@ input[type=text]{
     background: white;
     padding: 0px 5px 0px 5px;
 }
-input[type=checkbox]{
+input[type="checkbox"]{
     color: #007FFF;
     border: 1px solid #007FFF;
     background: white;
    
 }
-input[type=radio]{
+input[type="radio"]{
     color: #007FFF;
     border: 1px solid #007FFF;
     background: white;
    
+}
+
+input[type=submit], button {
+    color: white;
+    background: #007FFF;
+    border-radius: 10px;
+    text-transform: uppercase;
+    padding: 5px 15px 4px 15px;
+}
+.entry-content label, .entry-content p, .entry-content div, .entry-content span{
+    color: #007FFF;
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+   input::-webkit-input-placeholder {
+    color: #007FFF; /* Цвет подсказывающего текста */
+   }
+   /*{
+    -moz-placeholder { color: #007FFF;}
+    -webkit-input-placeholder {color: #007FFF;}
+}*/
+   #sh_type:after {
+	content:'';
+	display:block;
+	height:14px;
+	width:14px;
+	outline:1px solid #007FFF;
+	position:absolute;
+	top:0;
+	left:0;
 }
