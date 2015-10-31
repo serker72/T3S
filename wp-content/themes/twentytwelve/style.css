@@ -1179,6 +1179,13 @@ a:hover {
   line-height: 26px;
   margin: 0 20px 0 0;
 }
+.site-header #logined {
+  
+  width: 145px;
+  float: right;
+  line-height: 26px;
+  margin: 0 20px 0 0;
+}
 .site-header #login a {
 	color: #fff;
 }
@@ -2587,6 +2594,11 @@ input[type=submit], button {
 .entry-content label, .entry-content p, .entry-content div, .entry-content span{
     color: #007FFF;
 }
+.entry-content label{
+    float: left;
+    margin-top: 5px;
+    margin-right: 5px;
+}
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -2600,13 +2612,23 @@ select {
     -moz-placeholder { color: #007FFF;}
     -webkit-input-placeholder {color: #007FFF;}
 }*/
-   #sh_type:after {
+   #div_sh_type::after {
 	content:'';
 	display:block;
 	height:14px;
 	width:14px;
 	outline:1px solid #007FFF;
-	position:absolute;
-	top:0;
-	left:0;
+	position:relative;
+	top:-31px;
+	left:8px;
+}
+#sh_type:focus ~ #div_sh_type:after{
+    outline:1px solid #939598;
+	border:2px solid #fff;
+	width:10px;
+	height:10px;
+	background-color:#63849F;
+}
+#div_sh_type select{
+    padding-left: 25px;
 }

@@ -11,10 +11,12 @@
 	<script src="https://jquery-ui.googlecode.com/svn-history/r3982/trunk/ui/i18n/jquery.ui.datepicker-ru.js"></script-->
 	<script src="/wp-content/themes/twentytwelve/js/jquery-ui.min.js"></script>
 	<script src="/wp-content/themes/twentytwelve/js/jquery.ui.datepicker-ru.js"></script>
-	<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+        
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 	<link rel="stylesheet" href="/ui/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../info/tooltip.css"/>
         <script src="/wp-content/themes/twentytwelve/js/bootstrap.min.js"></script>
+        <script src="/wp-content/themes/twentytwelve/js/css.js"></script>
         <!--script src="/wp-content/themes/twentytwelve/js/jquery.slick.js" type="text/javascript"></script-->
 	<script>
 		var ajax_url = '<?php echo admin_url('admin-ajax.php'); ?>';
@@ -143,8 +145,13 @@
 			<a href="/account/login">Войти в систему</a>
 		</div>
 		<?php } else {?>
+                
 		<div id="profile">
 			<a href="/account/profile">Личный кабинет</a>
+		</div>
+                <div id="logined">
+                        <?php echo "Вы вошли как ".$user_info['fio']." Логин : "; echo $user_info['user_login'];?>
+			
 		</div>
 		<?php }?>
         <?php if (get_current_user_id() != 0) {
