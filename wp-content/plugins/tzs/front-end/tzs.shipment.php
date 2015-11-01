@@ -43,7 +43,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', ''); ?>" placeholder="Дата выгрузки" readonly="true">
         </div>
         <div id="div_second_city" class="span3 form-group">
-            <input autocomplete="city" id="second_city" class="form-control" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
+            <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1">
             <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
@@ -104,7 +104,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         <div class="span4">
             <label for="cost">Стоимость перевозки:</label>&nbsp;
             <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
-            &nbsp;грн
+            <span>грн</span>
             <input type="hidden" name="cost_curr" id="cost_curr" value="1">
         </div>
         <div class="span4">
@@ -176,13 +176,17 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
     <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
         <div class="span12">
-            После нажатия кнопки "РАЗМЕСТИТЬ ЗАЯВКУ" заявка будет опубликована в базе транспорта, после нажатия кнопки "ВЫХОД" заявка не сохраняется.
+            <div style="font-size: 92%; font-style: italic;">
+                После нажатия кнопки "РАЗМЕСТИТЬ ЗАЯВКУ" заявка будет опубликована в базе транспорта, после нажатия кнопки "ВЫХОД" заявка не сохраняется.
+            </div>
         </div>
     </div>
 
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span12">
-            Напоминаем: заявка будет удалена из базы активных заявок и перенесена в архив на следующий день после указанного Вами дня выгрузки
+            <div style="font-size: 92%; font-style: italic;">
+                <span style="color: #F00;">Напоминаем:</span> заявка будет удалена из базы активных заявок и перенесена в архив на следующий день после указанного Вами дня выгрузки
+            </div>
         </div>
     </div>
     

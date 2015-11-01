@@ -285,7 +285,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
     $output_tbody .= '
             </td>
             <td>
-                <div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.$cost[2].'</div>
+                <div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.str_replace(', ', ',<br>', $cost[2]).'</div>
             </td>';
                 //<div  class="payment_label" title="Форма оплаты услуг по перевозке груза">'.str_replace(', ', ',<br>', $cost[1]).'</div>
     
