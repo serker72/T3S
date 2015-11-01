@@ -57,21 +57,14 @@ function tzs_print_truck_form($errors, $edit=false) {
     </div>
                     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_tr_type" class="span3">
-            <select id="tr_type" name="tr_type" placeholder="Тип груза">
-            <?php
-                tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'tr_type', 'Тип груза');
-            ?>
-            </select>
-        </div>
         <div class="span3">
-            <input type="text" id="sh_descr" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="Описание груза">
+            <input type="text" id="sh_descr" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="Желаемый груз">
         </div>
-        <div class="span3">
-            <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий">
+        <div class="span5">
+            <input type="text" size="" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий" style="width: 350px;">
         </div>
-        <div class="span3 chekbox"><!-- style="text-align: right;"-->
-            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;Указать габариты груза (м):
+        <div class="span4 chekbox"><!-- style="text-align: right;"-->
+            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;<label for="set_dim">Указать габариты транспортного средства (м):</label>
         </div>
     </div>
     
@@ -91,13 +84,13 @@ function tzs_print_truck_form($errors, $edit=false) {
             <input type="text" size="5" id="trans_count" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "0" style="width: 25px;">
         </div>
         <div class="span3">
-            <label for="sh_weight">Вес груза:</label>&nbsp;
-            <input type="text" id="sh_weight" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5" style="width: 50px;">&nbsp;т
+            <label for="tr_weight">Вес груза:</label>&nbsp;
+            <input type="text" id="tr_weight" name="tr_weight" value="<?php echo_val('tr_weight'); ?>" maxlength = "5" style="width: 50px;">&nbsp;т
         </div>
         <div class="span3">
-            <input type="text" name="sh_length" id="sh_length" value="<?php echo_val('sh_length'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Длина" style="width: 50px;">&nbsp;&nbsp;
-            <input type="text" name="sh_width" id="sh_width" value="<?php echo_val('sh_width'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Ширина" style="width: 50px;">&nbsp;&nbsp;
-            <input type="text" name="sh_height" id="sh_height" value="<?php echo_val('sh_height'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Высота" style="width: 50px;">
+            <input type="text" name="tr_length" id="tr_length" value="<?php echo_val('tr_length'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Длина" style="width: 50px;">&nbsp;&nbsp;
+            <input type="text" name="tr_width" id="tr_width" value="<?php echo_val('tr_width'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Ширина" style="width: 50px;">&nbsp;&nbsp;
+            <input type="text" name="tr_height" id="tr_height" value="<?php echo_val('tr_height'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Высота" style="width: 50px;">
         </div>
     </div>
 
@@ -116,8 +109,8 @@ function tzs_print_truck_form($errors, $edit=false) {
         <div class="span1">
         </div>
         <div class="span3"><!-- style="text-align: right; float: right;"-->
-            <label for="sh_volume">Объем груза&nbsp;=</label>&nbsp;
-            <input type="text" id="sh_volume" name="sh_volume" value="<?php echo_val('sh_volume'); ?>" readonly="true" style="width: 80px;">
+            <label for="tr_volume">Объем груза&nbsp;=</label>&nbsp;
+            <input type="text" id="tr_volume" name="tr_volume" value="<?php echo_val('tr_volume'); ?>" readonly="true" style="width: 80px;">
             &nbsp;м<sup>3</sup>
         </div>
     </div>
@@ -131,25 +124,25 @@ function tzs_print_truck_form($errors, $edit=false) {
     </div>
 
     <div class="row-fluid"  style="width: 100%;">
-        <div class="span2 chekbox">
+        <div id="div_cash" class="span2 chekbox">
             <input type="checkbox" id="cash" name="cash" <?php isset($_POST['cash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="cash">Наличная</label>
         </div>
-        <div class="span2 chekbox">
+        <div id="div_nocash" class="span2 chekbox">
             <input type="checkbox" id="nocash" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="nocash">Безналичная</label>
         </div>
-        <div class="span2 chekbox">
+        <div id="div_way_ship" class="span2 chekbox">
             <input type="checkbox" id="way_ship" name="way_ship" <?php isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_ship">При погрузке</label>
         </div>
-        <div class="span2 chekbox">
+        <div id="div_way_debark" class="span2 chekbox">
             <input type="checkbox" id="way_debark" name="way_debark" <?php isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_debark">При выгрузке</label>
         </div>
-        <div class="span1 chekbox">
+        <div id="div_soft" class="span1 chekbox">
             <input type="checkbox" id="soft" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="soft">Софт</label>
         </div>
-        <div class="span2 chekbox" style="text-align: right;">
+        <div id="div_way_prepay" class="span2 chekbox" style="text-align: right;">
             <input type="checkbox" id="way_prepay" name="way_prepay" <?php isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> >&nbsp;<label for="way_prepay">Предоплата</label>
         </div>
-        <div class="span1">
+        <div id="div_prepayment" class="span1">
             <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;">&nbsp;%
         </div>
     </div>
@@ -271,13 +264,13 @@ function tzs_print_truck_form($errors, $edit=false) {
         // Изменение флага "Указать габариты груза (м):"
         function onSetDim(ch) {
             if (ch) {
-                jQuery("#sh_length, #sh_width, #sh_height").removeAttr("disabled");
-                //jQuery("#sh_length, #sh_width, #sh_height").attr('required', 'required');
+                jQuery("#tr_length, #tr_width, #tr_height").removeAttr("disabled");
+                //jQuery("#tr_length, #tr_width, #tr_height").attr('required', 'required');
             } else {
-                //jQuery("#sh_length, #sh_width, #sh_height").removeAttr('required');
-                jQuery("#sh_length, #sh_width, #sh_height").attr("disabled", "disabled");
-                jQuery("#sh_length, #sh_width, #sh_height").attr('value', '');
-                jQuery("#sh_volume").attr('value', '');
+                //jQuery("#tr_length, #tr_width, #tr_height").removeAttr('required');
+                jQuery("#tr_length, #tr_width, #tr_height").attr("disabled", "disabled");
+                jQuery("#tr_length, #tr_width, #tr_height").attr('value', '');
+                jQuery("#tr_volume").attr('value', '');
             }
         }
 
@@ -302,7 +295,7 @@ function tzs_print_truck_form($errors, $edit=false) {
         // Вывод карты
         function showDistanceDialog() {
             if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
-                //displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
+                //displayDistance([jQuery('input[name=tr_city_from]').val(), jQuery('input[name=tr_city_to]').val()], null);
                 displayDistance([jQuery('#first_city').val(), jQuery('#second_city').val()], null);
             } else {
 
@@ -381,11 +374,11 @@ function tzs_print_truck_form($errors, $edit=false) {
 
         // Рассчет объема груза
         function onVolumeCalculate() {
-            if ((jQuery('#sh_length').val().length > 0) && (jQuery('#sh_width').val().length > 0) && (jQuery('#sh_height').val().length > 0)) {
-                var vol = jQuery('#sh_length').val() * jQuery('#sh_width').val() * jQuery('#sh_height').val();
-                jQuery('#sh_volume').attr('value', vol);
+            if ((jQuery('#tr_length').val().length > 0) && (jQuery('#tr_width').val().length > 0) && (jQuery('#tr_height').val().length > 0)) {
+                var vol = jQuery('#tr_length').val() * jQuery('#tr_width').val() * jQuery('#tr_height').val();
+                jQuery('#tr_volume').attr('value', vol);
             } else {
-                jQuery('#sh_volume').attr('value', '');
+                jQuery('#tr_volume').attr('value', '');
             }
         }
 
@@ -441,11 +434,11 @@ function tzs_print_truck_form($errors, $edit=false) {
                 jQuery('#second_city').css({'border': '1px solid #007FFF'});
             }
 
-            if (jQuery('#sh_type').val() < 1) {
+            if (jQuery('#tr_type').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан тип груза.<br>\n';
-                jQuery('#sh_type').css({'border': '2px solid #F00'});
+                jQuery('#tr_type').css({'border': '2px solid #F00'});
             } else {
-                jQuery('#sh_type').css({'border': '1px solid #007FFF'});
+                jQuery('#tr_type').css({'border': '1px solid #007FFF'});
             }
             
             if (jQuery('#sh_descr').val() < 1) {
@@ -470,28 +463,28 @@ function tzs_print_truck_form($errors, $edit=false) {
             }
 
             if (jQuery('#set_dim').prop('checked')) {
-                if (jQuery('#sh_length').val().length == 0) {
+                if (jQuery('#tr_length').val().length == 0) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана длина груза.<br>\n';
-                    jQuery('#sh_length').css({'border': '2px solid #F00'});
+                    jQuery('#tr_length').css({'border': '2px solid #F00'});
                 } else {
-                    jQuery('#sh_length').css({'border': '1px solid #007FFF'});
+                    jQuery('#tr_length').css({'border': '1px solid #007FFF'});
                 }
 
-                if (jQuery('#sh_width').val().length == 0) {
+                if (jQuery('#tr_width').val().length == 0) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана ширина груза.<br>\n';
-                    jQuery('#sh_width').css({'border': '2px solid #F00'});
+                    jQuery('#tr_width').css({'border': '2px solid #F00'});
                 } else {
-                    jQuery('#sh_width').css({'border': '1px solid #007FFF'});
+                    jQuery('#tr_width').css({'border': '1px solid #007FFF'});
                 }
 
-                if (jQuery('#sh_height').val().length == 0) {
+                if (jQuery('#tr_height').val().length == 0) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана высота груза.<br>\n';
-                    jQuery('#sh_height').css({'border': '2px solid #F00'});
+                    jQuery('#tr_height').css({'border': '2px solid #F00'});
                 } else {
-                    jQuery('#sh_height').css({'border': '1px solid #007FFF'});
+                    jQuery('#tr_height').css({'border': '1px solid #007FFF'});
                 }
             } else {
-                jQuery('#sh_length, #sh_width, #sh_height').css({'border': '1px solid #007FFF'});
+                jQuery('#tr_length, #tr_width, #tr_height').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery("#price_query").is(':checked')) {
@@ -518,12 +511,12 @@ function tzs_print_truck_form($errors, $edit=false) {
                 
             // Проверка правильности указания переключателей
             if (jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked')) {
-                jQuery('#cash').css({'border': '2px solid #007FFF'});
-                jQuery('#nocash').css({'border': '2px solid #007FFF'});
+                jQuery('#div_cash').css({'border': '2px solid #007FFF'});
+                jQuery('#div_nocash').css({'border': '2px solid #007FFF'});
             } else {
                 ErrorMsg2 = ErrorMsg2 + 'Необходимо выбрать тип оплаты: наличная или безналичная.<br>\n';
-                jQuery('#cash').css({'border': '2px solid #F00'});
-                jQuery('#nocash').css({'border': '2px solid #F00'});
+                jQuery('#div_cash').css({'border': '2px solid #F00'});
+                jQuery('#div_nocash').css({'border': '2px solid #F00'});
             }
 
             if (ErrorMsg2.length > 0) {
@@ -595,13 +588,12 @@ function tzs_print_truck_form($errors, $edit=false) {
                                           //alert('Time elapsed!');
                                         }, 1000 );/*onCityChange();*/ });
 
-            //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
-            jQuery("#sh_length, #sh_width, #sh_height, #cost, #sh_weight, #trans_count").bind("change keyup input click", function() {
+            jQuery("#tr_length, #tr_width, #tr_height, #cost, #tr_weight, #trans_count").bind("change keyup input click", function() {
                 if (this.value.match(/[^0-9.]/g)) {
                     this.value = this.value.replace(/[^0-9.]/g, '');
                 }
             });
-            jQuery("#sh_length, #sh_width, #sh_height").change(function() { onVolumeCalculate(); });
+            jQuery("#tr_length, #tr_width, #tr_height").change(function() { onVolumeCalculate(); });
             jQuery("#price_query").change(function() { onPriceQueryChange(); });
             jQuery("#way_prepay").change(function() { onWayPrepayChange(); });
 
@@ -609,13 +601,13 @@ function tzs_print_truck_form($errors, $edit=false) {
                 event.preventDefault();
                 var flag = onFormValidate();
                 if (flag) {
-                    jQuery("form[id='form_shipment']").submit();
+                    jQuery("form[id='form_truck']").submit();
                 }
             });
 
             jQuery("#form_button2").click(function(event) { 
                 event.preventDefault();
-                resetForm("form[id='form_shipment']");
+                resetForm("form[id='form_truck']");
                 onSetDim(jQuery('#set_dim').prop('checked'));
             });
 
@@ -648,6 +640,19 @@ function tzs_edit_truck($id) {
 	$tr_length = get_param('tr_length');
 	$tr_height = get_param('tr_height');
 	$tr_width = get_param('tr_width');
+
+        $cost = get_param('cost');
+        $price = get_param('price');
+        $cost_curr = get_param_def('cost_curr', '1');
+        $prepayment = get_param('prepayment');
+
+        $price_query = isset($_POST['price_query']) ? 1 : 0;
+        $cash = isset($_POST['cash']) ? 1 : 0;
+        $nocash = isset($_POST['nocash']) ? 1 : 0;
+        $way_ship = isset($_POST['way_ship']) ? 1 : 0;
+        $way_debark = isset($_POST['way_debark']) ? 1 : 0;
+        $soft = isset($_POST['soft']) ? 1 : 0;
+        $way_prepay = isset($_POST['way_prepay']) ? 1 : 0;
 	
         // Контроль пересечения дат
         $tr_date_from_str = date("Ymd", strtotime($tr_date_from));
@@ -663,60 +668,27 @@ function tzs_edit_truck($id) {
         $tr_length = str_replace(',', '.', $tr_length);
         $tr_height = str_replace(',', '.', $tr_height);
         $tr_width = str_replace(',', '.', $tr_width);
+        $cost = str_replace(',', '.', $cost);
+        $price = str_replace(',', '.', $price);
+        $prepayment = str_replace(',', '.', $prepayment);
 	
 	$errors = array();
 	
-	// cost
-	$price = get_param_def('set_price','0') == '1';
-	$price_json = array();
-	$price_json['set_price'] = $price ? 1 : 0;
-	if ($price) {
-		$price_val = get_param_def('price','0');
-		if (!is_valid_num($price_val)) {
-			array_push($errors, "Неверно задана стоимость");
-		} else {
-			$price_json['price'] = floatval($price_val);
-		}
+        if (!is_valid_num($cost)) 
+            array_push($errors, "Неверно задана стоимость");
+        
+        if (!is_valid_num($price)) 
+            array_push($errors, "Неверно задана цена");
+        
+        if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)]))
+            array_push($errors, "Неверно задана валюта");
 		
-		$cost_curr = get_param_def('cost_curr','0');
-		if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)])) {
-			array_push($errors, "Неверно задана валюта");
-		} else {
-			$price_json['cost_curr'] = intval($cost_curr);
-		}
+        if ($way_prepay && (!is_valid_num($prepayment) || floatval($prepayment) > 100))
+            array_push($errors, "Неверно задан размер предоплаты");
+                                
 		
-		$payment = get_param_def('payment', null);
-		if ($payment != null) {
-			if ($payment != 'nocash' && $payment != 'cash' && $payment != 'mix_cash' && $payment != 'soft' && $payment != 'conv' && $payment != 'on_card') {
-				array_push($errors, "Неверно задана форма оплаты");
-			} else {
-				$price_json['payment'] = $payment;
-			}
-		}
-		
-		if (isset($_POST['payment_way_nds']))
-			$price_json['payment_way_nds'] = true;
-		if (isset($_POST['payment_way_ship']))
-			$price_json['payment_way_ship'] = true;
-		if (isset($_POST['payment_way_debark']))
-			$price_json['payment_way_debark'] = true;
-		if (isset($_POST['payment_way_barg']))
-			$price_json['payment_way_barg'] = true;
-			
-		if (isset($_POST['payment_way_prepay'])) {
-			$price_json['payment_way_prepay'] = true;
-			$prepayment = get_param_def('prepayment', '0');
-			if (!is_valid_num($prepayment) || floatval($prepayment) > 100) {
-				array_push($errors, "Неверно задан размер предоплаты");
-			} else {
-				$price_json['prepayment'] = floatval($prepayment);
-			}
-		}
-	} else {
-		if (isset($_POST['price_query']))
-			$price_json['price_query'] = true;
-	}
-	// ----
+        if (!$cash && !$nocash)
+            array_push($errors, "Необходимо выбрать тип оплаты: наличная или безналичная");
 	
 	if ($tr_date_from == null || $tr_date_to == null) {
 		array_push($errors, "Неверный формат даты");
@@ -751,7 +723,7 @@ function tzs_edit_truck($id) {
 	}
 	
 	if (!is_numeric($trans_type) || intval($trans_type) < 1) {
-		array_push($errors, "Неверно задан тип ТС");
+		array_push($errors, "Неверно задан тип транспортного средства");
 	}
 	
 	if (!is_numeric($tr_active) || intval($tr_active) < 0) {
@@ -801,20 +773,29 @@ function tzs_edit_truck($id) {
 		$tr_date_from = date('Y-m-d', mktime(0, 0, 0, $tr_date_from['month'], $tr_date_from['day'], $tr_date_from['year']));
 		$tr_date_to = date('Y-m-d', mktime(0, 0, 0, $tr_date_to['month'], $tr_date_to['day'], $tr_date_to['year']));
 		
+		$temp = $from_info['city_id'];
+		$sql = "SELECT lat,lng FROM ".TZS_CITIES_TABLE." WHERE city_id=$temp;";
+		$row1 = $wpdb->get_row($sql);
+
+		$temp = $to_info['city_id'];
+		$sql = "SELECT lat,lng FROM ".TZS_CITIES_TABLE." WHERE city_id=$temp;";
+		$row2 = $wpdb->get_row($sql);
+                
 		//$dis = tzs_calculate_distance(array($tr_city_from, $tr_city_to));
-		$dis = get_param('length');
+		//$dis = get_param('length');
+		$sh_distance = get_param('sh_distance');
 		
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_TRUCK_TABLE.
-				" (time, last_edited, user_id, tr_date_from, tr_date_to, tr_city_from, tr_city_to, tr_weight, tr_volume, tr_length, tr_height, tr_width, trans_count, trans_type, active, tr_type, cost, comment, distance,from_cid,from_rid,from_sid,to_cid,to_rid,to_sid,price,price_val,sh_descr)".
-				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %s, %d, %d,%d,%d,%d,%d,%d,%f,%d,%s);",
+				" (time, last_edited, user_id, tr_date_from, tr_date_to, tr_city_from, tr_city_to, tr_weight, tr_volume, tr_length, tr_height, tr_width, trans_count, trans_type, active, tr_type, comment, distance,from_cid,from_rid,from_sid,to_cid,to_rid,to_sid,price,price_val,sh_descr, cost, cash, nocash, way_ship, way_debark, soft, way_prepay, prepayment, price_query)".
+				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d, %s, %f, %d, %d, %d, %d, %d, %d, %f, %d);",
 				$user_id, $tr_date_from, $tr_date_to, stripslashes_deep($tr_city_from), stripslashes_deep($tr_city_to),
 				floatval($tr_weight), floatval($tr_volume), floatval($tr_length),
 				floatval($tr_height), floatval($tr_width), intval($trans_count), intval($trans_type), intval($tr_active), intval($tr_type),
-				stripslashes_deep(json_encode($price_json)), stripslashes_deep($comment), $dis,
+				stripslashes_deep($comment), $sh_distance,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                floatval($price_val), intval($cost_curr), stripslashes_deep($sh_descr));
+                                floatval($price), intval($cost_curr), stripslashes_deep($sh_descr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query));
 		
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось опубликовать Ваш транспорт. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -830,14 +811,16 @@ function tzs_edit_truck($id) {
 		} else {
 			$sql = $wpdb->prepare("UPDATE ".TZS_TRUCK_TABLE." SET ".
 				" last_edited=now(), tr_date_from=%s, tr_date_to=%s, tr_city_from=%s, tr_city_to=%s, tr_weight=%f, tr_volume=%f,".
-				" tr_length=%f, tr_height=%f, tr_width=%f, trans_count=%d, trans_type=%d, tr_type=%d, cost=%s, comment=%s, distance=%d, ".
-				" from_cid=%d,from_rid=%d,from_sid=%d,to_cid=%d,to_rid=%d,to_sid=%d, active=%d, price=%f, price_val=%d, sh_descr=%s".
+				" tr_length=%f, tr_height=%f, tr_width=%f, trans_count=%d, trans_type=%d, tr_type=%d, comment=%s, distance=%d, ".
+				" from_cid=%d,from_rid=%d,from_sid=%d,to_cid=%d,to_rid=%d,to_sid=%d, active=%d, price=%f, price_val=%d, sh_descr=%s,".
+                                " cost=%f, cash=%d, nocash=%d, way_ship=%d, way_debark=%d, soft=%d, way_prepay=%d, prepayment=%f, price_query=%d".
 				" WHERE id=%d AND user_id=%d;", $tr_date_from, $tr_date_to, stripslashes_deep($tr_city_from),
 				stripslashes_deep($tr_city_to), floatval($tr_weight), floatval($tr_volume),
 				floatval($tr_length), floatval($tr_height), floatval($tr_width), intval($trans_count), intval($trans_type),
-				intval($tr_type), stripslashes_deep(json_encode($price_json)), stripslashes_deep($comment), $dis,
+				intval($tr_type), stripslashes_deep($comment), $dis,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                intval($tr_active), floatval($price_val), intval($cost_curr), stripslashes_deep($sh_descr),
+                                intval($tr_active), floatval($price), intval($cost_curr), stripslashes_deep($sh_descr),
+                                floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
 				$id, $user_id);
 			
 			if (false === $wpdb->query($sql)) {
@@ -901,38 +884,73 @@ function tzs_front_end_edit_truck_handler($atts) {
 		global $wpdb;
 		$sql = "SELECT * FROM ".TZS_TRUCK_TABLE." WHERE id=$tr_id AND user_id=$user_id;";
 		$row = $wpdb->get_row($sql);
+		
 		if (count($row) == 0 && $wpdb->last_error != null) {
-			print_error('Не удалось отобразить информацию о транспорте. Свяжитесь, пожалуйста, с администрацией сайта');
+                    print_error('Не удалось отобразить информацию о транспорте. Свяжитесь, пожалуйста, с администрацией сайта');
 		} else if ($row == null) {
-			print_error('Груз не найден');
+                    print_error('Груз не найден');
 		} else {
-			$cost = json_decode($row->cost);
-			foreach ($cost as $key => $val) {
-				$_POST[$key] = ''.$val;
-			}
-			
-			$_POST['tr_date_from'] = date("d.m.Y", strtotime($row->tr_date_from));
-			$_POST['tr_date_to'] = date("d.m.Y", strtotime($row->tr_date_to));
-			$_POST['tr_city_from'] = $row->tr_city_from;
-			$_POST['tr_city_to'] = $row->tr_city_to;
-			$_POST['comment'] = $row->comment;
-			if ($row->tr_weight > 0)
-				$_POST['tr_weight'] = ''.remove_decimal_part($row->tr_weight);
-			if ($row->tr_volume > 0)
-				$_POST['tr_volume'] = ''.remove_decimal_part($row->tr_volume);
-			$_POST['trans_type'] = ''.$row->trans_type;
-			$_POST['tr_type'] = ''.$row->tr_type;
-			$_POST['trans_count'] = ''.$row->trans_count;
-			if ($row->tr_length > 0 || $row->tr_height > 0 || $row->tr_width > 0) {
-				$_POST['set_dim'] = '';
-				$_POST['tr_width'] = ''.remove_decimal_part($row->tr_width);
-				$_POST['tr_height'] = ''.remove_decimal_part($row->tr_height);
-				$_POST['tr_length'] = ''.remove_decimal_part($row->tr_length);
-			}
-			$_POST['sh_descr'] = $row->sh_descr;
-			$_POST['tr_active'] = $row->active;
-			$_POST['id'] = ''.$row->id;
-			tzs_print_truck_form(null, true);
+                    $sql_flag1 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->from_cid;
+                    $row1 = $wpdb->get_row($sql_flag1);
+                    $sql_flag2 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->to_cid;
+                    $row2 = $wpdb->get_row($sql_flag2);
+                
+                    $_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row1->code).'.png';
+                    $_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row2->code).'.png';			
+                    $_POST['tr_date_from'] = date("d.m.Y", strtotime($row->tr_date_from));
+                    $_POST['tr_date_to'] = date("d.m.Y", strtotime($row->tr_date_to));
+                    $_POST['tr_city_from'] = $row->tr_city_from;
+                    $_POST['tr_city_to'] = $row->tr_city_to;
+                    $_POST['comment'] = $row->comment;
+                    
+                    if ($row->tr_weight > 0)
+                        $_POST['tr_weight'] = ''.remove_decimal_part($row->tr_weight);
+                    if ($row->tr_volume > 0)
+                        $_POST['tr_volume'] = ''.remove_decimal_part($row->tr_volume);
+                    
+                    $_POST['trans_type'] = ''.$row->trans_type;
+                    $_POST['tr_type'] = ''.$row->tr_type;
+                    $_POST['trans_count'] = ''.$row->trans_count;
+                    
+                    if ($row->tr_length > 0 || $row->tr_height > 0 || $row->tr_width > 0) {
+                        $_POST['set_dim'] = '';
+                        if ($row->tr_width > 0)
+                            $_POST['tr_width'] = ''.remove_decimal_part($row->tr_width);
+                        if ($row->tr_height > 0)
+                            $_POST['tr_height'] = ''.remove_decimal_part($row->tr_height);
+                        if ($row->tr_length > 0)
+                            $_POST['tr_length'] = ''.remove_decimal_part($row->tr_length);
+                    }
+                    
+                    if ($row->cost > 0)
+                            $_POST['cost'] = ''.remove_decimal_part($row->cost);
+                    if ($row->price > 0)
+                            $_POST['price'] = ''.remove_decimal_part($row->price);
+                    if ($row->price_val > 0)
+                            $_POST['cost_curr'] = ''.remove_decimal_part($row->price_val);
+                    if ($row->cash > 0)
+                            $_POST['cash'] = 'on';
+                    if ($row->nocash > 0)
+                            $_POST['nocash'] = ''.remove_decimal_part($row->nocash);
+                    if ($row->way_ship > 0)
+                            $_POST['way_ship'] = ''.remove_decimal_part($row->way_ship);
+                    if ($row->way_debark > 0)
+                            $_POST['way_debark'] = ''.remove_decimal_part($row->way_debark);
+                    if ($row->soft > 0)
+                            $_POST['soft'] = ''.remove_decimal_part($row->soft);
+                    if ($row->way_prepay > 0)
+                            $_POST['way_prepay'] = ''.remove_decimal_part($row->way_prepay);
+                    if ($row->prepayment > 0)
+                            $_POST['prepayment'] = ''.remove_decimal_part($row->prepayment);
+                    if ($row->price_query > 0)
+                            $_POST['price_query'] = ''.remove_decimal_part($row->price_query);
+                        
+                    $_POST['sh_distance'] = $row->distance;
+                    $_POST['sh_descr'] = $row->sh_descr;
+                    $_POST['tr_active'] = $row->active;
+                    $_POST['id'] = ''.$row->id;
+                    
+                    tzs_print_truck_form(null, true);
 		}
 	}
 	
