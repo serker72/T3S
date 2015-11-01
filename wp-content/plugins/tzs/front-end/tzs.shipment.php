@@ -203,7 +203,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
     <!-- test new form END -->
     
 	
-    <script src="/wp-content/plugins/tzs/assets/js/jquery.maskedinput.min.js"></script>
     <script>
         tzs_tr2_types = [];
         <?php
@@ -595,7 +594,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
                                           //alert('Time elapsed!');
                                         }, 1000 );/*onCityChange();*/ });
 
-            //jQuery("#sh_length, #sh_width, #sh_height").mask("99.99");
             jQuery("#sh_length, #sh_width, #sh_height, #cost, #sh_weight, #trans_count").bind("change keyup input click", function() {
                 if (this.value.match(/[^0-9.]/g)) {
                     this.value = this.value.replace(/[^0-9.]/g, '');
@@ -834,7 +832,7 @@ function tzs_edit_shipment($id) {
 				stripslashes_deep($sh_city_to), stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume),
 				floatval($sh_length), floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), round($dis['distance'] / 1000),
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                floatval($price_val), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
+                                floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
 				$id, $user_id);
 			
 			if (false === $wpdb->query($sql)) {
@@ -899,75 +897,72 @@ function tzs_front_end_edit_shipment_handler($atts) {
 		$sql = "SELECT * FROM ".TZS_SHIPMENT_TABLE." WHERE id=$sh_id AND user_id=$user_id;";	
 		$row = $wpdb->get_row($sql);
 		
-		$sql_flag1 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->from_cid;
-		$row1 = $wpdb->get_row($sql_flag1);
-		$sql_flag2 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->to_cid;
-		$row2 = $wpdb->get_row($sql_flag2);
-		
 		if (count($row) == 0 && $wpdb->last_error != null) {
 			print_error('Не удалось отобразить информацию о грузе. Свяжитесь, пожалуйста, с администрацией сайта');
 		} else if ($row == null) {
 			print_error('Груз не найден');
 		} else {
-			/*$cost = json_decode($row->cost);
-			foreach ($cost as $key => $val) {
-				$_POST[$key] = ''.$val;
-			}*/
-			
-			$_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags1/".strtolower($row1->code).'.png';
-			$_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags2/".strtolower($row2->code).'.png';			
-			$_POST['sh_date_from'] = date("d.m.Y", strtotime($row->sh_date_from));
-			$_POST['sh_date_to'] = date("d.m.Y", strtotime($row->sh_date_to));
-			$_POST['sh_city_from'] = $row->sh_city_from;
-			$_POST['sh_city_to'] = $row->sh_city_to;
-			$_POST['sh_descr'] = $row->sh_descr;
-			$_POST['comment'] = $row->comment;
-			
-			if ($row->sh_weight > 0)
-				$_POST['sh_weight'] = ''.remove_decimal_part($row->sh_weight);
-			if ($row->sh_volume > 0)
-				$_POST['sh_volume'] = ''.remove_decimal_part($row->sh_volume);
-			$_POST['sh_type'] = ''.$row->sh_type;
-			$_POST['trans_type'] = ''.$row->trans_type;
-			$_POST['trans_count'] = ''.$row->trans_count;
-                        
-			if ($row->sh_length > 0 || $row->sh_height > 0 || $row->sh_width > 0) {
-                            $_POST['set_dim'] = '';
-                            
-                            if ($row->sh_width > 0) 
-				$_POST['sh_width'] = ''.remove_decimal_part($row->sh_width);
-                            if ($row->sh_height > 0) 
-				$_POST['sh_height'] = ''.remove_decimal_part($row->sh_height);
-                            if ($row->sh_length > 0) 
-				$_POST['sh_length'] = ''.remove_decimal_part($row->sh_length);
-			}
-                        
-			if ($row->cost > 0)
-				$_POST['cost'] = ''.remove_decimal_part($row->cost);
-			if ($row->price > 0)
-				$_POST['price'] = ''.remove_decimal_part($row->price);
-			if ($row->price_val > 0)
-				$_POST['cost_curr'] = ''.remove_decimal_part($row->price_val);
-			if ($row->cash > 0)
-				$_POST['cash'] = ''.remove_decimal_part($row->cash);
-			if ($row->nocash > 0)
-				$_POST['nocash'] = ''.remove_decimal_part($row->nocash);
-			if ($row->way_ship > 0)
-				$_POST['way_ship'] = ''.remove_decimal_part($row->way_ship);
-			if ($row->way_debark > 0)
-				$_POST['way_debark'] = ''.remove_decimal_part($row->way_debark);
-			if ($row->soft > 0)
-				$_POST['soft'] = ''.remove_decimal_part($row->soft);
-			if ($row->way_prepay > 0)
-				$_POST['way_prepay'] = ''.remove_decimal_part($row->way_prepay);
-			if ($row->prepayment > 0)
-				$_POST['prepayment'] = ''.remove_decimal_part($row->prepayment);
-			if ($row->price_query > 0)
-				$_POST['price_query'] = ''.remove_decimal_part($row->price_query);
-                        
-			$_POST['id'] = ''.$row->id;
-			$_POST['sh_active'] = $row->active;
-			tzs_print_shipment_form(null, true);
+                    $sql_flag1 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->from_cid;
+                    $row1 = $wpdb->get_row($sql_flag1);
+                    $sql_flag2 = "SELECT * FROM ".TZS_COUNTRIES_TABLE." WHERE country_id=".$row->to_cid;
+                    $row2 = $wpdb->get_row($sql_flag2);
+		
+                    $_POST['from_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row1->code).'.png';
+                    $_POST['to_code'] = "/wp-content/plugins/tzs/assets/images/flags/".strtolower($row2->code).'.png';			
+                    $_POST['sh_date_from'] = date("d.m.Y", strtotime($row->sh_date_from));
+                    $_POST['sh_date_to'] = date("d.m.Y", strtotime($row->sh_date_to));
+                    $_POST['sh_city_from'] = $row->sh_city_from;
+                    $_POST['sh_city_to'] = $row->sh_city_to;
+                    $_POST['sh_descr'] = $row->sh_descr;
+                    $_POST['comment'] = $row->comment;
+
+                    if ($row->sh_weight > 0)
+                            $_POST['sh_weight'] = ''.remove_decimal_part($row->sh_weight);
+                    if ($row->sh_volume > 0)
+                            $_POST['sh_volume'] = ''.remove_decimal_part($row->sh_volume);
+                    $_POST['sh_type'] = ''.$row->sh_type;
+                    $_POST['trans_type'] = ''.$row->trans_type;
+                    $_POST['trans_count'] = ''.$row->trans_count;
+
+                    if ($row->sh_length > 0 || $row->sh_height > 0 || $row->sh_width > 0) {
+                        $_POST['set_dim'] = '';
+
+                        if ($row->sh_width > 0) 
+                            $_POST['sh_width'] = ''.remove_decimal_part($row->sh_width);
+                        if ($row->sh_height > 0) 
+                            $_POST['sh_height'] = ''.remove_decimal_part($row->sh_height);
+                        if ($row->sh_length > 0) 
+                            $_POST['sh_length'] = ''.remove_decimal_part($row->sh_length);
+                    }
+
+                    if ($row->cost > 0)
+                            $_POST['cost'] = ''.remove_decimal_part($row->cost);
+                    if ($row->price > 0)
+                            $_POST['price'] = ''.remove_decimal_part($row->price);
+                    if ($row->price_val > 0)
+                            $_POST['cost_curr'] = ''.remove_decimal_part($row->price_val);
+                    if ($row->cash > 0)
+                            $_POST['cash'] = 'on';
+                    if ($row->nocash > 0)
+                            $_POST['nocash'] = ''.remove_decimal_part($row->nocash);
+                    if ($row->way_ship > 0)
+                            $_POST['way_ship'] = ''.remove_decimal_part($row->way_ship);
+                    if ($row->way_debark > 0)
+                            $_POST['way_debark'] = ''.remove_decimal_part($row->way_debark);
+                    if ($row->soft > 0)
+                            $_POST['soft'] = ''.remove_decimal_part($row->soft);
+                    if ($row->way_prepay > 0)
+                            $_POST['way_prepay'] = ''.remove_decimal_part($row->way_prepay);
+                    if ($row->prepayment > 0)
+                            $_POST['prepayment'] = ''.remove_decimal_part($row->prepayment);
+                    if ($row->price_query > 0)
+                            $_POST['price_query'] = ''.remove_decimal_part($row->price_query);
+
+                    $_POST['sh_distance'] = $row->distance;
+                    $_POST['id'] = ''.$row->id;
+                    $_POST['sh_active'] = $row->active;
+
+                    tzs_print_shipment_form(null, true);
 		}
 	}
 	
