@@ -131,22 +131,22 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
     <div class="row-fluid"  style="width: 100%;">
         <div class="span2 chekbox">
-            <input type="checkbox" id="cash" name="cash" <?php isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
+            <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
         </div>
         <div class="span2 chekbox">
-            <input type="checkbox" id="nocash" name="nocash" <?php isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
+            <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
         </div>
         <div class="span2 chekbox">
-            <input type="checkbox" id="way_ship" name="way_ship" <?php isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label>
+            <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label>
         </div>
         <div class="span2 chekbox">
-            <input type="checkbox" id="way_debark" name="way_debark" <?php isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label>
+            <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label>
         </div>
         <div class="span1 chekbox">
-            <input type="checkbox" id="soft" name="soft" <?php isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label>
+            <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label>
         </div>
         <div class="span2 chekbox" style="text-align: right;">
-            <input type="checkbox" id="way_prepay" name="way_prepay" <?php isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label>
+            <input type="checkbox" id="way_prepay" name="way_prepay" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label>
         </div>
         <div class="span1" style="padding-top: 10px;">
             <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"><div class="post-input">%</div>
@@ -156,7 +156,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span8">
             <div class="span12 chekbox" style="margin-bottom: 20px;">
-                <input type="checkbox" id="price_query" name="price_query" <?php isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
+                <input type="checkbox" id="price_query" name="price_query" <?php echo isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
             </div>
             <div class="span4">
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
@@ -594,7 +594,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
             //updateCostValue();
             onTransTypeChange();
-            onWayPrepayChange();
+            //onWayPrepayChange();
            // onCityChange();
             onCostChange();
 
@@ -951,22 +951,23 @@ function tzs_front_end_edit_shipment_handler($atts) {
                             $_POST['price'] = ''.remove_decimal_part($row->price);
                     if ($row->price_val > 0)
                             $_POST['cost_curr'] = ''.remove_decimal_part($row->price_val);
+                    if ($row->prepayment > 0)
+                            $_POST['prepayment'] = ''.remove_decimal_part($row->prepayment);
+                    
                     if ($row->cash > 0)
                             $_POST['cash'] = 'on';
                     if ($row->nocash > 0)
-                            $_POST['nocash'] = ''.remove_decimal_part($row->nocash);
+                            $_POST['nocash'] = 'on';
                     if ($row->way_ship > 0)
-                            $_POST['way_ship'] = ''.remove_decimal_part($row->way_ship);
+                            $_POST['way_ship'] = 'on';
                     if ($row->way_debark > 0)
-                            $_POST['way_debark'] = ''.remove_decimal_part($row->way_debark);
+                            $_POST['way_debark'] = 'on';
                     if ($row->soft > 0)
-                            $_POST['soft'] = ''.remove_decimal_part($row->soft);
+                            $_POST['soft'] = 'on';
                     if ($row->way_prepay > 0)
-                            $_POST['way_prepay'] = ''.remove_decimal_part($row->way_prepay);
-                    if ($row->prepayment > 0)
-                            $_POST['prepayment'] = ''.remove_decimal_part($row->prepayment);
+                            $_POST['way_prepay'] = 'on';
                     if ($row->price_query > 0)
-                            $_POST['price_query'] = ''.remove_decimal_part($row->price_query);
+                            $_POST['price_query'] = 'on';
 
                     $_POST['sh_distance'] = $row->distance;
                     $_POST['id'] = ''.$row->id;
