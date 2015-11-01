@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="/ui/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../info/tooltip.css"/>
         <script src="/wp-content/themes/twentytwelve/js/bootstrap.min.js"></script>
-        <script src="/wp-content/themes/twentytwelve/js/css.js"></script>
+        
         <!--script src="/wp-content/themes/twentytwelve/js/jquery.slick.js" type="text/javascript"></script-->
 	<script>
 		var ajax_url = '<?php echo admin_url('admin-ajax.php'); ?>';
