@@ -11,8 +11,8 @@ function tzs_print_product_form($errors, $edit=false) {
     date_add($dt, date_interval_create_from_date_string((TZS_PR_PUBLICATION_MIN_DAYS + 1).' days'));
     $d = date_format($dt, "d.m.Y");
 
-    //if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
-    //else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
+    if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
+    else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
     
     echo '<div style="clear: both;"></div>';
     print_errors($errors);
@@ -20,226 +20,6 @@ function tzs_print_product_form($errors, $edit=false) {
     <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
     <div style="clear: both;"></div>
     
-    <!-- test new form -->
-    <div style="width: 100%;">
-    <form enctype="multipart/form-data" method="post" id="form_shipment" class="" action="">
-        
-    <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_pr_active" class="span2">
-            <select id="pr_active" name="pr_active">
-                <option value="1" <?php if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
-                <option value="0" <?php if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
-            </select>
-        </div>
-        <div id="div_pr_type_id" class="span3">
-            <select id="pr_type_id" name="pr_type_id">
-                <option value="0" <?php if (isset($_POST['pr_type_id']) && $_POST['pr_type_id'] == 0) echo 'selected="selected"'; ?> >Категория</option>
-                <?php tzs_build_product_types('pr_type_id', TZS_PR_ROOT_CATEGORY_PAGE_ID); ?>
-            </select>
-            <?php wp_nonce_field( 'pr_type_id', 'pr_type_id_nonce' ); ?>
-	</div>
-        <div id="div_pr_sale_or_purchase" class="span2">
-            <!--label for="pr_sale_or_purchase">Тип заявки</label-->
-            <select id="pr_sale_or_purchase" name="pr_sale_or_purchase">
-                <option value="0" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 0) echo 'selected="selected"'; ?> >Тип заявки</option>
-                <option value="1" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 1) echo 'selected="selected"'; ?> >Продажа</option>
-                <option value="2" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
-            </select>
-        </div>
-        <div id="div_pr_fixed_or_tender" class="span2">
-            <!--label for="pr_fixed_or_tender">Участник тендера</label-->
-            <select id="pr_fixed_or_tender" name="pr_fixed_or_tender">
-                <option value="0" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 0) echo 'selected="selected"'; ?> >Участник тендера</option>
-                <option value="1" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 1) echo 'selected="selected"'; ?> >Цена зафиксирована</option>
-                <option value="2" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 2) echo 'selected="selected"'; ?> >Тендерное предложение</option>
-            </select>
-        </div>
-        <div class="span3">
-            <input autocomplete="city" id="first_city" type="text" size="35" name="pr_city_from" value="<?php echo_val('pr_city_from'); ?>" autocomplete="on" placeholder="Местонахождение товара">
-            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
-        </div>
-    </div>
-    
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span9">
-            <!--label for="pr_title">Наименование</label-->
-            <input type="text" name="pr_title" size="" maxlength="255" value="<?php echo_val('pr_title'); ?>" placeholder="Наименование товара" style="width: 90%;">
-        </div>
-        <div class="span3">
-        </div>
-    </div>
-                    
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span8">
-            <?php
-            $args = array(  'wpautop' => 1,
-                            'media_buttons' => 0,
-                            'textarea_name' => 'pr_description', //нужно указывать!
-                            'textarea_rows' => 2,
-                            'tabindex'      => null,
-                            'editor_css'    => '',
-                            'editor_class'  => '',
-                            'teeny'         => 1,
-                            'dfw'           => 0,
-                            'tinymce'       => array(
-                                'theme' => 'advanced',
-                                'theme_​advanced_​buttons1' => 'save,newdocument, | ,bold, italic, underline, strikethrough, |, justifyleft, justifycenter, justifyright, justifyfull, styleselect, formatselect, fontselect, fontsizeselect',
-                                'theme_​advanced_​buttons2' => 'cut, copy, paste, pastetext, pasteword, |, search, replace, |, bullist, numlist, |, outdent, indent, blockquote, |, undo, redo, |, link, unlink, anchor, image, cleanup, help, code, |, insertdate, inserttime, preview, |, forecolor, backcolor',
-                                'theme_​advanced_​buttons3' => 'tablecontrols, |, hr, removeformat, visualaid, |, sub, sup, |, charmap, emotions, iespell, media, advhr, |, print, |, ltr, rtl, |, fullscreen',
-                            ),
-                            'quicktags'     => array(
-                                'id' => 'editpost',
-                                //'buttons' => 'formatselect,|bold,italic,underline,bullist,blockquote,|,justifyleft,justifycenter,justifyright,justifyfull,|,link,unlink,,spellchecker,wp_fullscreen,wp_adv'
-                            ),
-                            'drag_drop_upload' => false
-                        );
-            wp_editor($_POST['pr_description'], 'editpost', $args);
-            ?>
-        </div>
-        <div class="span4">
-            <div class="span12">
-                <label>Добавить изображения (до 1Мб):</label>
-            </div>
-            <div class="span3">
-                <img src="" width="100%">
-            </div>
-            <div class="span3">
-                <img src="" width="100%">
-            </div>
-            <div class="span3">
-                <img src="" width="100%">
-            </div>
-        </div>
-    </div>
-    
-    <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_pr_copies" class="span4">
-            <label for="pr_copies">Количество</label>
-            <input type="number" id="pr_copies" name="pr_copies" size="2" value="<?php echo_val('pr_copies'); ?>" min="0" style="width: 80px;">
-            <select for="pr_copies" name="pr_unit" style="width: 80px;">
-            <?php
-                tzs_print_array_options($GLOBALS['tzs_pr_unit'], '', 'pr_unit', '');
-            ?>
-            </select>
-        </div>
-        <div id="div_pr_price" class="span4">
-            <label for="pr_price">Стоимость</label>
-            <input type="text" id="pr_price" name="pr_price" size="10" value="<?php echo_val('pr_price'); ?>" style="width: 80px;">
-            <select for="pr_price" name="pr_currency" style="width: 80px;">
-            <?php
-                tzs_print_array_options($GLOBALS['tzs_pr_curr'], '', 'pr_currency', '');
-            ?>
-            </select>
-        </div>
-        <div class="span4">
-            <label for="pr_expiration">Окончание публикации</label>
-            <input type="text" id="datepicker1" name="pr_expiration" size="" value="<?php echo_val_def('pr_expiration', $d); ?>" placeholder="Дата выгрузки" readonly="true" style="width: 80px;">
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span4">
-            <label for="cost">Стоимость перевозки:</label>&nbsp;
-            <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
-            <div class="post-input">грн</div>
-            <input type="hidden" name="cost_curr" id="cost_curr" value="1">
-        </div>
-        <div class="span4">
-            <label for="price">Цена&nbsp;=</label>&nbsp;
-            <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
-            <div class="post-input">грн/км</div>
-        </div>
-        <div class="span1">
-        </div>
-        <div class="span3"><!-- style="text-align: right; float: right;"-->
-            <label for="sh_volume">Объем груза&nbsp;=</label>&nbsp;
-            <input type="text" id="sh_volume" name="sh_volume" value="<?php echo_val('sh_volume'); ?>" readonly="true" style="width: 80px;">
-            <div class="post-input">м<sup>3</sup></div>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
-        <div class="span8">
-            <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
-        </div>
-        <div class="span4" style="text-align: right;">
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%;">
-        <div class="span2 chekbox">
-            <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
-        </div>
-        <div class="span2 chekbox">
-            <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
-        </div>
-        <div class="span2 chekbox">
-            <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label>
-        </div>
-        <div class="span2 chekbox">
-            <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label>
-        </div>
-        <div class="span1 chekbox">
-            <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label>
-        </div>
-        <div class="span2 chekbox" style="text-align: right;">
-            <input type="checkbox" id="way_prepay" name="way_prepay" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label>
-        </div>
-        <div class="span1" style="padding-top: 10px;">
-            <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"><div class="post-input">%</div>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span8">
-            <div class="span12 chekbox" style="margin-bottom: 20px;">
-                <input type="checkbox" id="price_query" name="price_query" <?php echo isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
-            </div>
-            <div class="span4">
-                <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
-            </div>
-            <div class="span4">
-                <button id="form_button2">ОЧИСТИТЬ ВСЕ ПОЛЯ</button>
-            </div>
-            <div class="span4">
-                <button id="form_button3">ВЫХОД</button>
-            </div>
-        </div>
-        <div class="span4" style="padding: 2px;"><!-- float: right; -->
-            <div class="" id="form_error_message" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px 5px; display: none;">
-            </div>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
-        <div class="span12">
-            <div style="font-size: 92%; font-style: italic;">
-                После нажатия кнопки "РАЗМЕСТИТЬ ЗАЯВКУ" заявка будет опубликована в базе транспорта, после нажатия кнопки "ВЫХОД" заявка не сохраняется.
-            </div>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span12">
-            <div style="font-size: 92%; font-style: italic;">
-                <span style="color: #F00;">Напоминаем:</span> заявка будет удалена из базы активных заявок и перенесена в архив на следующий день после указанного Вами дня выгрузки
-            </div>
-        </div>
-    </div>
-    
-	<?php if ($edit) {?>
-		<input type="hidden" name="action" value="editshipment"/>
-		<input type="hidden" name="id" value="<?php echo_val('id'); ?>"/>
-	<?php } else { ?>
-		<input type="hidden" name="action" value="addshipment"/>
-	<?php } ?>
-	<input type="hidden" name="formName" value="shipment" />
-    </form>
-    </div>
-    <div class="clearfix">&nbsp;</div>
-    
-    <!-- test new form END -->
-
     
     <form enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
 
@@ -292,7 +72,7 @@ function tzs_print_product_form($errors, $edit=false) {
         <div class="pr_edit_form_line">
             <label for="pr_description">Описание</label>
             <?php
-                /*$args = array(  'wpautop' => 1,
+                $args = array(  'wpautop' => 1,
                                 'media_buttons' => 0,
                                 'textarea_name' => 'pr_description', //нужно указывать!
                                 'textarea_rows' => 10,
@@ -308,7 +88,7 @@ function tzs_print_product_form($errors, $edit=false) {
                                                     ),
                                 'drag_drop_upload' => false
                             );
-                wp_editor($_POST['pr_description'], 'editpost', $args);*/
+                wp_editor($_POST['pr_description'], 'editpost', $args);
             ?>
         </div>
         <div class="pr_edit_form_line">
