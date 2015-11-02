@@ -25,12 +25,18 @@ function tzs_print_product_form($errors, $edit=false) {
     <form enctype="multipart/form-data" method="post" id="form_product" class="" action="">
         
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_pr_active" class="span2">
-            <select id="pr_active" name="pr_active">
-                <option value="1" <?php if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
-                <option value="0" <?php if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
-            </select>
+        <div id="div_pr_active" class="span12">
+            <?php if ($edit && isset($_POST["pr_active"]) && ($_POST["pr_active"] == 0)) { ?>
+            <div class="" style="background-color: #E5AEAE; text-align: center; padding: 2px;">Архивная заявка</div>
+            <?php } ?>
+            <!--select id="pr_active" name="pr_active">
+                <option value="1" <?php //if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
+                <option value="0" <?php //if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
+            </select-->
         </div>
+    </div>
+    
+    <div class="row-fluid"  style="width: 100%; ">
         <div id="div_pr_type_id" class="span3">
             <select id="pr_type_id" name="pr_type_id">
                 <option value="0" <?php if (isset($_POST['pr_type_id']) && $_POST['pr_type_id'] == 0) echo 'selected="selected"'; ?> >Категория</option>
@@ -40,7 +46,7 @@ function tzs_print_product_form($errors, $edit=false) {
 	</div>
         <div id="div_pr_sale_or_purchase" class="span2">
             <!--label for="pr_sale_or_purchase">Тип заявки</label-->
-            <select id="pr_sale_or_purchase" name="pr_sale_or_purchase">
+            <select id="pr_sale_or_purchase" name="pr_sale_or_purchase" style="width: 100px;">
                 <option value="0" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 0) echo 'selected="selected"'; ?> >Тип заявки</option>
                 <option value="1" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 1) echo 'selected="selected"'; ?> >Продажа</option>
                 <option value="2" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
@@ -663,6 +669,8 @@ function tzs_front_end_edit_product_handler($atts) {
                     if ($row->expiration !== null)
                         $_POST['pr_expiration'] = date("d.m.Y", strtotime($row->expiration));
                     $_POST['id'] = ''.$row->id;
+                    $_POST['pr_active'] = ''.$row->active;
+                    $_POST['pr_sale_or_purchase'] = ''.$row->sale_or_purchase;
                     
                     tzs_print_product_form(null, true);
 		}
