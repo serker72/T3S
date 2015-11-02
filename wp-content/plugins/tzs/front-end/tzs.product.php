@@ -21,7 +21,7 @@ function tzs_print_product_form($errors, $edit=false) {
     <div style="clear: both;"></div>
     
     <!-- test new form -->
-    <div style="width: 100%;">
+<div class="form_wrapper">
     <form enctype="multipart/form-data" method="post" id="form_shipment" class="" action="">
         
     <div class="row-fluid"  style="width: 100%; ">
@@ -69,7 +69,7 @@ function tzs_print_product_form($errors, $edit=false) {
         </div>
     </div>
                     
-    <div class="row-fluid"  style="width: 100%; ">
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
         <div class="span8">
             <?php
             $args = array(  'wpautop' => 1,
@@ -235,7 +235,7 @@ function tzs_print_product_form($errors, $edit=false) {
 	<?php } ?>
 	<input type="hidden" name="formName" value="shipment" />
     </form>
-    </div>
+</div>
     <div class="clearfix">&nbsp;</div>
     
     <!-- test new form END -->

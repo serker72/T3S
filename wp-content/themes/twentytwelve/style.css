@@ -2584,22 +2584,22 @@ input[type="radio"]{
    
 }
 
-.entry-content input[type=submit], button {
+.form_wrapper input[type=submit], button {
     color: white;
     background: #0b5792;
     border-radius: 10px;
     text-transform: uppercase;
     padding: 5px 15px 4px 15px;
 }
-.entry-content label, .entry-content p, .entry-content div, .entry-content span{
+.form_wrapper label, .form_wrapper p, .form_wrapper div, .form_wrapper span{
     color: #007FFF;
 }
-.entry-content label{
+.form_wrapper label{
     float: left;
     margin-top: 5px;
     margin-right: 5px;
 }
-.entry-content input[type="text"]
+.form_wrapper input[type="text"]
 {
     float: left;
 }

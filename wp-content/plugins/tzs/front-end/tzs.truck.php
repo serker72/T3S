@@ -14,6 +14,7 @@ function tzs_print_truck_form($errors, $edit=false) {
     <div style="clear: both;"></div>
     
     <!-- test new form -->
+<div class="form_wrapper">
     <form enctype="multipart/form-data" method="post" id="form_truck" class="" action="">
         
     <div class="row-fluid"  style="width: 100%; ">
@@ -192,6 +193,7 @@ function tzs_print_truck_form($errors, $edit=false) {
 	<?php } ?>
 	<input type="hidden" name="formName" value="truck" />
     </form>
+</div>
     <div class="clearfix">&nbsp;</div>
     
     <!-- test new form END -->
