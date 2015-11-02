@@ -22,7 +22,7 @@ function tzs_print_product_form($errors, $edit=false) {
     
     <!-- test new form -->
 <div class="form_wrapper">
-    <form enctype="multipart/form-data" method="post" id="form_shipment" class="" action="">
+    <form enctype="multipart/form-data" method="post" id="form_product" class="" action="">
         
     <div class="row-fluid"  style="width: 100%; ">
         <div id="div_pr_active" class="span2">
@@ -69,7 +69,7 @@ function tzs_print_product_form($errors, $edit=false) {
         </div>
     </div>
                     
-    <div class="row-fluid"  style="width: 100%; margin-bottom: 10px;">
+    <div class="row-fluid"  style="width: 100%; margin-bottom: 20px;">
         <div class="span8">
             <?php
             $args = array(  'wpautop' => 1,
@@ -97,17 +97,19 @@ function tzs_print_product_form($errors, $edit=false) {
             ?>
         </div>
         <div class="span4">
-            <div class="span12">
+            <div class="span12" style="margin-bottom: 10px;">
                 <label>Добавить изображения (до 1Мб):</label>
             </div>
-            <div class="span3">
-                <img src="" width="100%">
-            </div>
-            <div class="span3">
-                <img src="" width="100%">
-            </div>
-            <div class="span3">
-                <img src="" width="100%">
+            <div class="span12">
+                <div class="" style="width: 30%; float: left; margin-right: 5px;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
+                    <img src="" width="100%">
+                </div>
+                <div class="" style="width: 30%; float: left; margin-right: 5px;">
+                    <img src="" width="100%">
+                </div>
+                <div class="" style="width: 30%; float: left;">
+                    <img src="" width="100%">
+                </div>
             </div>
         </div>
     </div>
@@ -116,6 +118,7 @@ function tzs_print_product_form($errors, $edit=false) {
         <div id="div_pr_copies" class="span4">
             <label for="pr_copies">Количество</label>
             <input type="number" id="pr_copies" name="pr_copies" size="2" value="<?php echo_val('pr_copies'); ?>" min="0" style="width: 80px;">
+            &nbsp;&nbsp;
             <select for="pr_copies" name="pr_unit" style="width: 80px;">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_pr_unit'], '', 'pr_unit', '');
@@ -125,6 +128,7 @@ function tzs_print_product_form($errors, $edit=false) {
         <div id="div_pr_price" class="span4">
             <label for="pr_price">Стоимость</label>
             <input type="text" id="pr_price" name="pr_price" size="10" value="<?php echo_val('pr_price'); ?>" style="width: 80px;">
+            &nbsp;&nbsp;
             <select for="pr_price" name="pr_currency" style="width: 80px;">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_pr_curr'], '', 'pr_currency', '');
@@ -137,64 +141,28 @@ function tzs_print_product_form($errors, $edit=false) {
         </div>
     </div>
 
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span4">
-            <label for="cost">Стоимость перевозки:</label>&nbsp;
-            <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
-            <div class="post-input">грн</div>
-            <input type="hidden" name="cost_curr" id="cost_curr" value="1">
-        </div>
-        <div class="span4">
-            <label for="price">Цена&nbsp;=</label>&nbsp;
-            <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
-            <div class="post-input">грн/км</div>
-        </div>
-        <div class="span1">
-        </div>
-        <div class="span3"><!-- style="text-align: right; float: right;"-->
-            <label for="sh_volume">Объем груза&nbsp;=</label>&nbsp;
-            <input type="text" id="sh_volume" name="sh_volume" value="<?php echo_val('sh_volume'); ?>" readonly="true" style="width: 80px;">
-            <div class="post-input">м<sup>3</sup></div>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
-        <div class="span8">
-            <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
-        </div>
-        <div class="span4" style="text-align: right;">
-        </div>
-    </div>
-
     <div class="row-fluid"  style="width: 100%;">
-        <div class="span2 chekbox">
-            <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
-        </div>
-        <div class="span2 chekbox">
-            <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
-        </div>
-        <div class="span2 chekbox">
-            <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label>
-        </div>
-        <div class="span2 chekbox">
-            <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label>
-        </div>
-        <div class="span1 chekbox">
-            <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label>
-        </div>
-        <div class="span2 chekbox" style="text-align: right;">
-            <input type="checkbox" id="way_prepay" name="way_prepay" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label>
-        </div>
-        <div class="span1" style="padding-top: 10px;">
-            <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"><div class="post-input">%</div>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; ">
         <div class="span8">
-            <div class="span12 chekbox" style="margin-bottom: 20px;">
-                <input type="checkbox" id="price_query" name="price_query" <?php echo isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
+            <div class="span12">
+                <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
             </div>
+            
+            <div class="span3 chekbox">
+                <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
+            </div>
+            <div class="span3 chekbox">
+                <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
+            </div>
+            <div class="span3 chekbox">
+                <input type="checkbox" id="nds" name="nds" <?php echo isset($_POST['nds']) ? 'checked="checked"' : ''; ?>><label for="nds">включая НДС</label>
+            </div>
+            <div class="span3 chekbox">
+                <input type="checkbox" id="nonds" name="nonds" <?php echo isset($_POST['nonds']) ? 'checked="checked"' : ''; ?>><label for="nonds">без НДС</label>
+            </div>
+            
+            <div class="span12" style="margin-bottom: 20px;">
+            </div>
+            
             <div class="span4">
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
             </div>
@@ -205,8 +173,9 @@ function tzs_print_product_form($errors, $edit=false) {
                 <button id="form_button3">ВЫХОД</button>
             </div>
         </div>
+        
         <div class="span4" style="padding: 2px;"><!-- float: right; -->
-            <div class="" id="form_error_message" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px 5px; display: none;">
+            <div class="" id="form_error_message" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px 5px; display: block;">
             </div>
         </div>
     </div>
@@ -228,12 +197,12 @@ function tzs_print_product_form($errors, $edit=false) {
     </div>
     
 	<?php if ($edit) {?>
-		<input type="hidden" name="action" value="editshipment"/>
+		<input type="hidden" name="action" value="editproduct"/>
 		<input type="hidden" name="id" value="<?php echo_val('id'); ?>"/>
 	<?php } else { ?>
-		<input type="hidden" name="action" value="addshipment"/>
+		<input type="hidden" name="action" value="addproduct"/>
 	<?php } ?>
-	<input type="hidden" name="formName" value="shipment" />
+	<input type="hidden" name="formName" value="product" />
     </form>
 </div>
     <div class="clearfix">&nbsp;</div>
