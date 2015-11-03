@@ -18,6 +18,7 @@ function tzs_print_product_form($errors, $edit=false) {
     print_errors($errors);
     ?>
     <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
+    <script src="/wp-content/plugins/tzs/assets/js/jquery.MultiFile.min.js"></script>
     <div style="clear: both;"></div>
     
     <!-- test new form -->
@@ -52,7 +53,7 @@ function tzs_print_product_form($errors, $edit=false) {
                 <option value="2" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
             </select>
         </div>
-        <div id="div_pr_fixed_or_tender" class="span2">
+        <div id="div_pr_fixed_or_tender" class="span3">
             <!--label for="pr_fixed_or_tender">Участник тендера</label-->
             <select id="pr_fixed_or_tender" name="pr_fixed_or_tender">
                 <option value="0" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 0) echo 'selected="selected"'; ?> >Участник тендера</option>
@@ -60,9 +61,9 @@ function tzs_print_product_form($errors, $edit=false) {
                 <option value="2" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 2) echo 'selected="selected"'; ?> >Тендерное предложение</option>
             </select>
         </div>
-        <div class="span3">
-            <input autocomplete="city" id="first_city" type="text" size="35" name="pr_city_from" value="<?php echo_val('pr_city_from'); ?>" autocomplete="on" placeholder="Местонахождение товара">
-            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
+        <div class="span4">
+            <input autocomplete="city" id="first_city" type="text" size="35" name="pr_city_from" value="<?php echo_val('pr_city_from'); ?>" autocomplete="on" placeholder="Местонахождение товара" style="width: 280px;">
+            &nbsp;&nbsp;<img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
     </div>
     
@@ -107,14 +108,16 @@ function tzs_print_product_form($errors, $edit=false) {
                 <label>Добавить изображения (до 1Мб):</label>
             </div>
             <div class="span12">
-                <div class="" style="width: 30%; float: left; margin-right: 5px;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
-                    <img src="" width="100%">
+                <div class="" style="min-width: 100px; min-height: 100px; float: left; margin-right: 5px;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
+                    <!--img src="" width="100px" style="display:none"-->
+                    <input type="file" id="LoadImage1" >
+                    <!--a id="LoadImage1" href="#">Выбрать и загрузить</a-->
                 </div>
-                <div class="" style="width: 30%; float: left; margin-right: 5px;">
-                    <img src="" width="100%">
+                <div class="" style="min-width: 100px; min-height: 100px; float: left; margin-right: 5px;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
+                    <img src="" width="100px" style="display:none">
                 </div>
-                <div class="" style="width: 30%; float: left;">
-                    <img src="" width="100%">
+                <div class="" style="min-width: 100px; min-height: 100px; float: left;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
+                    <img src="" width="100px" style="display:none">
                 </div>
             </div>
         </div>
@@ -392,6 +395,24 @@ function tzs_print_product_form($errors, $edit=false) {
 	
     <script>
         jQuery(document).ready(function(){
+            jQuery('#LoadImage1').MultiFile({
+                // your options go here
+                max: 1,
+                maxfile: 1024,
+                preview: true,
+                accept: 'jpg|png|gif',
+                onFileSelect: function(element, value, master_element) {
+                    //jQuery('span.MultiFile-title, input#LoadImage1_F1').css({'display': 'none'});
+                    //jQuery('input.MultiFile-applied:nth-child(1)').hide();
+                    //jQuery('input#'+element.id).hide();
+                    jQuery('.MultiFile-preview').css({
+                        'width': '100%',
+                        'height': '100%',
+                        'position': 'absolute'
+                    });
+                }
+            });
+            
             jQuery('#bpost').submit(function() {
                     jQuery('#addpostsub').attr('disabled','disabled');
                     return true;
