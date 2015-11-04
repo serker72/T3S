@@ -18,7 +18,7 @@ function tzs_print_product_form($errors, $edit=false) {
     print_errors($errors);
     ?>
     <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
-    <script src="/wp-content/plugins/tzs/assets/js/jquery.MultiFile.min.js"></script>
+    
     <div style="clear: both;"></div>
     
     <!-- test new form -->
@@ -108,16 +108,37 @@ function tzs_print_product_form($errors, $edit=false) {
                 <label>Добавить изображения (до 1Мб):</label>
             </div>
             <div class="span12">
-                <div class="" style="min-width: 100px; min-height: 100px; float: left; margin-right: 5px;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
-                    <!--img src="" width="100px" style="display:none"-->
-                    <input type="file" id="LoadImage1" >
-                    <!--a id="LoadImage1" href="#">Выбрать и загрузить</a-->
+                <div class="pr_image_wrapper">
+                    <div id="div_image1_off" class="pr_image_off">
+                        <input type="file" id="image1_load" name="image1_load[]" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
+                        <label for="image1_load"><span>выбрать и загрузить</span></label>
+                    </div>
+                    <div id="div_image1_on" class="pr_image_on">
+                        <span id="image1_delete" class="pr_image_delete"></span>
+                        <img src="" id="image1">
+                    </div>
                 </div>
-                <div class="" style="min-width: 100px; min-height: 100px; float: left; margin-right: 5px;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
-                    <img src="" width="100px" style="display:none">
+                
+                <div class="pr_image_wrapper">
+                    <div id="div_image2_off" class="pr_image_off">
+                        <input type="file" id="image2_load" name="image2_load[]" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
+                        <label for="image2_load"><span>выбрать и загрузить</span></label>
+                    </div>
+                    <div id="div_image2_on" class="pr_image_on">
+                        <span id="image2_delete" class="pr_image_delete"></span>
+                        <img src="" id="image2">
+                    </div>
                 </div>
-                <div class="" style="min-width: 100px; min-height: 100px; float: left;<?php echo "border: 1px #6A7E97 dashed; border-radius: 4px;"; ?>">
-                    <img src="" width="100px" style="display:none">
+                
+                <div class="pr_image_wrapper">
+                    <div id="div_image3_off" class="pr_image_off">
+                        <input type="file" id="image3_load" name="image3_load[]" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
+                        <label for="image3_load"><span>выбрать и загрузить</span></label>
+                    </div>
+                    <div id="div_image3_on" class="pr_image_on">
+                        <span id="image3_delete" class="pr_image_delete"></span>
+                        <img src="" id="image3">
+                    </div>
                 </div>
             </div>
         </div>
@@ -217,217 +238,92 @@ function tzs_print_product_form($errors, $edit=false) {
     <div class="clearfix">&nbsp;</div>
     
     <!-- test new form END -->
-
-    
-    <form enctype="multipart/form-data" method="post" id="bpost" class="pr_edit_form post-form" action="">
-
-<!-- Новый вид формы, навеяно http://xiper.net/collect/html-and-css-tricks/verstka-form/blochnaya-verstka-form -->
-        <div>
-            <hr/>
-            <!--h3>Добавление товара или услуги</h3-->
-            <!--p>Укажите, пожалуйста, категорию, наименование, описание, количество, стоимость, форму оплаты, месторасположение, дату окончания публикации товара и комментарии</p-->
-            <p>Минимальный период публикации товара - <strong><?php echo TZS_PR_PUBLICATION_MIN_DAYS; ?></strong> дней.<br/>При наступлении даты окончания публикации товар будет автоматически перенесен в архив.</p>
-            <hr/>
-        </div>
-	<?php if ($edit) {?>
-        <div class="pr_edit_form_line">
-            <label for="pr_id">Номер</label>
-            <input type="text" id="" name="pr_id" size="15" value="<?php echo_val('id'); ?>" disabled="disabled">
-        </div>
-	<?php } ?>
-        <div class="pr_edit_form_line">
-            <label for="pr_type_id">Статус</label>
-            <select name="pr_active">
-                <option value="1" <?php if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
-                <option value="0" <?php if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
-            </select>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_type_id">Категория</label>
-            <select name="pr_type_id">
-                <?php tzs_build_product_types('pr_type_id', TZS_PR_ROOT_CATEGORY_PAGE_ID); ?>
-            </select>
-            <?php wp_nonce_field( 'pr_type_id', 'pr_type_id_nonce' ); ?>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_sale_or_purchase">Тип заявки</label>
-            <select name="pr_sale_or_purchase">
-                <option value="1" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 1) echo 'selected="selected"'; ?> >Продажа</option>
-                <option value="2" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
-            </select>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_fixed_or_tender">Участник тендера</label>
-            <select name="pr_fixed_or_tender">
-                <option value="1" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 1) echo 'selected="selected"'; ?> >Цена зафиксирована</option>
-                <option value="2" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 2) echo 'selected="selected"'; ?> >Тендерное предложение</option>
-            </select>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_title">Наименование</label>
-            <input type="text" id="pr_edit_text_big" name="pr_title" size="135" maxlength="255" value="<?php echo_val('pr_title'); ?>">
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_description">Описание</label>
-            <?php
-                /*$args = array(  'wpautop' => 1,
-                                'media_buttons' => 0,
-                                'textarea_name' => 'pr_description', //нужно указывать!
-                                'textarea_rows' => 10,
-                                'tabindex'      => null,
-                                'editor_css'    => '',
-                                'editor_class'  => '',
-                                'teeny'         => 1,
-                                'dfw'           => 0,
-                                'tinymce'       => 1,
-                                'quicktags'     => array(
-                                                    'id' => 'editpost',
-                                                    'buttons' => 'strong,em,ul,ol,li,close'
-                                                    ),
-                                'drag_drop_upload' => false
-                            );
-                wp_editor($_POST['pr_description'], 'editpost', $args);*/
-            ?>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_copies">Количество</label>
-            <input type="number" id="" name="pr_copies" size="2" value="<?php echo_val('pr_copies'); ?>" min="0">
-            <select for="pr_copies" name="pr_unit">
-            <?php
-                foreach ($GLOBALS['tzs_pr_unit'] as $key => $val) {
-                        echo '<option value="'.$key.'" ';
-                        if ($val == '')
-                                $val = '-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-';
-                        if (isset($_POST['pr_unit']) && $_POST['pr_unit'] == $key && $key != 0) {
-                                echo 'selected="selected"';
-                        }
-                        if ($key == 0) {
-                                echo 'disabled="disabled"';
-                        }
-                        //echo '>'.htmlspecialchars($val).'</option>\n';
-                        echo '>'.$val.'</option>\n';
-                }
-            ?>
-            </select>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_price">Стоимость</label>
-            <input type="text" id="" name="pr_price" size="10" value="<?php echo_val('pr_price'); ?>">
-            <select for="price" name="pr_currency">
-            <?php
-                foreach ($GLOBALS['tzs_pr_curr'] as $key => $val) {
-                        echo '<option value="'.$key.'" ';
-                        if ($val == '')
-                                $val = '-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-';
-                        if (isset($_POST['pr_currency']) && $_POST['pr_currency'] == $key && $key != 0) {
-                                echo 'selected="selected"';
-                        }
-                        if ($key == 0) {
-                                echo 'disabled="disabled"';
-                        }
-                        //echo '>'.htmlspecialchars($val).'</option>\n';
-                        echo '>'.$val.'</option>\n';
-                }
-            ?>
-            </select>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_payment">Форма оплаты</label>
-            <select name="pr_payment">
-            <?php
-                foreach ($GLOBALS['tzs_pr_payment'] as $key => $val) {
-                        echo '<option value="'.$key.'" ';
-                        if ($val == '')
-                                $val = '-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-&nbsp;-';
-                        if (isset($_POST['pr_payment']) && $_POST['pr_payment'] == $key) { // && $key != 0
-                                echo 'selected="selected"';
-                        }
-                        if ($key == 0) {
-                            //echo 'disabled="disabled"';
-                        }
-                        //echo '>'.htmlspecialchars($val).'</option>\n';
-                        echo '>'.$val.'</option>\n';
-                }
-            ?>
-            </select>
-            <select name="pr_nds">
-                <option value="0" <?php if (isset($_POST['pr_nds']) && $_POST['pr_nds'] == 0) echo 'selected="selected"'; ?> disabled="disabled">---------------</option>
-                <option value="1" <?php if (isset($_POST['pr_nds']) && $_POST['pr_nds'] == 1) echo 'selected="selected"'; ?> >Без НДС</option>
-                <option value="2" <?php if (isset($_POST['pr_nds']) && $_POST['pr_nds'] == 2) echo 'selected="selected"'; ?> >Включая НДС</option>
-            </select>
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_city_from">Местонахождение</label>
-            <input autocomplete="city" id="pr_edit_text_big" type="text" size="135" name="pr_city_from" value="<?php echo_val('pr_city_from'); ?>" autocomplete="off">
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_expiration">Окончание публикации</label>
-            <input type="text" id="datepicker1" name="pr_expiration" size="" value="<?php echo_val_def('pr_expiration', $d); ?>">
-        </div>
-        <div class="pr_edit_form_line">
-            <label for="pr_comment">Комментарии</label>
-            <input type="text" id="pr_edit_text_big" name="pr_comment" size="135" value="<?php echo_val('pr_comment'); ?>">
-        </div>
-
-	<?php if ($edit) {?>
-		<input type="hidden" name="action" value="editproduct"/>
-		<input type="hidden" name="id" value="<?php echo_val('id'); ?>"/>
-	<?php } else { ?>
-		<input type="hidden" name="action" value="addproduct"/>
-	<?php } ?>
-	<input type="hidden" name="formName" value="product" />
-        <table>
-            <tr>
-                <td width="130px">&nbsp;</td>
-                <td>
-                    <input name="addpost" type="submit" id="addpostsub" class="submit_button" value="<?php echo $edit ? "Изменить" : "Разместить" ?>"/>
-                </td>
-                <td width="15px">&nbsp;</td>
-                <td>
-                    <?php if ($edit) { ?>
-                        <a href="/edit-images-pr/?id=<?php echo_val('id'); ?>&form_type=product" id="edit_images">Загрузить/обновить изображения</a>
-                        <!--button id="edit_images" onClick="javascript: window.open('/edit-images-pr/?id=<?php echo_val('id');?>&form_type=product', '_self');">Изменить изображения</button-->
-                    <?php }?>
-                </td>
-            </tr>
-        </table>
-    </form>
 	
     <script>
+
+        // Очистка формы
+        function resetForm(selector) {
+            jQuery(':text, :password, :file, textarea', selector)
+                    .val('')
+                    .css({'border': '1px solid #007FFF'});
+            jQuery(':input, select option', selector)
+                    .removeAttr('checked')
+                    .removeAttr('selected')
+                    .css({'border': '1px solid #007FFF'});
+            jQuery('select option:first', selector).attr('selected', true);
+
+            // Очистим список ошибок
+            jQuery("#form_error_message").html('');
+            jQuery("#form_error_message").hide();
+            
+            jQuery("#image1_delete, #image2_delete, #image3_delete").click();
+        }
+
+        /*
+         * Функция, вызываемая после загрузки страницы
+         */
         jQuery(document).ready(function(){
-            jQuery('#LoadImage1').MultiFile({
-                // your options go here
-                max: 1,
-                maxfile: 1024,
-                preview: true,
-                accept: 'jpg|png|gif',
-                onFileSelect: function(element, value, master_element) {
-                    //jQuery('span.MultiFile-title, input#LoadImage1_F1').css({'display': 'none'});
-                    //jQuery('input.MultiFile-applied:nth-child(1)').hide();
-                    //jQuery('input#'+element.id).hide();
-                    jQuery('.MultiFile-preview').css({
-                        'width': '100%',
-                        'height': '100%',
-                        'position': 'absolute'
-                    });
+            jQuery("#image1_load").change(function() {
+                var fileObj = this.files[0];
+                if (fileObj.size > 1024000) {
+                    alert('Размер файла не должен превышать 1 Мб !');
+                } else {
+                    var url = URL.createObjectURL(fileObj);
+                    jQuery('#image1').attr('src', url);
+                    jQuery('#div_image1_off').hide();
+                    jQuery('#div_image1_on').show();
                 }
             });
             
-            jQuery('#bpost').submit(function() {
-                    jQuery('#addpostsub').attr('disabled','disabled');
-                    return true;
+            jQuery("#image2_load").change(function() {
+                var fileObj = this.files[0];
+                if (fileObj.size > 1024000) {
+                    alert('Размер файла не должен превышать 1 Мб !');
+                } else {
+                    var url = URL.createObjectURL(fileObj);
+                    jQuery('#image2').attr('src', url);
+                    jQuery('#div_image2_off').hide();
+                    jQuery('#div_image2_on').show();
+                }
             });
+            
+            jQuery("#image3_load").change(function() {
+                var fileObj = this.files[0];
+                if (fileObj.size > 1024000) {
+                    alert('Размер файла не должен превышать 1 Мб !');
+                } else {
+                    var url = URL.createObjectURL(fileObj);
+                    jQuery('#image3').attr('src', url);
+                    jQuery('#div_image3_off').hide();
+                    jQuery('#div_image3_on').show();
+                }
+            });
+            
+            jQuery("#image1_delete").click(function(event) {
+                jQuery('#image1').removeAttr('src');
+                jQuery('#div_image1_off').show();
+                jQuery('#div_image1_on').hide();
+            });
+            
+            jQuery("#image2_delete").click(function(event) {
+                jQuery('#image2').removeAttr('src');
+                jQuery('#div_image2_off').show();
+                jQuery('#div_image2_on').hide();
+            });
+            
+            jQuery("#image3_delete").click(function(event) {
+                jQuery('#image3').removeAttr('src');
+                jQuery('#div_image3_off').show();
+                jQuery('#div_image3_on').hide();
+            });
+            
+            jQuery("#form_button2").click(function(event) { 
+                event.preventDefault();
+                resetForm("form[id='form_product']");
+            });
+            
             jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
             jQuery( "#datepicker1" ).datepicker({ dateFormat: "dd.mm.yy" });
-            
-            jQuery("[name=pr_sale_or_purchase]").change(function (eventObject) {
-                if (eventObject.target.value == 2) {
-                    jQuery("[name=pr_fixed_or_tender]").attr('value', 2);
-                    jQuery('[name=pr_fixed_or_tender]').attr('disabled', 'disabled');
-                } else {
-                    jQuery('[name=pr_fixed_or_tender]').removeAttr('disabled');
-                }
-            });
         });
     </script>
 <?php

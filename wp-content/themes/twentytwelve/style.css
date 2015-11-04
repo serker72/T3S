@@ -2669,3 +2669,81 @@ select {
 .gabarite{
 margin-top: 20px;
 }
+
+/* inputfile */
+/*.js*/ 
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label {
+    margin-top: 20px;
+    max-width: 90%;
+    font-size: 75%;
+    /* 20px */
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: normal;
+    cursor: pointer;
+    /*display: inline-block;*/
+    overflow: hidden;
+    padding: 0.625rem 1.25rem;
+    /* 10px 20px */
+}
+
+.no-js .inputfile + label {
+    display: none;
+}
+
+.inputfile:focus + label,
+.inputfile.has-focus + label {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+}
+
+/* style 3 */
+
+.inputfile-3 + label {
+    color: #d3394c;
+}
+
+.inputfile-3:focus + label,
+.inputfile-3.has-focus + label,
+.inputfile-3 + label:hover {
+    color: #722040;
+}
+
+/* pr_image */
+.pr_image_wrapper {
+    min-width: 100px;
+    min-height: 100px;
+    float: left;
+    margin-right: 2px;
+}
+.pr_image_off {
+    border: 1px #6A7E97 dashed;
+    border-radius: 4px;
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 100px;
+}
+.pr_image_on {
+    display: none;
+}
+.pr_image_on img {
+    width: 100px;
+    height: 100px;
+}
+.pr_image_delete {
+    background: #ffffff url(images/gtk-cancel-small.png) no-repeat left 2px top 2px;
+    margin-left: 82px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    z-index: 1000;
+}
