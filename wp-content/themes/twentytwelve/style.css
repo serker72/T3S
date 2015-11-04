@@ -2584,7 +2584,7 @@ input[type="radio"]{
    
 }
 
-.form_wrapper input[type=submit], button {
+#adduser button, .form_wrapper input[type=submit], button {
     color: white;
     background: #0b5792;
     border-radius: 10px;
@@ -2633,13 +2633,7 @@ select {
 	height:10px;
 	background-color:#63849F;
 }
-#sh_type:focus ~ #div_sh_type:after{
-    outline:1px solid #939598;
-	border:2px solid #fff;
-	width:10px;
-	height:10px;
-	background-color:#63849F;
-}
+
 #div_trans_type select, #div_sh_type select{
     padding-left: 25px;
 }
