@@ -10,9 +10,19 @@ function tzs_print_product_form($errors, $edit=false) {
     $dt = new DateTime();
     date_add($dt, date_interval_create_from_date_string((TZS_PR_PUBLICATION_MIN_DAYS + 1).' days'));
     $d = date_format($dt, "d.m.Y");
+    $img_info = array();
+    $img_names = array();
 
     //if(isset($_GET['spis'])) echo "<a id='edit_search' href='/account/my-products/'>Назад к списку</a> <div style='clear: both'></div>";
     //else echo "<button id='edit_search'  onclick='history.back()'>Назад к списку</button> <div style='clear: both'></div>";
+
+    if (isset($_POST["pr_image_id_lists"]) && (strlen($_POST["pr_image_id_lists"]) > 0)) {
+        $img_names = explode(';', $_POST["pr_image_id_lists"]);
+        for ($i=0;$i < count($img_names);$i++) {
+            if ($img_names[$i] !== null && $img_names[$i] !== '')
+                $img_info[$i] = wp_get_attachment_image_src($img_names[$i], 'thumbnail');
+        }
+    }
     
     echo '<div style="clear: both;"></div>';
     print_errors($errors);
@@ -110,34 +120,43 @@ function tzs_print_product_form($errors, $edit=false) {
             <div class="span12">
                 <div class="pr_image_wrapper">
                     <div id="div_image1_off" class="pr_image_off">
-                        <input type="file" id="image1_load" name="image1_load[]" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
+                        <input type="file" id="image1_load" name="image1_load" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
                         <label for="image1_load"><span>выбрать и загрузить</span></label>
                     </div>
                     <div id="div_image1_on" class="pr_image_on">
                         <span id="image1_delete" class="pr_image_delete"></span>
-                        <img src="" id="image1">
+                        <img id="image1" src="<?php echo isset($img_info[0][0]) ? $img_info[0][0] : ''; ?>">
+                        <?php if ($edit && isset($img_names[0])) { ?>
+                            <input type="hidden" name="image_id_1" value="<?php echo $img_names[0]; ?>"/>
+                        <?php } ?>
                     </div>
                 </div>
                 
                 <div class="pr_image_wrapper">
                     <div id="div_image2_off" class="pr_image_off">
-                        <input type="file" id="image2_load" name="image2_load[]" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
+                        <input type="file" id="image2_load" name="image2_load" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
                         <label for="image2_load"><span>выбрать и загрузить</span></label>
                     </div>
                     <div id="div_image2_on" class="pr_image_on">
                         <span id="image2_delete" class="pr_image_delete"></span>
-                        <img src="" id="image2">
+                        <img id="image2" src="<?php echo isset($img_info[1][0]) ? $img_info[1][0] : ''; ?>">
+                        <?php if ($edit && isset($img_names[1])) { ?>
+                            <input type="hidden" name="image_id_2" value="<?php echo $img_names[1]; ?>"/>
+                        <?php } ?>
                     </div>
                 </div>
                 
                 <div class="pr_image_wrapper">
                     <div id="div_image3_off" class="pr_image_off">
-                        <input type="file" id="image3_load" name="image3_load[]" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
+                        <input type="file" id="image3_load" name="image3_load" class="inputfile inputfile-3" accept="image/jpeg,image/png,image/gif">
                         <label for="image3_load"><span>выбрать и загрузить</span></label>
                     </div>
                     <div id="div_image3_on" class="pr_image_on">
                         <span id="image3_delete" class="pr_image_delete"></span>
-                        <img src="" id="image3">
+                        <img id="image3" src="<?php echo isset($img_info[2][0]) ? $img_info[2][0] : ''; ?>">
+                        <?php if ($edit && isset($img_names[2])) { ?>
+                            <input type="hidden" name="image_id_3" value="<?php echo $img_names[2]; ?>"/>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -147,7 +166,7 @@ function tzs_print_product_form($errors, $edit=false) {
     <div class="row-fluid"  style="width: 100%; ">
         <div id="div_pr_copies" class="span4">
             <label for="pr_copies">Количество</label>
-            <input type="number" id="pr_copies" name="pr_copies" size="2" value="<?php echo_val('pr_copies'); ?>" min="0" style="width: 80px;">
+            <input type="number" id="pr_copies" name="pr_copies" size="2" value="<?php echo_val('pr_copies'); ?>" min="0" placeholder="Количество" style="width: 80px;">
             &nbsp;&nbsp;
             <select for="pr_copies" name="pr_unit" style="width: 80px;">
             <?php
@@ -157,7 +176,7 @@ function tzs_print_product_form($errors, $edit=false) {
         </div>
         <div id="div_pr_price" class="span4">
             <label for="pr_price">Стоимость</label>
-            <input type="text" id="pr_price" name="pr_price" size="10" value="<?php echo_val('pr_price'); ?>" style="width: 80px;">
+            <input type="text" id="pr_price" name="pr_price" size="10" value="<?php echo_val('pr_price'); ?>" placeholder="Стоимость" style="width: 80px;">
             &nbsp;&nbsp;
             <select for="pr_price" name="pr_currency" style="width: 80px;">
             <?php
@@ -263,6 +282,21 @@ function tzs_print_product_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
+            if (jQuery('#image1').attr('src') != '') {
+                jQuery('#div_image1_off').hide();
+                jQuery('#div_image1_on').show();
+            }
+            
+            if (jQuery('#image2').attr('src') != '') {
+                jQuery('#div_image2_off').hide();
+                jQuery('#div_image2_on').show();
+            }
+            
+            if (jQuery('#image3').attr('src') != '') {
+                jQuery('#div_image3_off').hide();
+                jQuery('#div_image3_on').show();
+            }
+            
             jQuery("#image1_load").change(function() {
                 var fileObj = this.files[0];
                 if (fileObj.size > 1024000) {
@@ -588,6 +622,7 @@ function tzs_front_end_edit_product_handler($atts) {
                     $_POST['id'] = ''.$row->id;
                     $_POST['pr_active'] = ''.$row->active;
                     $_POST['pr_sale_or_purchase'] = ''.$row->sale_or_purchase;
+                    $_POST["pr_image_id_lists"] = $row->image_id_lists;
                     
                     tzs_print_product_form(null, true);
 		}
