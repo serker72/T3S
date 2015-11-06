@@ -161,6 +161,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                 <tr style="border: none;">
                     <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
                         <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
+                        <div class="country_flag"><img id ="first_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->from_code.'.png"  width=18 height=12 alt=""></div>
                     </td>
                     <td rowspan="2" style="width: 65px; border: none; vertical-align: middle;">
                         <div class="date_from_label" title="Дата погрузки">
@@ -191,6 +192,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
             <tr style="border: none;">
                 <td style="text-align: right; border: none; border-right: 1px solid #CDE;">
                     <div class="city_label">'.htmlspecialchars(tzs_get_city($row->to_sid)).'</div>
+                    <div class="country_flag"><img id ="second_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->to_code.'.png"  width=18 height=12 alt=""></div>
                 </td>
                 <td rowspan="2" style="border: none;  vertical-align: middle;">
                     <div class="date_to_label" title="Дата выгрузки">
@@ -422,9 +424,12 @@ function tzs_front_end_tables_reload() {
             $sql .= " b.status AS order_status,";
             $sql .= " b.dt_pay AS order_dt_pay,";
             $sql .= " b.dt_expired AS order_dt_expired,";
-            $sql .= " IFNULL(b.dt_pay, a.".$table_order_by.") AS dt_sort";
+            $sql .= " IFNULL(b.dt_pay, a.".$table_order_by.") AS dt_sort,";
+            $sql .= " c.code AS from_code, d.code AS to_code";
             $sql .= " FROM ".$table_name." a";
             $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = '".$order_table_prefix."' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
+            $sql .= " LEFT OUTER JOIN wp_tzs_countries c ON (a.from_cid = c.country_id)";
+            $sql .= " LEFT OUTER JOIN wp_tzs_countries d ON (a.to_cid = d.country_id)";
             $sql .= " WHERE active=1 $sql1 $s_sql";
             $sql .= " ORDER BY order_status DESC, dt_sort DESC";
             $sql .= " LIMIT $from,$pp;";

@@ -9,14 +9,14 @@ function tzs_front_end_view_productsd_handler($atts) {
 	$sh_id = isset($_GET['id']) && is_numeric($_GET['id']) ? intval($_GET['id']) : 0;
 	
 	if ($sh_id <= 0) {
-		print_error('Тендер не найден');
+		print_error('Товарр не найден');
 	} else {
 		$sql = "SELECT * FROM ".TZS_PRODUCTS_TABLE." WHERE id=$sh_id;";
 		$row = $wpdb->get_row($sql);
 		if (count($row) == 0 && $wpdb->last_error != null) {
-			print_error('Не удалось отобразить информацию о тендер. Свяжитесь, пожалуйста, с администрацией сайта.');
+			print_error('Не удалось отобразить информацию о товаре. Свяжитесь, пожалуйста, с администрацией сайта.');
 		} else if ($row == null) {
-			print_error('Тендер не найден');
+			print_error('Товар не найден');
 		} else {
                     
                     ?>

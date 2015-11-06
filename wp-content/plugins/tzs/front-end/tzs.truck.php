@@ -157,7 +157,9 @@ function tzs_print_truck_form($errors, $edit=false) {
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
             </div>
             <div class="span4">
+                <?php if (!$edit) { ?>
                 <button id="form_button2">ОЧИСТИТЬ ВСЕ ПОЛЯ</button>
+                <?php } ?>
             </div>
             <div class="span4">
                 <button id="form_button3">ВЫХОД</button>
@@ -809,6 +811,8 @@ function tzs_edit_truck($id) {
 				echo "Ваш транспорт опубликован!";
 				echo "<br/>";
 				echo '<a href="/view-truck/?id='.tzs_find_latest_truck_rec().'&spis=new">Просмотреть транспорт</a>';
+                                $new_url = get_site_url().'/my-trucks';
+                                echo '<meta http-equiv="refresh" content="0; url='.$new_url.'">';
 			}
 		} else {
 			$sql = $wpdb->prepare("UPDATE ".TZS_TRUCK_TABLE." SET ".
@@ -835,6 +839,8 @@ function tzs_edit_truck($id) {
 				echo "Ваш транспорт изменен";
 				echo "<br/>";
 				echo '<a href="/view-truck/?id='.$id.'&spis=new">Просмотреть транспорт</a>';
+                                $new_url = get_site_url().'/my-trucks';
+                                echo '<meta http-equiv="refresh" content="0; url='.$new_url.'">';
 			}
 		}
 	}

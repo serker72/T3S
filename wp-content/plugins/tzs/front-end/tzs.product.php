@@ -1,7 +1,12 @@
 <?php
 
 include_once(TZS_PLUGIN_DIR.'/functions/tzs.product.functions.php');
-include_once(TZS_PLUGIN_DIR.'/front-end/tzs.trade.images.php');
+//include_once(TZS_PLUGIN_DIR.'/front-end/tzs.trade.images.php');
+
+// Эти файлы должны быть подключены в лицевой части (фронт-энде).
+require_once( ABSPATH . 'wp-admin/includes/image.php' );
+require_once( ABSPATH . 'wp-admin/includes/file.php' );
+require_once( ABSPATH . 'wp-admin/includes/media.php' );
 
         
 function tzs_print_product_form($errors, $edit=false) {
@@ -35,17 +40,13 @@ function tzs_print_product_form($errors, $edit=false) {
 <div class="form_wrapper">
     <form enctype="multipart/form-data" method="post" id="form_product" class="" action="">
         
+    <?php if ($edit && isset($_POST["pr_active"]) && ($_POST["pr_active"] == 0)) { ?>
     <div class="row-fluid"  style="width: 100%; ">
         <div id="div_pr_active" class="span12">
-            <?php if ($edit && isset($_POST["pr_active"]) && ($_POST["pr_active"] == 0)) { ?>
             <div class="" style="background-color: #E5AEAE; text-align: center; padding: 2px;">Архивная заявка</div>
-            <?php } ?>
-            <!--select id="pr_active" name="pr_active">
-                <option value="1" <?php //if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
-                <option value="0" <?php //if (isset($_POST["pr_active"]) && ($_POST["pr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
-            </select-->
         </div>
     </div>
+    <?php } ?>
     
     <div class="row-fluid"  style="width: 100%; ">
         <div id="div_pr_type_id" class="span3">
@@ -73,14 +74,12 @@ function tzs_print_product_form($errors, $edit=false) {
         </div>
         <div class="span4">
             <input autocomplete="city" id="first_city" type="text" size="35" name="pr_city_from" value="<?php echo_val('pr_city_from'); ?>" autocomplete="on" placeholder="Местонахождение товара" style="width: 280px;">
-            &nbsp;&nbsp;<img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
     </div>
     
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span9">
-            <!--label for="pr_title">Наименование</label-->
-            <input type="text" name="pr_title" size="" maxlength="255" value="<?php echo_val('pr_title'); ?>" placeholder="Наименование товара" style="width: 90%;">
+            <input type="text" id="pr_title" name="pr_title" size="" maxlength="255" value="<?php echo_val('pr_title'); ?>" placeholder="Наименование товара" style="width: 90%;">
         </div>
         <div class="span3">
         </div>
@@ -92,7 +91,7 @@ function tzs_print_product_form($errors, $edit=false) {
             $args = array(  'wpautop' => 1,
                             'media_buttons' => 0,
                             'textarea_name' => 'pr_description', //нужно указывать!
-                            'textarea_rows' => 2,
+                            'textarea_rows' => 3,
                             'tabindex'      => null,
                             'editor_css'    => '',
                             'editor_class'  => '',
@@ -166,11 +165,11 @@ function tzs_print_product_form($errors, $edit=false) {
     <div class="row-fluid"  style="width: 100%; ">
         <div id="div_pr_copies" class="span4">
             <label for="pr_copies">Количество</label>
-            <input type="number" id="pr_copies" name="pr_copies" size="2" value="<?php echo_val('pr_copies'); ?>" min="0" placeholder="Количество" style="width: 80px;">
+            <input type="text" id="pr_copies" name="pr_copies" size="" value="<?php echo_val('pr_copies'); ?>" min="0" placeholder="Количество" style="width: 80px;">
             &nbsp;&nbsp;
-            <select for="pr_copies" name="pr_unit" style="width: 80px;">
+            <select for="pr_copies" id="pr_unit" name="pr_unit" style="width: 80px;">
             <?php
-                tzs_print_array_options($GLOBALS['tzs_pr_unit'], '', 'pr_unit', '');
+                tzs_print_array_options($GLOBALS['tzs_pr_unit'], '', 'pr_unit', 'Ед.измерения');
             ?>
             </select>
         </div>
@@ -178,9 +177,9 @@ function tzs_print_product_form($errors, $edit=false) {
             <label for="pr_price">Стоимость</label>
             <input type="text" id="pr_price" name="pr_price" size="10" value="<?php echo_val('pr_price'); ?>" placeholder="Стоимость" style="width: 80px;">
             &nbsp;&nbsp;
-            <select for="pr_price" name="pr_currency" style="width: 80px;">
+            <select for="pr_price" id="pr_currency" name="pr_currency" style="width: 80px;">
             <?php
-                tzs_print_array_options($GLOBALS['tzs_pr_curr'], '', 'pr_currency', '');
+                tzs_print_array_options($GLOBALS['tzs_pr_curr'], '', 'pr_currency', 'Валюта');
             ?>
             </select>
         </div>
@@ -193,7 +192,7 @@ function tzs_print_product_form($errors, $edit=false) {
     <div class="row-fluid"  style="width: 100%;">
         <div class="span8">
             <div class="span12">
-                <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
+                <label for="" id="payment_label">Форма расчета (можно указать несколько способов одновременно):</label>
             </div>
             
             <div class="span3 chekbox">
@@ -209,14 +208,16 @@ function tzs_print_product_form($errors, $edit=false) {
                 <input type="checkbox" id="nonds" name="nonds" <?php echo isset($_POST['nonds']) ? 'checked="checked"' : ''; ?>><label for="nonds">без НДС</label>
             </div>
             
-            <div class="span12" style="margin-bottom: 20px;">
+            <div class="span12">
             </div>
             
             <div class="span4">
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
             </div>
             <div class="span4">
+                <?php if (!$edit) { ?>
                 <button id="form_button2">ОЧИСТИТЬ ВСЕ ПОЛЯ</button>
+                <?php } ?>
             </div>
             <div class="span4">
                 <button id="form_button3">ВЫХОД</button>
@@ -224,15 +225,15 @@ function tzs_print_product_form($errors, $edit=false) {
         </div>
         
         <div class="span4" style="padding: 2px;"><!-- float: right; -->
-            <div class="" id="form_error_message" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px 5px; display: block;">
+            <div class="" id="form_error_message" style="color: #F00;border: 1px #F00 dashed; border-radius: 4px; padding: 3px 5px; display: none;">
             </div>
         </div>
     </div>
 
-    <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
+    <div class="row-fluid"  style="width: 100%; margin-top: 15px;">
         <div class="span12">
             <div style="font-size: 92%; font-style: italic;">
-                После нажатия кнопки "РАЗМЕСТИТЬ ЗАЯВКУ" заявка будет опубликована в базе транспорта, после нажатия кнопки "ВЫХОД" заявка не сохраняется.
+                После нажатия кнопки "РАЗМЕСТИТЬ ЗАЯВКУ" заявка будет опубликована в базе товаров, после нажатия кнопки "ВЫХОД" заявка не сохраняется.
             </div>
         </div>
     </div>
@@ -240,7 +241,7 @@ function tzs_print_product_form($errors, $edit=false) {
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span12">
             <div style="font-size: 92%; font-style: italic;">
-                <span style="color: #F00;">Напоминаем:</span> заявка будет удалена из базы активных заявок и перенесена в архив на следующий день после указанного Вами дня выгрузки
+                <span style="color: #F00;">Напоминаем:</span> При наступлении даты окончания публикации товар будет автоматически перенесен в архив. Минимальный срок публикации - <?php echo TZS_PR_PUBLICATION_MIN_DAYS; ?> дней
             </div>
         </div>
     </div>
@@ -250,6 +251,7 @@ function tzs_print_product_form($errors, $edit=false) {
 		<input type="hidden" name="id" value="<?php echo_val('id'); ?>"/>
 	<?php } else { ?>
 		<input type="hidden" name="action" value="addproduct"/>
+                <input type="hidden" name="pr_active" value="1"/>
 	<?php } ?>
 	<input type="hidden" name="formName" value="product" />
     </form>
@@ -259,6 +261,107 @@ function tzs_print_product_form($errors, $edit=false) {
     <!-- test new form END -->
 	
     <script>
+
+        // Функция проверки правильности заполнения полей формы до отправки
+        function onFormValidate() {
+            //var ErrorMsg1 = 'Список ошибок:<ul>';
+            var ErrorMsg1 = '<p>';
+            var ErrorMsg2 = '';
+            var ErrorMsg3 = '</p>';
+
+            if (jQuery('#pr_type_id').val() < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указана категория товара.<br>\n';
+                jQuery('#pr_type_id').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_type_id').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_sale_or_purchase').val() < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указан тип заявки.<br>\n';
+                jQuery('#pr_sale_or_purchase').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_sale_or_purchase').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_fixed_or_tender').val() < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указан признак тендера.<br>\n';
+                jQuery('#pr_fixed_or_tender').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_fixed_or_tender').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#first_city').val().length < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указан пункт местонахождения товара.<br>\n';
+                jQuery('#first_city').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#first_city').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_title').val().length < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указано наименование товара.<br>\n';
+                jQuery('#pr_title').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_title').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#editpost').val().length < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не заполнено описание товара.<br>\n';
+                jQuery('#editpost').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#editpost').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_copies').val().length < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указано количество товара.<br>\n';
+                jQuery('#pr_copies').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_copies').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_unit').val() < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указана единица измерения количества товара.<br>\n';
+                jQuery('#pr_unit').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_unit').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_price').val().length < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указана стоимость товара.<br>\n';
+                jQuery('#pr_price').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_price').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#pr_currency').val() < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указана валюта стоимости товара.<br>\n';
+                jQuery('#pr_currency').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#pr_currency').css({'border': '1px solid #007FFF'});
+            }
+
+            if (jQuery('#datepicker1').val().length < 1) {
+                ErrorMsg2 = ErrorMsg2 + 'Не указана дата окончания публикации.<br>\n';
+                jQuery('#datepicker1').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#datepicker1').css({'border': '1px solid #007FFF'});
+            }
+                
+            // Проверка правильности указания переключателей
+            if (!(jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked') || jQuery("#nds").is(':checked') || jQuery("#nonds").is(':checked'))) {
+                ErrorMsg2 = ErrorMsg2 + 'Необходимо выбрать хотя бы один способ в блоке "Форма расчета".<br>\n';
+                jQuery('#payment_label').css({'border': '2px solid #F00'});
+            } else {
+                jQuery('#payment_label').css({'border': 'none'});
+            }
+
+            if (ErrorMsg2.length > 0) {
+                jQuery("#form_error_message").html(ErrorMsg1 + ErrorMsg2 + ErrorMsg3);
+                jQuery("#form_error_message").show();
+                return false;
+            } else {
+                return true;
+            }
+        }
 
         // Очистка формы
         function resetForm(selector) {
@@ -351,13 +454,61 @@ function tzs_print_product_form($errors, $edit=false) {
                 jQuery('#div_image3_on').hide();
             });
             
+            jQuery("#form_button1").click(function(event) { 
+                event.preventDefault();
+                var flag = onFormValidate();
+                if (flag) {
+                    jQuery("form[id='form_product']").submit();
+                }
+            });
+
             jQuery("#form_button2").click(function(event) { 
                 event.preventDefault();
                 resetForm("form[id='form_product']");
             });
-            
+
+            jQuery("#form_button3").click(function(event) { 
+                event.preventDefault();
+                location.href = "/account/profile/";
+            });
+
+            jQuery("#pr_sale_or_purchase").change(function (eventObject) {
+                if (eventObject.target.value == 2) {
+                    jQuery("#pr_fixed_or_tender").attr('value', 2);
+                    jQuery('#pr_fixed_or_tender').attr('disabled', 'disabled');
+                } else {
+                    jQuery('#pr_fixed_or_tender').removeAttr('disabled');
+                }
+            });
+
             jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
-            jQuery( "#datepicker1" ).datepicker({ dateFormat: "dd.mm.yy" });
+            jQuery( "#datepicker1" ).datepicker({ 
+                dateFormat: "dd.mm.yy",
+                minDate: "<?php echo $d; ?>",
+                selectOtherMonths: true,
+                showOtherMonths: true,
+            });
+    
+            jQuery("#pr_copies, #pr_price").bind("change keyup input click", function() {
+                if (this.value.match(/[^0-9.]/g)) {
+                    this.value = this.value.replace(/[^0-9.]/g, '');
+                }
+            });
+            
+            jQuery("#pr_unit").attr('value', 1);
+            jQuery("#pr_currency").attr('value', 1);
+    
+            
+            <?php if ($errors != null && count($errors) > 0) {
+                $err_str = '';
+		foreach ($errors as $error) {
+                    $err_str .= $error.'</br>';
+                }
+                ?>
+                jQuery("#form_error_message").html("<?php echo $err_str; ?>");
+                jQuery("#form_error_message").show();
+            <?php } ?>
+
         });
     </script>
 <?php
@@ -365,6 +516,18 @@ function tzs_print_product_form($errors, $edit=false) {
 
 function tzs_edit_product($id) {
     $errors = array();
+    
+    $file_error_message = array(
+        0 => 'Ошибок не возникло, файл был успешно загружен на сервер',
+        1 => 'Размер принятого файла превысил максимально допустимый размер, который задан директивой upload_max_filesize конфигурационного файла php.ini',
+        2 => 'Размер загружаемого файла превысил значение MAX_FILE_SIZE, указанное в HTML-форме',
+        3 => 'Загружаемый файл был получен только частично',
+        4 => 'Файл не был загружен',
+        5 => '',
+        6 => 'Отсутствует временная папка',
+        7 => 'Не удалось записать файл на диск',
+        8 => 'PHP-расширение остановило загрузку файла',
+    );
     
     $user_id = get_current_user_id();
     
@@ -380,77 +543,81 @@ function tzs_edit_product($id) {
 	$pr_unit = get_param_def('pr_unit','0');
 	$pr_currency = get_param_def('pr_currency','0');
 	$pr_price = get_param_def('pr_price','0');
-	$pr_payment = get_param_def('pr_payment','0');
-	$pr_nds = get_param_def('pr_nds','0');
 	$pr_city_from = get_param('pr_city_from');
 	$pr_comment = get_param('pr_comment');
 	$pr_expiration = get_param('pr_expiration');
+        $cash = isset($_POST['cash']) ? 1 : 0;
+        $nocash = isset($_POST['nocash']) ? 1 : 0;
+        $nds = isset($_POST['nds']) ? 1 : 0;
+        $nonds = isset($_POST['nonds']) ? 1 : 0;
+        $pr_payment = ($cash && $nocash) ? 11 : (($cash && !$nocash) ? 10 : ((!$cash && $nocash) ? 1 : 0));
+        $pr_nds = (nds && $nonds) ? 11 : ((nds && !$nondsh) ? 10 : ((!nds && $nonds) ? 1 : 0));
 	
+        //$image_id_lists = get_param('image_id_lists');
+        //$main_image = get_param_def('main_image', '0');
+        $image_id_lists = array();
+        $main_image = 0;
         
 	if (is_valid_date($pr_expiration) === null) {
-            array_push($errors, "Неверный формат даты");
+            array_push($errors, "Неверный формат даты.");
 	} else {
             $cur_date = new DateTime();
             $exp_date = new DateTime($pr_expiration);
             $interval = date_diff($cur_date, $exp_date);
             if ($interval->days < TZS_PR_PUBLICATION_MIN_DAYS) {
-                array_push($errors, "Минимальный срок публикации ".TZS_PR_PUBLICATION_MIN_DAYS." дней");
+                array_push($errors, "Минимальный срок публикации ".TZS_PR_PUBLICATION_MIN_DAYS." дней.");
             }
         }
 
 	$pr_expiration = is_valid_date($pr_expiration);
         
 	if (!is_valid_city($pr_city_from)) {
-            array_push($errors, "Неверный населенный пункт");
+            array_push($errors, "Не указан пункт местонахождения товара.");
 	}
         
 	if (strlen($pr_title) < 2) {
-            array_push($errors, "Введите наименование товара");
+            array_push($errors, "Не указано наименование товара.");
 	}
         
 	if (strlen($pr_description) < 2) {
-            array_push($errors, "Введите описание товара");
+            array_push($errors, "Не указано описание товара.");
 	}
         
 	if (!is_valid_num_zero($pr_type_id)) {
-            array_push($errors, "Неверно задана категория товара");
+            array_push($errors, "Не указана категория товара.");
 	}
         
 	if (!is_valid_num_zero($pr_sale_or_purchase)) {
-            array_push($errors, "Неверно задан тип операции");
+            array_push($errors, "Не указан тип операции.");
 	}
         
 	if (!is_valid_num_zero($pr_fixed_or_tender)) {
-            array_push($errors, "Неверно задан тип ценового предложения");
+            array_push($errors, "Не указан тип ценового предложения.");
 	}
         
         
 	if (!is_valid_num_zero($pr_active)) {
-            array_push($errors, "Неверно задан статус товара");
+            array_push($errors, "Не указан статус товара.");
 	}
         
 	if (!is_valid_num_zero($pr_copies)) {
-            array_push($errors, "Неверно задано количество экземпляров товара");
+            array_push($errors, "Не указано количество экземпляров товара.");
 	}
         
 	if (!is_valid_num_zero($pr_unit)) {
-            array_push($errors, "Неверно задана единица измерения количества экземпляров товара");
+            array_push($errors, "Не указана единица измерения количества экземпляров товара.");
 	}
         
 	if (!is_valid_num_zero($pr_currency)) {
-            array_push($errors, "Неверно задана валюта");
-	}
-        
-	if (!is_valid_num_zero($pr_payment)) {
-            array_push($errors, "Неверно задана форма оплаты");
-	}
-        
-	if (!is_valid_num_zero($pr_nds)) {
-            array_push($errors, "Неверно задан переключатель наличия НДС");
+            array_push($errors, "Не указана валюта.");
 	}
         
 	if (!is_valid_num_zero($pr_price)) {
-            array_push($errors, "Неверно задана стоимость товара");
+            array_push($errors, "Не указана стоимость товара.");
+	}
+        
+        if (!$cash && !$nocash && !$nds && !$nonds) {
+            array_push($errors, "Необходимо выбрать хотя бы один способ в блоке \"Форма расчета\".");
 	}
     }
     else {
@@ -478,13 +645,50 @@ function tzs_edit_product($id) {
 	}
         
         $pr_expiration = date('Y-m-d', mktime(0, 0, 0, $pr_expiration['month'], $pr_expiration['day'], $pr_expiration['year']));
+        
+        // Обработка изображений
+        for($i = 1; $i <= 3; $i++) {
+            $add_image_index = 'image'.$i.'_load';
+            $del_image_index = 'image_id_'.$i;
+            
+            // Удаление изображения
+            if ((count($errors) === 0) && isset($_POST[$del_image_index]) && (strlen($_FILES[$add_image_index]['name']) > 0)) {
+                if( false === wp_delete_attachment($_POST[$del_image_index], true) ) {
+                    array_push($errors, "Не удалось удалить файл с изображением: ".$_POST[$del_image_index]->get_error_message());
+                }
+            }
+            elseif ((count($errors) === 0) && isset($_POST[$del_image_index]) && (strlen($_FILES[$add_image_index]['name']) == 0)) {
+                $image_id_lists[] = $_POST[$del_image_index];
+            }
+
+            // Добавление изображения
+            if ((count($errors) === 0) && (strlen($_FILES[$add_image_index]['name']) > 0)) {
+                if ($_FILES[$add_image_index]['error']) {
+                    array_push($errors, "Не удалось загрузить файл с изображением: ".$file_error_message[$_FILES[$add_image_index]['error']]);
+                } else {
+                    // Позволим WordPress перехватить загрузку.
+                    // не забываем указать атрибут name поля input
+                    $attachment_id = media_handle_upload($add_image_index, 0);
+
+                    if ( is_wp_error($attachment_id) ) {
+                        array_push($errors, "Не удалось загрузить файл с изображением: ".$attachment_id->get_error_message());
+                    } else {
+                        $image_id_lists[] = $attachment_id;
+                    }
+                }
+            }
+        }
+        
+        $main_image = isset($image_id_lists[0]) ? $image_id_lists[0] : 0;
+        // Обработка изображений - END
 
         if ($id == 0) {
                 $sql = $wpdb->prepare("INSERT INTO ".TZS_PRODUCTS_TABLE.
-                        " (type_id, user_id, sale_or_purchase, 	fixed_or_tender, title, description, copies, unit, currency, price, payment, nds, city_from, from_cid, from_rid, from_sid, created, comment, last_edited, active, expiration)".
+                        " (type_id, user_id, sale_or_purchase, 	fixed_or_tender, title, description, copies, unit, currency, price, payment, nds, city_from, from_cid, from_rid, from_sid, created, comment, last_edited, active, expiration, image_id_lists, main_image_id)".
                         " VALUES (%d, %d, %d, %d, %s, %s, %d, %d, %d, %f, %d, %d, %s, %d, %d, %d, now(), %s, NULL, %d, %s);",
                         intval($pr_type_id), $user_id, intval($pr_sale_or_purchase), intval($pr_fixed_or_tender), stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds),
-                        stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration);
+                        stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration,
+                        implode(';', $image_id_lists), intval($main_image));
 
                 if (false === $wpdb->query($sql)) {
                         array_push($errors, "Не удалось опубликовать Ваш товар/услугу. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -494,19 +698,20 @@ function tzs_edit_product($id) {
                         echo "<div>";
                         echo "<h2>Ваш товар/услуга опубликован !</h2>";
                         echo "<br/>";
-                        //echo '<a href="/view-product/?id='.tzs_find_latest_product_rec().'&spis=new">Просмотреть товар/услугу</a>';
-                        echo "<h3>Сейчас будет открыта страница для добавления изображений !</h3>";
-                        echo "<div>";
-                        $new_url = get_site_url().'/edit-images-pr/?id='.tzs_find_latest_product_rec().'&form_type=product';
+                        echo '<a href="/view-product/?id='.tzs_find_latest_product_rec().'&spis=new">Просмотреть товар/услугу</a>';
+                        //echo "<h3>Сейчас будет открыта страница для добавления изображений !</h3>";
+                        //echo "<div>";
+                        //$new_url = get_site_url().'/edit-images-pr/?id='.tzs_find_latest_product_rec().'&form_type=product';
+                        $new_url = get_site_url().'/my-products';
                         echo '<meta http-equiv="refresh" content="0; url='.$new_url.'">';
                 }
         } else {
                 $sql = $wpdb->prepare("UPDATE ".TZS_PRODUCTS_TABLE." SET ".
                         " last_edited=now(), type_id=%d, sale_or_purchase=%d, fixed_or_tender=%d, title=%s, description=%s, copies=%d, unit=%d, currency=%d, price=%f, payment=%d, nds=%d, ".
-                        " city_from=%s, from_cid=%d, from_rid=%d, from_sid=%d, comment=%s, active=%d, expiration=%s".
+                        " city_from=%s, from_cid=%d, from_rid=%d, from_sid=%d, comment=%s, active=%d, expiration=%s, image_id_lists=%s, main_image_id=%d".
                         " WHERE id=%d AND user_id=%d;", 
                         intval($pr_type_id), intval($pr_sale_or_purchase), intval($pr_fixed_or_tender), stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds), 
-                        stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration,
+                        stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration, implode(';', $image_id_lists), intval($main_image),
                         $id, $user_id);
 
                 if (false === $wpdb->query($sql)) {
@@ -517,10 +722,11 @@ function tzs_edit_product($id) {
                         echo "<div>";
                         echo "<h2>Ваш товар/услуга изменен !</h2>";
                         echo "<br/>";
-                        //echo '<a href="/view-product/?id='.$id.'">Просмотреть товар/услугу</a>';
-                        echo "<h3>Сейчас будет открыта страница для добавления изображений !</h3>";
-                        echo "<div>";
-                        $new_url = get_site_url().'/edit-images-pr/?id='.$id.'&form_type=product';
+                        echo '<a href="/view-product/?id='.$id.'">Просмотреть товар/услугу</a>';
+                        //echo "<h3>Сейчас будет открыта страница для добавления изображений !</h3>";
+                        //echo "<div>";
+                        //$new_url = get_site_url().'/edit-images-pr/?id='.$id.'&form_type=product';
+                        $new_url = get_site_url().'/my-products';
                         echo '<meta http-equiv="refresh" content="0; url='.$new_url.'">';
                 }
         } 
@@ -607,22 +813,35 @@ function tzs_front_end_edit_product_handler($atts) {
 			print_error('Товар/услуга не найден');
 		} else {
                     //" (type_id, title, description, copies, currency, price, payment, city_from, comment, expiration)".
+                    $_POST['id'] = ''.$row->id;
+                    $_POST['pr_active'] = ''.$row->active;
                     $_POST['pr_type_id'] = ''.$row->type_id;
+                    $_POST['pr_sale_or_purchase'] = ''.$row->sale_or_purchase;
+                    $_POST['pr_fixed_or_tender'] = ''.$row->fixed_or_tender;
                     $_POST['pr_title'] = $row->title;
                     $_POST['pr_description'] = $row->description;
                     $_POST['pr_copies'] = ''.$row->copies;
+                    $_POST['pr_unit'] = ''.$row->unit;
                     $_POST['pr_currency'] = ''.$row->currency;
-                    if ($row->price > 0)
-                            $_POST['pr_price'] = ''.remove_decimal_part($row->price);
-                    $_POST['pr_payment'] = ''.$row->payment;
                     $_POST['pr_city_from'] = $row->city_from;
                     $_POST['pr_comment'] = $row->comment;
+                    $_POST["pr_image_id_lists"] = $row->image_id_lists;
+                    
+                    if ($row->price > 0)
+                            $_POST['pr_price'] = ''.remove_decimal_part($row->price);
+                    
+                    if ($row->payment > 0) {
+                        if (($row->payment == '1') || ($row->payment == '11'))  $_POST['nocash'] = 'on';
+                        if (($row->payment == '10') || ($row->payment == '11')) $_POST['cash'] = 'on';
+                    }
+                    
+                    if ($row->nds > 0) {
+                        if (($row->nds == '1') || ($row->nds == '11'))  $_POST['nonds'] = 'on';
+                        if (($row->nds == '10') || ($row->nds == '11')) $_POST['nds'] = 'on';
+                    }
+                    
                     if ($row->expiration !== null)
                         $_POST['pr_expiration'] = date("d.m.Y", strtotime($row->expiration));
-                    $_POST['id'] = ''.$row->id;
-                    $_POST['pr_active'] = ''.$row->active;
-                    $_POST['pr_sale_or_purchase'] = ''.$row->sale_or_purchase;
-                    $_POST["pr_image_id_lists"] = $row->image_id_lists;
                     
                     tzs_print_product_form(null, true);
 		}

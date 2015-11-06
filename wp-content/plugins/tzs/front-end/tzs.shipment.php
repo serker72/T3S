@@ -163,7 +163,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
             </div>
             <div class="span4">
+                <?php if (!$edit) { ?>
                 <button id="form_button2">ОЧИСТИТЬ ВСЕ ПОЛЯ</button>
+                <?php } ?>
             </div>
             <div class="span4">
                 <button id="form_button3">ВЫХОД</button>
@@ -692,20 +694,20 @@ function tzs_edit_shipment($id) {
 	
 
         if (!is_valid_num($cost)) 
-            array_push($errors, "Неверно задана стоимость");
+            array_push($errors, "Неверно задана стоимость.");
         
         if (!is_valid_num($price)) 
-            array_push($errors, "Неверно задана цена");
+            array_push($errors, "Неверно задана цена.");
         
         if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)]))
-            array_push($errors, "Неверно задана валюта");
+            array_push($errors, "Неверно задана валюта.");
 		
         if ($way_prepay && (!is_valid_num($prepayment) || floatval($prepayment) > 100))
-            array_push($errors, "Неверно задан размер предоплаты");
+            array_push($errors, "Неверно задан размер предоплаты.");
                                 
 		
-        if (!$cash && !$nocash)
-            array_push($errors, "Необходимо выбрать тип оплаты: наличная или безналичная");
+        if (!$cash && !$nocash && !$way_ship && !$way_debark && !$soft && !$way_prepay)
+            array_push($errors, "Необходимо выбрать хотя бы один способ в блоке \"Форма расчета\".");
 	
 	if ($sh_date_from == null || $sh_date_to == null) {
 		array_push($errors, "Неверный формат даты");
@@ -713,7 +715,7 @@ function tzs_edit_shipment($id) {
 
         // Контроль пересечения дат
         if ($sh_date_to_str < $sh_date_from_str) {
-            array_push($errors, "Дата выгрузки не может быть РАНЬШЕ даты погрузки");
+            array_push($errors, "Дата выгрузки не может быть РАНЬШЕ даты погрузки.");
         }
 	
 	if (!is_valid_city($sh_city_from)) {
@@ -834,6 +836,8 @@ function tzs_edit_shipment($id) {
 				echo "<br/>";
 				//echo '<pre>'.print_r($_POST,true).'</pre>';
 				echo '<a href="/view-shipment/?id='.tzs_find_latest_shipment_rec().'&spis=new">Просмотреть груз</a>';
+                                $new_url = get_site_url().'/my-shipments';
+                                echo '<meta http-equiv="refresh" content="0; url='.$new_url.'">';
 			}
 		} else {
 			$sql = $wpdb->prepare("UPDATE ".TZS_SHIPMENT_TABLE." SET ".
@@ -857,6 +861,8 @@ function tzs_edit_shipment($id) {
 				echo "Ваш груз изменен";
 				echo "<br/>";
 				echo '<a href="/view-shipment/?id='.$id.'&spis=new">Просмотреть груз</a>';
+                                $new_url = get_site_url().'/my-shipments';
+                                echo '<meta http-equiv="refresh" content="0; url='.$new_url.'">';
 			}
 		}
 	}

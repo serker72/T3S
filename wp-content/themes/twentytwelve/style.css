@@ -884,9 +884,13 @@ input[type=text], input[type=password], select {
 	font-weight: normal;
 	/*height: 55px;*/
 	border: 0;
+        border-right: #FFFFFF 1px dashed;
 	margin: 0;
 	padding: 0 5px;
 	font-size: 14px;
+}
+#tbl_products th:last-child {
+    border-right: 0;
 }
 #tbl_products td {
         font-family: Verdana, Tahoma, Sans-serif !important;
@@ -964,7 +968,7 @@ input[type=text], input[type=password], select {
     min-width: 60px;
 }
 #tbl_trucks_path {
-    min-width: 130px;
+    min-width: 150px;
 }
 #tbl_trucks_dtc {
     min-width: 60px;
@@ -1922,6 +1926,7 @@ max-height: 46px !important;
     padding-left: 15px;
 }
 .city_label {
+    float: left;
     font-weight: bold;
     text-align: left;
     /*text-transform: uppercase;*/
@@ -2746,4 +2751,10 @@ margin-top: 20px;
     height: 20px;
     position: absolute;
     z-index: 1000;
+}
+.country_flag {
+    float: right;
+    width: 22px;
+    height: 16px;
+    padding: 2px;
 }
