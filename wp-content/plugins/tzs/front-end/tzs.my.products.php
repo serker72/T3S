@@ -121,7 +121,7 @@ function tzs_front_end_my_products_handler($atts) {
                             <tr id="tbl_thead_records_per_page">
                                 <!--th colspan="10" id="thead_h1"-->
                                 <!--th colspan="4" id="thead_h1"-->
-                                <th colspan="4">
+                                <th colspan="4" style="border: 0;">
                                     <div class="div_td_left">
                                         <h3><?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> товары</h3>
                                     </div>
@@ -157,8 +157,8 @@ function tzs_front_end_my_products_handler($atts) {
                             $profile_td_text = '<a href="javascript:doDisplay('.$row->id.');" at="'.$row->id.'" id="icon_set">Действия</a>
                                     <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
                                         <ul>
-                                            <a href="/account/view-truck/?id='.$row->id.'&link=my-trucks&active='.$active.'">Смотреть</a>
-                                            <a href="/account/edit-truck/?id='.$row->id.'">Изменить</a>';
+                                            <a href="/account/view-product/?id='.$row->id.'&link=my-products&active='.$active.'">Смотреть</a>
+                                            <a href="/account/edit-product/?id='.$row->id.'">Изменить</a>';
 
                             if ($row->active && ($row->order_status === null)) {
                                 $profile_td_text .= '<a href="javascript:promptPickUp('.$row->id.', \'PR\');">В ТОП</a>';

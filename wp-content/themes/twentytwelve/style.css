@@ -2648,6 +2648,10 @@ select {
 }
 .chekbox label{
     margin-left: 25px;
+    color: #808080;
+}
+.chekbox input[type=checkbox]:checked + label {
+    color: #007FFF;
 }
 .chekbox label:before {
 	content:'';

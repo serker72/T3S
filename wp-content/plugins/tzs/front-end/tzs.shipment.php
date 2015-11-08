@@ -71,7 +71,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий">
         </div>
         <div class="span3 chekbox"><!-- style="text-align: right;"-->
-            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>><div class="post-input gabarite">Указать габариты груза (м):</div>
+            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>><label for="set_dim">Указать габариты груза (м):</label>
+            <!--div class="post-input gabarite"></div-->
         </div>
     </div>
     
@@ -382,7 +383,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         }
 
         // Изменение флага "Предоплата"
-        function onWayPrepayChange() {
+        function onWayPrepayChange(eventObject) {
             if (jQuery("#way_prepay").is(':checked')) {
                 jQuery("#prepayment").attr('value', '');
                 jQuery("#prepayment").removeAttr("disabled");
@@ -392,6 +393,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             }
         }
 
+        
         // Рассчет объема груза
         function onVolumeCalculate() {
             if ((jQuery('#sh_length').val().length > 0) && (jQuery('#sh_width').val().length > 0) && (jQuery('#sh_height').val().length > 0)) {
@@ -615,8 +617,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
             });
             jQuery("#sh_length, #sh_width, #sh_height").change(function() { onVolumeCalculate(); });
             jQuery("#price_query").change(function() { onPriceQueryChange(); });
-            jQuery("#way_prepay").change(function() { onWayPrepayChange(); });
-
+            jQuery("#way_prepay").change(function(eventObject) { onWayPrepayChange(eventObject); });
+            
             jQuery("#form_button1").click(function(event) { 
                 event.preventDefault();
                 var flag = onFormValidate();

@@ -107,7 +107,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="3">
+                                <th colspan="3" style="border: 0;">
                                     <div class="div_td_left">
                                         <h3><?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> грузы</h3>
                                     </div>
