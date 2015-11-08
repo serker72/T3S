@@ -3,7 +3,7 @@
 /*
  * Вывод одной строки таблицы в виде html
  */
-function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
+function tzs_products_table_record_out($row, $form_type, $pr_type_array, $profile_td_text=null) {
 //    $user_info = tzs_get_user_meta($row->user_id);
 
     $output_tbody = '<tr rid="'.$row->id.'" id="';
@@ -116,7 +116,11 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
 
     $output_tbody .= '</div></td>';
                 
-    $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>';
+    if ($profile_td_text) {
+        $output_tbody .= '<td>'.$profile_td_text.'</td>';
+    } else {
+        $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>';
+    }
     
     $output_tbody .= '</tr>';
     
@@ -126,7 +130,7 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array) {
 /*
  * Вывод одной строки таблицы в виде html
  */
-function tzs_tr_sh_table_record_out($row, $form_type) {
+function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
 //    $user_info = tzs_get_user_meta($row->user_id);
 
     if ($form_type === 'shipments') { $prefix = 'sh';}
@@ -163,7 +167,7 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
                         <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
                         <div class="country_flag"><img id ="first_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->from_code.'.png"  width=18 height=12 alt=""></div>
                     </td>
-                    <td rowspan="2" style="width: 65px; border: none; vertical-align: middle;">
+                    <td rowspan="2" class="tbl_distance_td2" style="width: 75px; border: none; vertical-align: middle;">
                         <div class="date_from_label" title="Дата погрузки">
                             '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_from : $row->sh_date_from).'<br/>
                         </div>
@@ -295,8 +299,13 @@ function tzs_tr_sh_table_record_out($row, $form_type) {
         //$output_tbody .= '<td><div title="Комментарии">'.$row->comment.'</div></td>';
     }
     
-    $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>
-        </tr>';
+    if ($profile_td_text) {
+        $output_tbody .= '<td>'.$profile_td_text.'</td>';
+    } else {
+        $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>';
+    }
+    
+    $output_tbody .= '</tr>';
     
     return $output_tbody;
 }
@@ -425,11 +434,14 @@ function tzs_front_end_tables_reload() {
             $sql .= " b.dt_pay AS order_dt_pay,";
             $sql .= " b.dt_expired AS order_dt_expired,";
             $sql .= " IFNULL(b.dt_pay, a.".$table_order_by.") AS dt_sort,";
-            $sql .= " c.code AS from_code, d.code AS to_code";
+            $sql .= " c.code AS from_code";
+            if ($form_type != 'products') 
+                $sql .= ", d.code AS to_code";
             $sql .= " FROM ".$table_name." a";
             $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = '".$order_table_prefix."' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
             $sql .= " LEFT OUTER JOIN wp_tzs_countries c ON (a.from_cid = c.country_id)";
-            $sql .= " LEFT OUTER JOIN wp_tzs_countries d ON (a.to_cid = d.country_id)";
+            if ($form_type != 'products')
+                $sql .= " LEFT OUTER JOIN wp_tzs_countries d ON (a.to_cid = d.country_id)";
             $sql .= " WHERE active=1 $sql1 $s_sql";
             $sql .= " ORDER BY order_status DESC, dt_sort DESC";
             $sql .= " LIMIT $from,$pp;";

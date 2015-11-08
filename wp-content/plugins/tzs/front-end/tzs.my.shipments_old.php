@@ -1,7 +1,5 @@
 <?php
 
-include_once(TZS_PLUGIN_DIR.'/front-end/tzs.tables_reload.php');
-
 add_action( 'wp_ajax_tzs_delete_shipment', 'tzs_delete_shipment_callback' );
 
 function tzs_delete_shipment_callback() {
@@ -85,12 +83,9 @@ function tzs_front_end_my_shipments_handler($atts) {
                 $sql .= " b.status AS order_status,";
                 $sql .= " b.dt_pay AS order_dt_pay,";
                 $sql .= " b.dt_expired AS order_dt_expired,";
-                $sql .= " IFNULL(b.dt_pay, a.time) AS dt_sort,";
-                $sql .= " c.code AS from_code, d.code AS to_code";
+                $sql .= " IFNULL(b.dt_pay, a.time) AS dt_sort";
                 $sql .= " FROM ".TZS_SHIPMENT_TABLE." a";
                 $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'SH' AND a.id = b.tbl_id AND ((b.status=1 AND b.dt_expired > NOW()) OR b.status=0) )";
-                $sql .= " LEFT OUTER JOIN wp_tzs_countries c ON (a.from_cid = c.country_id)";
-                $sql .= " LEFT OUTER JOIN wp_tzs_countries d ON (a.to_cid = d.country_id)";
                 $sql .= " WHERE a.user_id=$user_id AND a.active=$active";
                 $sql .= " ORDER BY order_status DESC, dt_sort DESC";
                 $sql .= " LIMIT $from,$pp;";
@@ -107,9 +102,9 @@ function tzs_front_end_my_shipments_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="3">
+                                <th colspan="4">
                                     <div class="div_td_left">
-                                        <h3><?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> грузы</h3>
+                                        <h3>Список <?php echo ($active === '1') ? 'публикуемых' : 'архивных'; ?> грузов</h3>
                                     </div>
                                 </th>
                                 
@@ -127,37 +122,79 @@ function tzs_front_end_my_shipments_handler($atts) {
                             <tr>
                                 <th id="tbl_trucks_id">№, дата и время заявки</th>
                                 <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br>выгрузки</th>
-                                <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
-                                <th id="tbl_trucks_tc">Тип груза /<br>Желаемый тип ТС</th>
-                                <th id="tbl_trucks_wv">Вес,<br>объём</th>
+                                <th id="tbl_trucks_dtc">Дата погрузки /<br>выгрузки</th>
+                                <th id="tbl_trucks_ttr">Тип груза</th>
+                                <th id="tbl_trucks_wv">Вес,<br>объем</th>
                                 <th id="tbl_trucks_comm">Описание груза</th>
-                                <th id="tbl_trucks_cost">Cтоимость,<br/>цена 1 км</th>
-                                <th id="tbl_trucks_payment" nonclickable="true">Форма оплаты</th>
+                                <th id="tbl_trucks_cost">Стоимость,<br/>цена 1 км</th>
+                                <th id="tbl_trucks_payment">Форма оплаты</th>
+                                <th id="comm">Комментарии</th>
                                 <th id="actions" nonclickable="true">Действия</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             foreach ( $res as $row ) {
-                                $profile_td_text = '<a href="javascript:doDisplay('.$row->id.');" at="'.$row->id.'" id="icon_set">Действия</a>
-                                        <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
-                                            <ul>
-                                                <a href="/account/view-shipment/?id='.$row->id.'&link=my-shipments&active='.$active.'">Смотреть</a>
-                                                <a href="/account/edit-shipment/?id='.$row->id.'">Изменить</a>';
-                                
-                                if ($row->active && ($row->order_status === null)) {
-                                    $profile_td_text .= '<a href="javascript:promptPickUp('.$row->id.', \'SH\');">В ТОП</a>';
-                                }
+                                $type = trans_types_to_str($row->trans_type, $row->tr_type);
+                                $cost = tzs_cost_to_str($row->cost, true);
 
-                                if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) {
-                                    $profile_td_text .= '<a href="/account/view-order/?id='.$row->order_id.'">Счет ТОП</a>';
-                                }
+                                ?>
+                                <tr rid="<?php echo $row->id;?>" <?php echo ($row->order_status == 1 ? ' class="top_record"' : ($row->order_status !== null && $row->order_status == 0 ? ' class="pre_top_record"' : '')); ?> >
+                                <td>
+                                    <?php echo $row->id;?><br>
+                                    <?php echo convert_time($row->time);?>
+                                </td>
+                                <td>
+                                        <?php echo tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, $row->sh_city_from);?><br/><?php echo tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, $row->sh_city_to); ?>
+                                        <?php if ($row->distance > 0) {?>
+                                                <br/>
+                                                <?php echo tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to)); ?>
+                                        <?php } ?>
+                                </td>
+                                <td><?php echo convert_date($row->sh_date_from);?><br/><?php echo convert_date($row->sh_date_to);?></td>
+
+                                <td><?php echo $GLOBALS['tzs_sh_types'][$row->sh_type];?></td>
                                 
-                                $profile_td_text .= '<a href="javascript: promptDelete('.$row->id.', '.$row->active.');" id="red">Удалить</a>
-                                            </ul>
-                                        </div>';
-                                
-                                echo tzs_tr_sh_table_record_out($row, 'shipments', $profile_td_text);
+                                <td>
+                                <?php 
+                                    if ($row->sh_weight > 0) {
+                                        echo remove_decimal_part($row->sh_weight).' т<br>';
+                                    }
+
+                                    if ($row->sh_volume > 0) {
+                                        echo remove_decimal_part($row->sh_volume).' м³';
+                                    }
+                                ?>
+                                </td>
+
+                                <td><?php echo htmlspecialchars($row->sh_descr);?></td>
+                                <td>
+                                    <?php if ($row->price > 0) {
+                                        echo $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].'<br><br>';
+                                        echo round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].'/км'; 
+                                    } ?>
+                                </td>
+                                <td><?php echo $cost[1]; ?></td>
+                                <td><?php echo htmlspecialchars($row->comment);?></td>
+                                <td>
+                                        <a href="javascript:doDisplay(<?php echo $row->id;?>);" at="<?php echo $row->id;?>" id="icon_set">Действия</a>
+                                        <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
+                                                <ul>
+                                                        <a href="/account/view-shipment/?id=<?php echo $row->id;?>&link=my-shipments&active=<?php echo $active; ?>">Смотреть</a>
+                                                        <a href="/account/edit-shipment/?id=<?php echo $row->id;?>">Изменить</a>
+                                                    <?php if ($row->active && ($row->order_status === null)) { ?>
+                                                        <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'SH');">В ТОП</a>
+                                                    <?php } ?>
+                                                        
+                                                    <?php if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) { ?>
+                                                        <a href="/account/view-order/?id=<?php echo $row->order_id;?>">Счет ТОП</a>
+                                                    <?php } ?>
+                                                        <a href="javascript: promptDelete(<?php echo $row->id.', '.$row->active; ?>);" id="red">Удалить</a>
+                                                </ul>
+                                        </div>
+                                </td>
+                                </tr>
+                            <?php
                             }
                             ?>
                         </tbody>
@@ -170,18 +207,15 @@ function tzs_front_end_my_shipments_handler($atts) {
 
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>
                     <script>
-                    // Функция, отрабатывающая после готовности HTML-документа
                     jQuery(document).ready(function(){
-                        jQuery('#tbl_products').on('click', 'td', function(e) {  
-                                var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
-                                var id = this.parentNode.getAttribute("rid");
-                                //alert('Тыц-тыц: cellIndex - '+this.cellIndex+', textContent -'+this.textContent+', id -'+id+', nonclickable - '+nonclickable);
-                                if (!nonclickable && (id != null)) {
-                                    document.location = "/account/view-shipment/?id="+id+"&link=my-shipments&active=<?php echo $active; ?>";
-                                }
-                        });
+                            jQuery('table').on('click', 'td', function(e) {  
+                                    var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
+                                    var id = this.parentNode.getAttribute("rid");
+                                    if (!nonclickable)
+                                            document.location = "/account/view-shipment/?id="+id+"&link=my-shipments&active=<?php echo $active; ?>";
+                            });
                         
-                        jQuery("#tbl_products").stickyTableHeaders();
+                            jQuery("#tbl_products").stickyTableHeaders();
                     });
 
                     function doDisplay(id) {

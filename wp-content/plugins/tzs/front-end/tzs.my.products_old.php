@@ -1,7 +1,5 @@
 <?php
 
-include_once(TZS_PLUGIN_DIR.'/front-end/tzs.tables_reload.php');
-
 add_action( 'wp_ajax_tzs_delete_product', 'tzs_delete_product_callback' );
 
 function tzs_delete_product_callback() {
@@ -99,11 +97,9 @@ function tzs_front_end_my_products_handler($atts) {
                 $sql .= " b.status AS order_status,";
                 $sql .= " b.dt_pay AS order_dt_pay,";
                 $sql .= " b.dt_expired AS order_dt_expired,";
-                $sql .= " IFNULL(b.dt_pay, a.created) AS dt_sort,";
-                $sql .= " c.code AS from_code";
+                $sql .= " IFNULL(b.dt_pay, a.created) AS dt_sort";
                 $sql .= " FROM ".TZS_PRODUCTS_TABLE." a";
                 $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'PR' AND a.id = b.tbl_id AND ((b.status=1 AND b.dt_expired > NOW()) OR b.status=0) )";
-                $sql .= " LEFT OUTER JOIN wp_tzs_countries c ON (a.from_cid = c.country_id)";
                 $sql .= " WHERE a.user_id=$user_id AND a.active=$active";
                 $sql .= " ORDER BY order_status DESC, dt_sort DESC";
                 $sql .= " LIMIT $from,$pp;";
@@ -123,7 +119,7 @@ function tzs_front_end_my_products_handler($atts) {
                                 <!--th colspan="4" id="thead_h1"-->
                                 <th colspan="4">
                                     <div class="div_td_left">
-                                        <h3><?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> товары</h3>
+                                        <h3>Список <?php echo ($active === '1') ? 'публикуемых' : 'архивных'; ?> товаров</h3>
                                     </div>
                                 </th>
                                 
@@ -139,40 +135,80 @@ function tzs_front_end_my_products_handler($atts) {
                                 </th>
                             </tr>
                             <tr>
-                                <th id="tbl_products_id">Номер, дата и время заявки</th>
+                                <th id="tbl_products_id">№, дата и время заявки</th>
                                 <th id="tbl_products_sale">Покупка<br/>Продажа</th>
-                                <th id="tbl_products_dtc">Период публи-<br/>кации</th>
-                                <th id="tbl_products_type">Тип товара</th>
-                                <th id="tbl_products_img">Фото товара</th>
-                                <th id="tbl_products_title">Название, описание и местонахождение товара</th>
-                                <th id="tbl_products_price">Цена<br/>Кол-во</th>
-                                <th id="tbl_products_payment">Форма оплаты</th>
-                                <th id="tbl_products_cost">Купить / Предложить цену</th>
+                                <th id="tbl_products_img">Фото</th>
+                                <th id="tbl_products_dtc">Период публикации</th>
+                                <th id="title">Описание товара</th>
+                                <th id="price">Стоимость товара</th>
+                                <th id="descr">Форма оплаты</th>
+                                <th id="cities">Город</th>
+                                <th id="comm">Комментарии</th>
                                 <th id="actions" nonclickable="true">Действия</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
                         foreach ( $res as $row ) {
-                            $profile_td_text = '<a href="javascript:doDisplay('.$row->id.');" at="'.$row->id.'" id="icon_set">Действия</a>
-                                    <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
-                                        <ul>
-                                            <a href="/account/view-truck/?id='.$row->id.'&link=my-trucks&active='.$active.'">Смотреть</a>
-                                            <a href="/account/edit-truck/?id='.$row->id.'">Изменить</a>';
-
-                            if ($row->active && ($row->order_status === null)) {
-                                $profile_td_text .= '<a href="javascript:promptPickUp('.$row->id.', \'PR\');">В ТОП</a>';
-                            }
-
-                            if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) {
-                                $profile_td_text .= '<a href="/account/view-order/?id='.$row->order_id.'">Счет ТОП</a>';
-                            }
-
-                            $profile_td_text .= '<a href="javascript: promptDelete('.$row->id.', '.$row->active.');" id="red">Удалить</a>
-                                        </ul>
-                                    </div>';
-
-                            echo tzs_products_table_record_out($row, 'products', tzs_get_children_pages(TZS_PR_ROOT_CATEGORY_PAGE_ID), $profile_td_text);
+                            ?>
+                            <tr rid="<?php echo $row->id;?>" <?php echo ($row->order_status == 1 ? ' class="top_record"' : ($row->order_status !== null && $row->order_status == 0 ? ' class="pre_top_record"' : '')); ?> >
+                                <td>
+                                    <?php echo $row->id;?><br>
+                                    <?php echo convert_time($row->created);?>
+                                </td>
+                                <td>
+                                    <?php echo ($row->sale_or_purchase == 1) ? 'Продажа' : 'Покупка'; ?><br><br>
+                                    <?php echo ($row->fixed_or_tender == 1) ? 'Цена зафиксирована' : 'Тендерное предложение'; ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (strlen($row->image_id_lists) > 0) {
+                                        $main_image_id = $row->main_image_id;
+                                        // Вначале выведем главное изображение
+                                        $attachment_info = wp_get_attachment_image_src($main_image_id, 'full');
+                                        if ($attachment_info !== false) { ?>
+                                            <div class="ienlarger">
+                                                <a href="#nogo">
+                                                    <img src="<?php echo $attachment_info[0]; ?>" alt="thumb" class="resize_thumb">
+                                                    <span>
+                                                        <?php echo htmlspecialchars($row->title); ?><br/>
+                                                        <img src="<?php echo $attachment_info[0]; ?>" alt="large"/>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        <?php } else {
+                                            echo '&nbsp;';
+                                        }
+                                    } else {
+                                        echo '&nbsp;';
+                                    }
+                                    ?>
+                                </td>
+                                <td><?php echo convert_date($row->created).'<br>'.convert_date($row->expiration); ?></td>
+                                <td><?php echo htmlspecialchars($row->title);?></td>
+                                <td><?php echo $row->price." ".$GLOBALS['tzs_pr_curr'][$row->currency];?></td>
+                                <td><?php echo $GLOBALS['tzs_pr_payment'][$row->payment];?></td>
+                                <td><?php echo tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, $row->city_from);?></td>
+                                <td><?php echo htmlspecialchars($row->comment);?></td>
+                                <td>
+                                        <a href="javascript:doDisplay(<?php echo $row->id;?>);" at="<?php echo $row->id;?>" id="icon_set">Действия</a>
+                                        <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
+                                                <ul>
+                                                        <a href="/account/view-product/?id=<?php echo $row->id;?>&link=my-products&active=<?php echo $active; ?>">Смотреть</a>
+                                                        <a href="/account/edit-product/?id=<?php echo $row->id;?>">Изменить</a>
+                                                    <?php if ($row->active && ($row->order_status === null)) { ?>
+                                                        <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'PR');">В ТОП</a>
+                                                    <?php } ?>
+                                                        
+                                                    <?php if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) { ?>
+                                                        <a href="/account/view-order/?id=<?php echo $row->order_id;?>">Счет ТОП</a>
+                                                    <?php } ?>
+                                                        <a href="javascript:promptDelete(<?php echo $row->id.', '.$row->active;?>);" id="red">Удалить</a>
+                                                </ul>
+                                        </div>
+                                </td>
+                            </tr>
+                        <?php
                         }
                         ?>
                         </tbody>

@@ -1,7 +1,5 @@
 <?php
 
-include_once(TZS_PLUGIN_DIR.'/front-end/tzs.tables_reload.php');
-
 add_action( 'wp_ajax_tzs_delete_truck', 'tzs_delete_truck_callback' );
 
 function tzs_delete_truck_callback() {
@@ -107,9 +105,9 @@ function tzs_front_end_my_trucks_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="3" style="border: 0;">
+                                <th colspan="4">
                                     <div class="div_td_left">
-                                        <h3><?php echo ($active === '1') ? 'Публикуемый' : 'Архивный'; ?> транспорт</h3>
+                                        <h3>Список <?php echo ($active === '1') ? 'публикуемого' : 'архивного'; ?> транспорта</h3>
                                     </div>
                                 </th>
                                 
@@ -127,38 +125,100 @@ function tzs_front_end_my_trucks_handler($atts) {
                             <tr>
                                 <th id="tbl_trucks_id">№, дата и время заявки</th>
                                 <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br>выгрузки</th>
-                                <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
-                                <th id="tbl_trucks_ttr">Тип ТС</th>
+                                <th id="tbl_trucks_dtc">Дата погрузки /<br>выгрузки</th>
+                                <th id="tbl_trucks_ttr">Тип транспортного средства</th>
                                 <th id="tbl_trucks_wv">Описание ТС</th>
                                 <th id="tbl_trucks_wv">Желаемый груз</th>
                                 <th id="tbl_trucks_cost">Стоимость,<br/>цена 1 км</th>
-                                <th id="tbl_trucks_payment" nonclickable="true">Форма оплаты</th>
-                                <!--th id="comm">Комментарии</th-->
-                                <th id="actions">Действия</th>
+                                <th id="tbl_trucks_payment">Форма оплаты</th>
+                                <th id="comm">Комментарии</th>
+                                <th id="actions" nonclickable="true">Действия</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             foreach ( $res as $row ) {
-                                $profile_td_text = '<a href="javascript:doDisplay('.$row->id.');" at="'.$row->id.'" id="icon_set">Действия</a>
-                                        <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
-                                            <ul>
-                                                <a href="/account/view-truck/?id='.$row->id.'&link=my-trucks&active='.$active.'">Смотреть</a>
-                                                <a href="/account/edit-truck/?id='.$row->id.'">Изменить</a>';
-                                
-                                if ($row->active && ($row->order_status === null)) {
-                                    $profile_td_text .= '<a href="javascript:promptPickUp('.$row->id.', \'TR\');">В ТОП</a>';
-                                }
+                                $type = trans_types_to_str($row->trans_type, $row->tr_type);
+                                $cost = tzs_cost_to_str($row->cost, true);
+                                ?>
+                                <tr rid="<?php echo $row->id;?>" <?php echo ($row->order_status == 1 ? ' class="top_record"' : ($row->order_status !== null && $row->order_status == 0 ? ' class="pre_top_record"' : '')); ?> >
+                                <td>
+                                    <?php echo $row->id;?><br>
+                                    <?php echo convert_time($row->time);?>
+                                </td>
+                                <td>
+                                    <?php echo tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, $row->tr_city_from);?><br/><?php echo tzs_city_to_str($row->to_cid, $row->to_rid, $row->to_sid, $row->tr_city_to);?>
+                                    <?php if ($row->distance > 0) {?>
+                                            <br/>
+                                            <?php echo tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to)); ?>
+                                    <?php } ?>
+                                </td>
+                                <td><?php echo convert_date($row->tr_date_from);?><br/><?php echo convert_date($row->tr_date_to);?></td>
+                                <td><?php echo $type; ?></td>
+                                <td><?php  
+                                    $tr_ds1 = '';
+                                    $tr_ds2 = '';
+                                    if ($row->tr_length > 0) {
+                                        $tr_ds1 .= 'Д';
+                                        $tr_ds2 .= intval($row->tr_length);
+                                    }
 
-                                if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) {
-                                    $profile_td_text .= '<a href="/account/view-order/?id='.$row->order_id.'">Счет ТОП</a>';
-                                }
-                                
-                                $profile_td_text .= '<a href="javascript: promptDelete('.$row->id.', '.$row->active.');" id="red">Удалить</a>
-                                            </ul>
-                                        </div>';
-                                
-                                echo tzs_tr_sh_table_record_out($row, 'trucks', $profile_td_text);
+                                    if ($row->tr_width > 0) {
+                                        if ($tr_ds1 !== '') $tr_ds1 .= 'x';
+                                        if ($tr_ds2 !== '') $tr_ds2 .= 'x';
+                                        $tr_ds1 .= 'Ш';
+                                        $tr_ds2 .= intval($row->tr_width);
+                                    }
+
+                                    if ($row->tr_height > 0) {
+                                        if ($tr_ds1 !== '') $tr_ds1 .= 'x';
+                                        if ($tr_ds2 !== '') $tr_ds2 .= 'x';
+                                        $tr_ds1 .= 'В';
+                                        $tr_ds2 .= intval($row->tr_height);
+                                    }
+
+                                    if (($tr_ds1 !== '') && ($tr_ds2 !== '')) 
+                                        echo $tr_ds1.': '.$tr_ds2.' м';
+                                    
+                                    if ($row->tr_weight > 0)
+                                        echo '<br>'.remove_decimal_part($row->tr_weight).' т';
+                                        
+                                    if($row->tr_volume > 0)
+                                        echo '<br>'.remove_decimal_part($row->tr_volume).' м³';
+
+                                    if ($row->tr_descr && (strlen($row->tr_descr) > 0))
+                                        echo '<br>'.$row->tr_descr;
+                                ?></td>
+                                <td><?php echo $row->sh_descr; ?></td>
+                                <td>
+                                    <?php if ($row->price > 0) {
+                                        echo $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].'<br><br>';
+                                        echo round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].'/км'; 
+                                    } else {
+                                        echo $cost[0];
+                                    } ?>
+                                </td>
+                                <td><?php echo $cost[1]; ?></td>
+                                <td><?php echo htmlspecialchars($row->comment);?></td>
+                                <td>
+                                        <a href="javascript:doDisplay(<?php echo $row->id;?>);" at="<?php echo $row->id;?>" id="icon_set">Действия</a>
+                                        <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
+                                                <ul>
+                                                        <a href="/account/view-truck/?id=<?php echo $row->id;?>&link=my-trucks&active=<?php echo $active; ?>">Смотреть</a>
+                                                        <a href="/account/edit-truck/?id=<?php echo $row->id;?>">Изменить</a>
+                                                    <?php if ($row->active && ($row->order_status === null)) { ?>
+                                                        <a href="javascript:promptPickUp(<?php echo $row->id;?>, 'TR');">В ТОП</a>
+                                                    <?php } ?>
+                                                        
+                                                    <?php if ($row->active && ($row->order_status !== null) && ($row->order_status == 0)) { ?>
+                                                        <a href="/account/view-order/?id=<?php echo $row->order_id;?>">Счет ТОП</a>
+                                                    <?php } ?>
+                                                        <a href="javascript: promptDelete(<?php echo $row->id.', '.$row->active;?>);" id="red">Удалить</a>
+                                                </ul>
+                                        </div>
+                                </td>
+                                </tr>
+                                <?php
                             }
                             ?>
                         </tbody>
@@ -170,15 +230,12 @@ function tzs_front_end_my_trucks_handler($atts) {
                 
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>
                 <script>
-                // Функция, отрабатывающая после готовности HTML-документа
                 jQuery(document).ready(function(){
-                        jQuery('#tbl_products').on('click', 'td', function(e) {  
+                        jQuery('table').on('click', 'td', function(e) {  
                                 var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                                 var id = this.parentNode.getAttribute("rid");
-                                //alert('Тыц-тыц: cellIndex - '+this.cellIndex+', textContent -'+this.textContent+', id -'+id+', nonclickable - '+nonclickable);
-                                if (!nonclickable && (id != null)) {
-                                    document.location = "/account/view-truck/?id="+id+"&link=my-trucks&active=<?php echo $active; ?>";
-                                }
+                                if (!nonclickable)
+                                        document.location = "/account/view-truck/?id="+id+"&link=my-trucks&active=<?php echo $active; ?>";
                         });
                         
                         jQuery("#tbl_products").stickyTableHeaders();

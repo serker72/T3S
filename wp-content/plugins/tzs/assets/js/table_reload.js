@@ -216,6 +216,7 @@
                     }
 
                     jQuery('#preloader').fadeOut('fast');
+                    //jQuery("td.tbl_distance_td2").innerWidth(jQuery("#tbl_trucks_dtc").innerWidth());
                 },
                 error: function(data) {
                     if (data.responseText !== 'undefined') {
