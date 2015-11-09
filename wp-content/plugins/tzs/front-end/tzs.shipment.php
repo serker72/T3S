@@ -57,7 +57,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
     </div>
                     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_sh_type" class="span3">
+        <div id="div_sh_type" class="span3 input_select">
             <select id="sh_type" name="sh_type" placeholder="Тип груза">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_sh_types'], '', 'sh_type', 'Тип груза');
@@ -77,7 +77,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
     </div>
     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_trans_type" class="span3">
+        <div id="div_trans_type" class="span3 input_select">
             <select id="trans_type" name="trans_type">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
@@ -208,13 +208,13 @@ function tzs_print_shipment_form($errors, $edit=false) {
     <!-- test new form END -->
     <script>
     
-    jQuery('#sh_type').on('change', function() {
+/*    jQuery('#sh_type').on('change', function() {
             jQuery('#div_sh_type').addClass("change");    
      });
      jQuery('#trans_type').on('change', function() {
             jQuery('#div_trans_type').addClass("change");    
      });
-  
+*/  
 
     </script>
 	
@@ -554,6 +554,14 @@ function tzs_print_shipment_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
+            jQuery('#sh_type').on('change', function() {
+                    jQuery('#sh_type').addClass("change");    
+             });
+            
+            jQuery('#div_sh_type').on('change', function() {
+                    jQuery('#div_sh_type').addClass("change");    
+             });
+            
             jQuery('#show_dist_link').hide();
 
             jQuery('#set_dim').click(function() {

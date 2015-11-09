@@ -49,14 +49,14 @@ function tzs_print_product_form($errors, $edit=false) {
     <?php } ?>
     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_pr_type_id" class="span3">
+        <div id="div_pr_type_id" class="span3 input_select">
             <select id="pr_type_id" name="pr_type_id">
                 <option value="0" <?php if (isset($_POST['pr_type_id']) && $_POST['pr_type_id'] == 0) echo 'selected="selected"'; ?> >Категория</option>
                 <?php tzs_build_product_types('pr_type_id', TZS_PR_ROOT_CATEGORY_PAGE_ID); ?>
             </select>
             <?php wp_nonce_field( 'pr_type_id', 'pr_type_id_nonce' ); ?>
 	</div>
-        <div id="div_pr_sale_or_purchase" class="span2">
+        <div id="div_pr_sale_or_purchase" class="span2 input_select">
             <!--label for="pr_sale_or_purchase">Тип заявки</label-->
             <select id="pr_sale_or_purchase" name="pr_sale_or_purchase" style="width: 100px;">
                 <option value="0" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 0) echo 'selected="selected"'; ?> >Тип заявки</option>
@@ -64,7 +64,7 @@ function tzs_print_product_form($errors, $edit=false) {
                 <option value="2" <?php if (isset($_POST['pr_sale_or_purchase']) && $_POST['pr_sale_or_purchase'] == 2) echo 'selected="selected"'; ?> >Покупка</option>
             </select>
         </div>
-        <div id="div_pr_fixed_or_tender" class="span3">
+        <div id="div_pr_fixed_or_tender" class="span3 input_select">
             <!--label for="pr_fixed_or_tender">Участник тендера</label-->
             <select id="pr_fixed_or_tender" name="pr_fixed_or_tender">
                 <option value="0" <?php if (isset($_POST['pr_fixed_or_tender']) && $_POST['pr_fixed_or_tender'] == 0) echo 'selected="selected"'; ?> >Участник тендера</option>

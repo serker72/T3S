@@ -31,8 +31,8 @@ function tzs_print_truck_form($errors, $edit=false) {
             <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;">&nbsp;&nbsp;км
             <input type="hidden" name="length" id="route-length">
         </div>
-        <div id="div_tr_active" class="span3">
-            <label for="tr_active">Статус</label>
+        <div id="div_tr_active" class="span3 input_select">
+            <!--label for="tr_active">Статус</label-->
             <select id="tr_active" name="tr_active">
                 <option value="1" <?php if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
                 <option value="0" <?php if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
@@ -70,7 +70,7 @@ function tzs_print_truck_form($errors, $edit=false) {
     </div>
     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_trans_type" class="span3">
+        <div id="div_trans_type" class="span3 input_select">
             <select id="trans_type" name="trans_type">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
@@ -308,6 +308,7 @@ function tzs_print_truck_form($errors, $edit=false) {
 
         // Изменение поля "Тип транспорта"
         function onTransTypeChange() {
+            jQuery('#trans_type').addClass("change");
             jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
         }
 
@@ -536,6 +537,10 @@ function tzs_print_truck_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
+/*            jQuery('#trans_type').on('change', function() {
+                    jQuery('#trans_type').addClass("change");    
+             });
+*/             
             jQuery('#show_dist_link').hide();
 
             jQuery('#set_dim').click(function() {

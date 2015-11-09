@@ -2621,7 +2621,8 @@ select {
     -moz-placeholder { color: #007FFF;}
     -webkit-input-placeholder {color: #007FFF;}
 }*/
-   #div_trans_type:after, #div_sh_type::after {
+   /*#div_trans_type:after, #div_sh_type::after {*/
+.input_select:after {
 	content:'';
 	display:block;
 	height:14px;
@@ -2639,7 +2640,8 @@ select {
 	background-color:#63849F;
 }
 
-#div_trans_type select, #div_sh_type select{
+/*#div_trans_type select, #div_sh_type select{*/
+.input_select select {
     padding-left: 25px;
 }
 
