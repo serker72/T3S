@@ -85,7 +85,7 @@ function tzs_front_end_my_trucks_handler($atts) {
                 $sql .= " b.dt_pay AS order_dt_pay,";
                 $sql .= " b.dt_expired AS order_dt_expired,";
                 $sql .= " IFNULL(b.dt_pay, a.time) AS dt_sort,";
-                $sql .= " c.code AS from_code, d.code AS to_code";
+                $sql .= " LOWER(c.code) AS from_code, LOWER(d.code) AS to_code";
                 $sql .= " FROM ".TZS_TRUCK_TABLE." a";
                 $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'TR' AND a.id = b.tbl_id AND ((b.status=1 AND b.dt_expired > NOW()) OR b.status=0) )";
                 $sql .= " LEFT OUTER JOIN wp_tzs_countries c ON (a.from_cid = c.country_id)";

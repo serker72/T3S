@@ -434,9 +434,9 @@ function tzs_front_end_tables_reload() {
             $sql .= " b.dt_pay AS order_dt_pay,";
             $sql .= " b.dt_expired AS order_dt_expired,";
             $sql .= " IFNULL(b.dt_pay, a.".$table_order_by.") AS dt_sort,";
-            $sql .= " c.code AS from_code";
+            $sql .= " LOWER(c.code) AS from_code";
             if ($form_type != 'products') 
-                $sql .= ", d.code AS to_code";
+                $sql .= ", LOWER(d.code) AS to_code";
             $sql .= " FROM ".$table_name." a";
             $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = '".$order_table_prefix."' AND a.id = b.tbl_id AND b.status = 1 AND b.dt_expired > NOW())";
             $sql .= " LEFT OUTER JOIN wp_tzs_countries c ON (a.from_cid = c.country_id)";

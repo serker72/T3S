@@ -699,7 +699,7 @@ function tzs_edit_product($id) {
         if ($id == 0) {
                 $sql = $wpdb->prepare("INSERT INTO ".TZS_PRODUCTS_TABLE.
                         " (type_id, user_id, sale_or_purchase, 	fixed_or_tender, title, description, copies, unit, currency, price, payment, nds, city_from, from_cid, from_rid, from_sid, created, comment, last_edited, active, expiration, image_id_lists, main_image_id)".
-                        " VALUES (%d, %d, %d, %d, %s, %s, %d, %d, %d, %f, %d, %d, %s, %d, %d, %d, now(), %s, NULL, %d, %s);",
+                        " VALUES (%d, %d, %d, %d, %s, %s, %d, %d, %d, %f, %d, %d, %s, %d, %d, %d, now(), %s, NULL, %d, %s, %s, %d);",
                         intval($pr_type_id), $user_id, intval($pr_sale_or_purchase), intval($pr_fixed_or_tender), stripslashes_deep($pr_title), stripslashes_deep($pr_description), intval($pr_copies), intval($pr_unit), intval($pr_currency), floatval($pr_price), intval($pr_payment), intval($pr_nds),
                         stripslashes_deep($pr_city_from), $from_info["country_id"],$from_info["region_id"],$from_info["city_id"], stripslashes_deep($pr_comment), intval($pr_active), $pr_expiration,
                         implode(';', $image_id_lists), intval($main_image));
