@@ -32,11 +32,12 @@ function tzs_print_truck_form($errors, $edit=false) {
             <input type="hidden" name="length" id="route-length">
         </div>
         <div id="div_tr_active" class="span3 input_select">
+            <input type="hidden" name="tr_active" id="tr_active" value="1">
             <!--label for="tr_active">Статус</label-->
-            <select id="tr_active" name="tr_active">
-                <option value="1" <?php if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
-                <option value="0" <?php if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
-            </select>
+            <!--select id="tr_active" name="tr_active">
+                <option value="1" <?php //if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
+                <option value="0" <?php //if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
+            </select-->
         </div>
     </div>
     
@@ -70,7 +71,7 @@ function tzs_print_truck_form($errors, $edit=false) {
     </div>
     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_trans_type" class="span3 input_select">
+        <div id="div_trans_type" class="span3">
             <select id="trans_type" name="trans_type">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
@@ -199,6 +200,11 @@ function tzs_print_truck_form($errors, $edit=false) {
     <div class="clearfix">&nbsp;</div>
     
     <!-- test new form END -->
+    <script>
+     jQuery('#trans_type').on('change', function() {
+            jQuery('#div_trans_type').addClass("change");    
+     });
+    </script>
 	
     <script>
         tzs_tr2_types = [];
