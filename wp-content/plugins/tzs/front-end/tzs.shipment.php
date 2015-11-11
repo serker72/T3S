@@ -293,24 +293,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
             }
         }
 
-        // Изменение флага "Наличная"
-        function onSetCash() {
-            if (jQuery("#cash").is(':checked')) {
-                jQuery("#nocash").attr("disabled", "disabled");
-            } else {
-                jQuery("#nocash").removeAttr("disabled");
-            }
-        }
-
-        // Изменение флага "Безналичная"
-        function onSetNoCash() {
-            if (jQuery("#nocash").is(':checked')) {
-                jQuery("#cash").attr("disabled", "disabled");
-            } else {
-                jQuery("#cash").removeAttr("disabled");
-            }
-        }
-
         // Вывод карты
         function showDistanceDialog() {
             if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
@@ -558,13 +540,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     onSetDim(this.checked);
             });
             
-            jQuery('#cash').click(function() { onSetCash(); });
-            jQuery('#nocash').click(function() { onSetNoCash(); });
-
-            jQuery('#bpost').submit(function() {
-                    jQuery('#addpostsub').attr('disabled','disabled');
-                    return true;
-            });
             jQuery.datepicker.setDefaults(jQuery.datepicker.regional['ru']);
             jQuery( "#datepicker1" ).datepicker({ 
                 dateFormat: "dd.mm.yy",
