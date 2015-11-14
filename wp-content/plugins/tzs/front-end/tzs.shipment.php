@@ -24,7 +24,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
 	   </div>
         <div class="span1">
-            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
+            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
             <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>
@@ -48,7 +48,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1">
-            <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
+            <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
             <a id="show_dist_link" href="javascript:showDistanceDialog();">см. карту</a>
@@ -394,6 +394,12 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     .removeAttr('selected')
                     .css({'border': '1px solid #007FFF'});
             jQuery('select option:first', selector).attr('selected', true);
+            
+            // Очистим флаги и скроем кнопку "см. карту"
+            jQuery('img', selector).attr('src', '')
+            jQuery('#show_dist_link').hide();
+
+            jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
 
             // Очистим список ошибок
             jQuery("#form_error_message").html('');
@@ -491,6 +497,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
             if (jQuery("#price_query").is(':checked')) {
                 jQuery('#cost, #prepayment').css({'border': '1px solid #007FFF'});
+                jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
             } else {
                 if (jQuery('#cost').val().length < 1) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана стоимость перевозки.<br>\n';
@@ -509,16 +516,14 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 } else {
                     jQuery('#prepayment').css({'border': '1px solid #007FFF'});
                 }
-            }
                 
-            // Проверка правильности указания переключателей
-            if (jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked')) {
-                jQuery('#cash').css({'border': '2px solid #007FFF'});
-                jQuery('#nocash').css({'border': '2px solid #007FFF'});
-            } else {
-                ErrorMsg2 = ErrorMsg2 + 'Необходимо выбрать тип оплаты: наличная или безналичная.<br>\n';
-                jQuery('#cash').css({'border': '2px solid #F00'});
-                jQuery('#nocash').css({'border': '2px solid #F00'});
+                // Проверка правильности указания переключателей
+                if ((jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked') || jQuery("#way_ship").is(':checked') || jQuery("#way_debark").is(':checked') || jQuery("#soft").is(':checked') || jQuery("#way_prepay").is(':checked'))) {
+                    jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
+                } else {
+                    ErrorMsg2 = ErrorMsg2 + 'Не выбрана форма расчета.<br>\n';
+                    jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': '1px solid #F00'});
+                }
             }
 
             if (ErrorMsg2.length > 0) {

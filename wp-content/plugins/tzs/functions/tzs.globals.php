@@ -146,7 +146,7 @@ $GLOBALS['tzs_city_from_radius_value'] = array(
 
 $GLOBALS['tzs_pr_curr'] = array(
 	0 => '',
-	1 => 'грн',
+	1 => 'грн/шт',
 	2 => 'грн/м<sup>2</sup>',
 	3 => 'грн/м<sup>3</sup>',
 	4 => 'грн/метр пог.',

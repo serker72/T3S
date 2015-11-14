@@ -25,7 +25,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             <input autocomplete="city" id="first_city" type="text" size="35" name="tr_city_from" value="<?php echo_val('tr_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
 	   </div>
         <div class="span1">
-            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
+            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
             <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;">&nbsp;&nbsp;км
@@ -49,7 +49,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             <input autocomplete="city" id="second_city" type="text" size="35" name="tr_city_to" value="<?php echo_val('tr_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1">
-            <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="Флаг страны">
+            <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
             <a id="show_dist_link" href="javascript:showDistanceDialog();">см. карту</a>
@@ -274,13 +274,12 @@ function tzs_print_truck_form($errors, $edit=false) {
         // Изменение флага "Указать габариты груза (м):"
         function onSetDim(ch) {
             if (ch) {
-                jQuery("#tr_length, #tr_width, #tr_height").removeAttr("disabled");
+                jQuery("#tr_length, #tr_width, #tr_height, #tr_volume").removeAttr("disabled");
                 //jQuery("#tr_length, #tr_width, #tr_height").attr('required', 'required');
             } else {
                 //jQuery("#tr_length, #tr_width, #tr_height").removeAttr('required');
-                jQuery("#tr_length, #tr_width, #tr_height").attr("disabled", "disabled");
-                jQuery("#tr_length, #tr_width, #tr_height").attr('value', '');
-                jQuery("#tr_volume").attr('value', '');
+                jQuery("#tr_length, #tr_width, #tr_height, #tr_volume").attr("disabled", "disabled");
+                jQuery("#tr_length, #tr_width, #tr_height, #tr_volume").attr('value', '');
             }
         }
 
@@ -332,6 +331,7 @@ function tzs_print_truck_form($errors, $edit=false) {
                 jQuery("[name=way_prepay]").prop('checked', false);
 
                 jQuery("[name=cost]").attr("disabled", "disabled");
+                jQuery("[name=price]").attr("disabled", "disabled");
                 jQuery("[name=prepayment]").attr("disabled", "disabled");
                 jQuery("[name=cash]").attr("disabled", "disabled");
                 jQuery("[name=nocash]").attr("disabled", "disabled");
@@ -342,6 +342,7 @@ function tzs_print_truck_form($errors, $edit=false) {
                 jQuery("#prepayment").attr("disabled", "disabled");
             } else {
                 jQuery("[name=cost]").removeAttr("disabled");
+                jQuery("[name=price]").removeAttr("disabled");
                 jQuery("[name=prepayment]").removeAttr("disabled");
                 jQuery("[name=cash]").removeAttr("disabled");
                 jQuery("[name=nocash]").removeAttr("disabled");
@@ -385,7 +386,13 @@ function tzs_print_truck_form($errors, $edit=false) {
                     .removeAttr('selected')
                     .css({'border': '1px solid #007FFF'});
             jQuery('select option:first', selector).attr('selected', true);
+            
+            // Очистим флаги и скроем кнопку "см. карту"
+            jQuery('img', selector).attr('src', '')
+            jQuery('#show_dist_link').hide();
 
+            jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
+            
             // Очистим список ошибок
             jQuery("#form_error_message").html('');
             jQuery("#form_error_message").hide();
@@ -400,7 +407,7 @@ function tzs_print_truck_form($errors, $edit=false) {
 
             if (jQuery('#datepicker1').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата погрузки.<br>\n';
-                jQuery('#datepicker1').css({'border': '2px solid #F00'});
+                jQuery('#datepicker1').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#datepicker1').css({'border': '1px solid #007FFF'});
             }
@@ -408,49 +415,49 @@ function tzs_print_truck_form($errors, $edit=false) {
             if (jQuery('#first_city').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт погрузки.<br>\n';
                 //jQuery('#first_city').addClass('form_error_input');
-                jQuery('#first_city').css({'border': '2px solid #F00'});
+                jQuery('#first_city').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#first_city').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery('#datepicker2').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата выгрузки.<br>\n';
-                jQuery('#datepicker2').css({'border': '2px solid #F00'});
+                jQuery('#datepicker2').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#datepicker2').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery('#second_city').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт выгрузки.<br>\n';
-                jQuery('#second_city').css({'border': '2px solid #F00'});
+                jQuery('#second_city').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#second_city').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery('#tr_type').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан тип груза.<br>\n';
-                jQuery('#tr_type').css({'border': '2px solid #F00'});
+                jQuery('#tr_type').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#tr_type').css({'border': '1px solid #007FFF'});
             }
             
             if (jQuery('#sh_descr').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указано описание груза.<br>\n';
-                jQuery('#sh_descr').css({'border': '2px solid #F00'});
+                jQuery('#sh_descr').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#sh_descr').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery('#trans_type').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан тип транспортного средства.<br>\n';
-                jQuery('#trans_type').css({'border': '2px solid #F00'});
+                jQuery('#trans_type').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#trans_type').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery('#trans_count').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указано количество машин.<br>\n';
-                jQuery('#trans_count').css({'border': '2px solid #F00'});
+                jQuery('#trans_count').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#trans_count').css({'border': '1px solid #007FFF'});
             }
@@ -458,21 +465,21 @@ function tzs_print_truck_form($errors, $edit=false) {
             if (jQuery('#set_dim').prop('checked')) {
                 if (jQuery('#tr_length').val().length == 0) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана длина груза.<br>\n';
-                    jQuery('#tr_length').css({'border': '2px solid #F00'});
+                    jQuery('#tr_length').css({'border': '1px solid #F00'});
                 } else {
                     jQuery('#tr_length').css({'border': '1px solid #007FFF'});
                 }
 
                 if (jQuery('#tr_width').val().length == 0) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана ширина груза.<br>\n';
-                    jQuery('#tr_width').css({'border': '2px solid #F00'});
+                    jQuery('#tr_width').css({'border': '1px solid #F00'});
                 } else {
                     jQuery('#tr_width').css({'border': '1px solid #007FFF'});
                 }
 
                 if (jQuery('#tr_height').val().length == 0) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана высота груза.<br>\n';
-                    jQuery('#tr_height').css({'border': '2px solid #F00'});
+                    jQuery('#tr_height').css({'border': '1px solid #F00'});
                 } else {
                     jQuery('#tr_height').css({'border': '1px solid #007FFF'});
                 }
@@ -482,10 +489,11 @@ function tzs_print_truck_form($errors, $edit=false) {
 
             if (jQuery("#price_query").is(':checked')) {
                 jQuery('#cost, #prepayment').css({'border': '1px solid #007FFF'});
+                jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
             } else {
                 if (jQuery('#cost').val().length < 1) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана стоимость перевозки.<br>\n';
-                    jQuery('#cost').css({'border': '2px solid #F00'});
+                    jQuery('#cost').css({'border': '1px solid #F00'});
                 } else {
                     jQuery('#cost').css({'border': '1px solid #007FFF'});
                 }
@@ -493,23 +501,21 @@ function tzs_print_truck_form($errors, $edit=false) {
                 if (jQuery("#way_prepay").is(':checked')) {
                     if (jQuery('#prepayment').val().length < 1) {
                         ErrorMsg2 = ErrorMsg2 + 'Не указан % предоплаты.<br>\n';
-                        jQuery('#prepayment').css({'border': '2px solid #F00'});
+                        jQuery('#prepayment').css({'border': '1px solid #F00'});
                     } else {
                         jQuery('#prepayment').css({'border': '1px solid #007FFF'});
                     }
                 } else {
                     jQuery('#prepayment').css({'border': '1px solid #007FFF'});
                 }
-            }
                 
-            // Проверка правильности указания переключателей
-            if (jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked')) {
-                jQuery('#div_cash').css({'border': '2px solid #007FFF'});
-                jQuery('#div_nocash').css({'border': '2px solid #007FFF'});
-            } else {
-                ErrorMsg2 = ErrorMsg2 + 'Необходимо выбрать тип оплаты: наличная или безналичная.<br>\n';
-                jQuery('#div_cash').css({'border': '2px solid #F00'});
-                jQuery('#div_nocash').css({'border': '2px solid #F00'});
+                // Проверка правильности указания переключателей
+                if ((jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked') || jQuery("#way_ship").is(':checked') || jQuery("#way_debark").is(':checked') || jQuery("#soft").is(':checked') || jQuery("#way_prepay").is(':checked'))) {
+                    jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
+                } else {
+                    ErrorMsg2 = ErrorMsg2 + 'Не выбрана форма расчета.<br>\n';
+                    jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': '1px solid #F00'});
+                }
             }
 
             if (ErrorMsg2.length > 0) {
@@ -545,6 +551,7 @@ function tzs_print_truck_form($errors, $edit=false) {
                 showOtherMonths: true
             });
             //jQuery("#datepicker2").attr("disabled", "disabled");
+            jQuery('#datepicker1, #datepicker2').css({'cursor': 'pointer'});
 
             onSetDim(jQuery('#set_dim').prop('checked'));
             jQuery("[name=trans_type]").change(function() { onTransTypeChange(); });

@@ -39,7 +39,7 @@ function tzs_get_first_page_id_by_content_search($search_keyword, $orderby_array
 // Возвращает список дочерних страниц в виде массива
 function tzs_get_children_pages($post_parent) {
     $arr_lis = array();
-    $myposts = new WP_Query(array( 'post_type' => 'page', 'post_parent' => $post_parent, 'orderby' => array('ID' => 'ASC')));
+    $myposts = new WP_Query(array( 'post_type' => 'page', 'post_parent' => $post_parent, 'nopaging = true', 'orderby' => array('title' => 'ASC')));
     $i=0;
     while ( $myposts->have_posts() ) : $myposts->the_post(); 
         $id = get_the_ID();

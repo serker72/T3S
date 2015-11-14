@@ -92,7 +92,7 @@ function tzs_print_product_form($errors, $edit=false) {
             $args = array(  'wpautop' => 1,
                             'media_buttons' => 0,
                             'textarea_name' => 'pr_description', //нужно указывать!
-                            'textarea_rows' => 3,
+                            'textarea_rows' => 4,
                             'tabindex'      => null,
                             'editor_css'    => '',
                             'editor_class'  => '',
@@ -275,6 +275,15 @@ function tzs_print_product_form($errors, $edit=false) {
     </script>
 	
     <script>
+        // Изменение поля "Единица измерения"
+        function onPrUnitChange() {
+            jQuery('#pr_currency').attr('value', jQuery('#pr_unit').val());
+        }
+
+        // Изменение поля "Валюта"
+        function onPrCurrencyChange() {
+            jQuery('#pr_unit').attr('value', jQuery('#pr_currency').val());
+        }
 
         // Функция проверки правильности заполнения полей формы до отправки
         function onFormValidate() {
@@ -509,8 +518,14 @@ function tzs_print_product_form($errors, $edit=false) {
                 }
             });
             
-            jQuery("#pr_unit").attr('value', 1);
-            jQuery("#pr_currency").attr('value', 1);
+            jQuery("#pr_unit").change(function() { onPrUnitChange(); });
+            jQuery("#pr_unit").keyup(function() { onPrUnitChange(); });
+            jQuery("#pr_currency").change(function() { onPrCurrencyChange(); });
+            jQuery("#pr_currency").keyup(function() { onPrCurrencyChange(); });
+            if (jQuery('#pr_unit').val() < 1) {
+                jQuery("#pr_unit").attr('value', 1);
+                jQuery("#pr_currency").attr('value', 1);
+            }
     
             
             <?php if ($errors != null && count($errors) > 0) {
