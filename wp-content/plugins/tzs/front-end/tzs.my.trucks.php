@@ -107,34 +107,36 @@ function tzs_front_end_my_trucks_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="3" style="border: 0;">
+                                <th colspan="4" style="border: 0;">
                                     <div class="div_td_left">
                                         <h3><?php echo ($active === '1') ? 'Публикуемый' : 'Архивный'; ?> транспорт</h3>
                                     </div>
                                 </th>
                                 
-                                <th colspan="6">
+                                <th colspan="5">
                                     <div id="my_products_button">
                                         <?php if ($active === '1') { ?>
-                                            <button id="view_del" onClick="javascript: window.open('/account/my-truck/?active=0', '_self');">Показать архивные</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-truck/?active=0', '_self');">Показать архивный</button>
                                         <?php } else { ?>
-                                            <button id="view_edit" onClick="javascript: window.open('/account/my-truck/?active=1', '_self');">Показать публикуемые</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-truck/?active=1', '_self');">Показать публикуемый</button>
                                         <?php } ?>
-                                        <button id="view_add" onClick="javascript: window.open('/account/add-truck/', '_self');">Добавить транспорт</button>
+                                        <!--button id="view_add" onClick="javascript: window.open('/account/add-truck/', '_self');">Добавить транспорт</button-->
                                     </div>
                                 </th>
                             </tr>
                             <tr>
                                 <th id="tbl_trucks_id">№, дата и время заявки</th>
-                                <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br>выгрузки</th>
-                                <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
+                                <th nonclickable="true" style="min-width: 260px; padding: 0; margin: 0;">
+                                    <div class="tbl_trucks_path">Пункты погрузки /<br/>выгрузки<br/>&nbsp;</div>
+                                    <div class="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</div>
+                                </th>
                                 <th id="tbl_trucks_ttr">Тип ТС</th>
                                 <th id="tbl_trucks_wv">Описание ТС</th>
                                 <th id="tbl_trucks_wv">Желаемый груз</th>
                                 <th id="tbl_trucks_cost">Стоимость,<br/>цена 1 км</th>
-                                <th id="tbl_trucks_payment" nonclickable="true">Форма оплаты</th>
+                                <th id="tbl_trucks_payment">Форма оплаты</th>
                                 <!--th id="comm">Комментарии</th-->
-                                <th id="actions">Действия</th>
+                                <th id="actions" nonclickable="true">Действия</th>
                             </tr>
                         </thead>
                         <tbody>

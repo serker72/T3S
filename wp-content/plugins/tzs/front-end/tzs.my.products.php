@@ -121,20 +121,20 @@ function tzs_front_end_my_products_handler($atts) {
                             <tr id="tbl_thead_records_per_page">
                                 <!--th colspan="10" id="thead_h1"-->
                                 <!--th colspan="4" id="thead_h1"-->
-                                <th colspan="4" style="border: 0;">
+                                <th colspan="5" style="border: 0;">
                                     <div class="div_td_left">
                                         <h3><?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> товары</h3>
                                     </div>
                                 </th>
                                 
-                                <th colspan="6">
+                                <th colspan="5">
                                     <div id="my_products_button">
                                         <?php if ($active === '1') { ?>
-                                            <button id="view_del" onClick="javascript: window.open('/account/my-products/?active=0', '_self');">Показать архивные</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-products/?active=0', '_self');">Показать архивные</button>
                                         <?php } else { ?>
-                                            <button id="view_edit" onClick="javascript: window.open('/account/my-products/?active=1', '_self');">Показать публикуемые</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-products/?active=1', '_self');">Показать публикуемые</button>
                                         <?php } ?>
-                                        <button id="view_add" onClick="javascript: window.open('/account/add-product/', '_self');">Добавить товар</button>
+                                        <!--button id="view_add" onClick="javascript: window.open('/account/add-product/', '_self');">Добавить товар</button-->
                                     </div>
                                 </th>
                             </tr>

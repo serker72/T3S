@@ -12,14 +12,18 @@ function tzs_front_end_shipments_handler($atts) {
                     <th colspan="9">
                         <div id="thead_h1" class="div_td_left"><h1 class="entry-title"><strong>ПОИСК ГРУЗА</strong></h1></div>
                         <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
-                        <div class="thead_info">для добавления грузов, пожалуйста, войдите или зарегистрируйтесь</div>
+                    <?php if (get_current_user_id() == 0) {?>
+                        <div class="thead_info">Для добавления грузов, пожалуйста, <a href="/account/login">войдите</a> или <a href="/account/registration/">зарегистрируйтесь</a></div>
+                    <?php }?>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>
                 </tr>
                 <tr>
                     <th id="tbl_trucks_id">Номер, дата и время заявки</th>
-                    <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br/>выгрузки</th>
-                    <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
+                    <th nonclickable="true" style="min-width: 260px; padding: 0; margin: 0;">
+                        <div class="tbl_trucks_path">Пункты погрузки /<br/>выгрузки<br/>&nbsp;</div>
+                        <div class="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</div>
+                    </th>
                     <th id="tbl_trucks_tc">Тип груза /<br>Желаемый тип ТС</th>
                     <th id="tbl_trucks_wv">Вес,<br>объём</th>
                     <th id="tbl_trucks_comm">Описание груза</th>
@@ -30,7 +34,8 @@ function tzs_front_end_shipments_handler($atts) {
                 <tr>
                     <th>
                     </th>
-                    <th>
+                    <th style="min-width: 260px; width: 260px; padding: 0; margin: 0;">
+                        <div class="tbl_trucks_path">
                         <div id="tbl_thead_search_button_2" class="tbl_thead_search_button" title="Фильтр по типу заявок">
                             <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_2', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
@@ -79,8 +84,10 @@ function tzs_front_end_shipments_handler($atts) {
                                 <i><sup>*</sup>Для выбора радиуса укажите<br>страну и город пункта загрузки.</i>
                             </span>
                         </div>
-                    </th>
-                    <th>
+                    <!--/th>
+                    <th-->
+                        </div>
+                        <div class="tbl_trucks_dtc">
                         <div id="tbl_thead_search_button_3" class="tbl_thead_search_button" title="Фильтр по участнику тендера">
                             <!--img chk="1" src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/checkbox_<?php echo (isset($_POST['sale_or_purchase']) && $_POST['sale_or_purchase'] > 0) ? 'checked' : 'unchecked'; ?>.png" width="16px" height="16px"-->
                             <a href="JavaScript:tblTHeadShowForm('#tbl_thead_search_div_3', '.tbl_thead_search_div');"><img src="<?php echo get_site_url(); ?>/wp-content/plugins/tzs/assets/images/navigate-down.png"></a>
@@ -91,6 +98,7 @@ function tzs_front_end_shipments_handler($atts) {
                             <input type="text" name="data_from" value="<?php echo_val('data_from'); ?>" size="10"><br>
                             Дата выгрузки:<br>
                             <input type="text" name="data_to" value="<?php echo_val('data_to'); ?>" size="10">
+                        </div>
                         </div>
                     </th>
                     <th>

@@ -58,7 +58,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
     </div>
                     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_sh_type" class="span3">
+        <div id="" class="span3">
             <select id="sh_type" name="sh_type" placeholder="Тип груза">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_sh_types'], '', 'sh_type', 'Тип груза');
@@ -78,7 +78,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
     </div>
     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_trans_type" class="span3">
+        <div id="" class="span3">
             <select id="trans_type" name="trans_type">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
@@ -559,6 +559,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 showOtherMonths: true
             });
             //jQuery("#datepicker2").attr("disabled", "disabled");
+            jQuery('#datepicker1, #datepicker2').css({'cursor': 'pointer'});
 
             onSetDim(jQuery('#set_dim').prop('checked'));
             jQuery("[name=trans_type]").change(function() { onTransTypeChange(); });

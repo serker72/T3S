@@ -107,27 +107,29 @@ function tzs_front_end_my_shipments_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="3" style="border: 0;">
+                                <th colspan="4" style="border: 0;">
                                     <div class="div_td_left">
                                         <h3><?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> грузы</h3>
                                     </div>
                                 </th>
                                 
-                                <th colspan="6">
+                                <th colspan="5">
                                     <div id="my_products_button">
                                         <?php if ($active === '1') { ?>
-                                            <button id="view_del" onClick="javascript: window.open('/account/my-shipments/?active=0', '_self');">Показать архивные</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-shipments/?active=0', '_self');">Показать архивные</button>
                                         <?php } else { ?>
-                                            <button id="view_edit" onClick="javascript: window.open('/account/my-shipments/?active=1', '_self');">Показать публикуемые</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-shipments/?active=1', '_self');">Показать публикуемые</button>
                                         <?php } ?>
-                                        <button id="view_add" onClick="javascript: window.open('/account/add-shipment/', '_self');">Добавить груз</button>
+                                        <!--button id="view_add" onClick="javascript: window.open('/account/add-shipment/', '_self');">Добавить груз</button-->
                                     </div>
                                 </th>
                             </tr>
                             <tr>
                                 <th id="tbl_trucks_id">№, дата и время заявки</th>
-                                <th id="tbl_trucks_path" nonclickable="true">Пункты погрузки /<br>выгрузки</th>
-                                <th id="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</th>
+                                <th nonclickable="true" style="min-width: 260px; padding: 0; margin: 0;">
+                                    <div class="tbl_trucks_path">Пункты погрузки /<br/>выгрузки<br/>&nbsp;</div>
+                                    <div class="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</div>
+                                </th>
                                 <th id="tbl_trucks_tc">Тип груза /<br>Желаемый тип ТС</th>
                                 <th id="tbl_trucks_wv">Вес,<br>объём</th>
                                 <th id="tbl_trucks_comm">Описание груза</th>
@@ -182,24 +184,34 @@ function tzs_front_end_my_shipments_handler($atts) {
                         });
                         
                         jQuery("#tbl_products").stickyTableHeaders();
+                        /*jQuery("#icon_set").hover(function(e) { 
+                            //alert('e.pageY='+e.pageY+'\ne.pageX'+e.pageX);
+                            var id = jQuery(this).attr('at');
+                            jQuery('div[for='+id+']').css({
+                                'top': e.pageY,
+                                'left': e.pageX,
+                            });
+                            doDisplay(id);
+                        });*/
                     });
 
                     function doDisplay(id) {
-                            var el = jQuery('div[for='+id+']');
-                            if (el.attr('style') == null) {
-                                    el.attr('style', 'display:none;');
-                                    jQuery('a[at='+id+']').attr('id', 'icon_set');
-                            } else {
-                                    el.removeAttr('style');
-                                    jQuery('a[at='+id+']').attr('id', 'icon_set_cur');
-                            }
-                            jQuery("div[id2=menu]").each(function(i) {
-                                    var id2 = this.getAttribute('for');
-                                    if (id2 != ''+id) {
-                                            this.setAttribute('style', 'display:none;');
-                                            jQuery('a[at='+id2+']').attr('id', 'icon_set');
-                                    }
-                            });
+                        //alert('doDisplay: id=' + id);
+                        var el = jQuery('div[for='+id+']');
+                        if (el.attr('style') == null) {
+                                el.attr('style', 'display:none;');
+                                jQuery('a[at='+id+']').attr('id', 'icon_set');
+                        } else {
+                                el.removeAttr('style');
+                                jQuery('a[at='+id+']').attr('id', 'icon_set_cur');
+                        }
+                        jQuery("div[id2=menu]").each(function(i) {
+                                var id2 = this.getAttribute('for');
+                                if (id2 != ''+id) {
+                                        this.setAttribute('style', 'display:none;');
+                                        jQuery('a[at='+id2+']').attr('id', 'icon_set');
+                                }
+                        });
                     }
 
                     function promptDelete(id, active) {

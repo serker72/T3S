@@ -51,15 +51,15 @@ function tzs_front_end_my_orders_handler($atts) {
                                 <th colspan="5">
                                     <div id="my_products_button">
                                         <?php if ($status !== '0') { ?>
-                                            <button id="view_del" onClick="javascript: window.open('/account/my-orders/?status=0', '_self');">Показать неоплаченные</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-orders/?status=0', '_self');">Показать неоплаченные</button>
                                         <?php } ?>
                                             
                                         <?php if ($status !== '1') { ?>
-                                            <button id="view_edit" onClick="javascript: window.open('/account/my-orders/?status=1', '_self');">Показать действующие</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-orders/?status=1', '_self');">Показать действующие</button>
                                         <?php } ?>
                                             
                                         <?php if ($status !== '2') { ?>
-                                            <button id="view_edit" onClick="javascript: window.open('/account/my-orders/?status=2', '_self');">Показать архивные</button>
+                                            <button id="" onClick="javascript: window.open('/account/my-orders/?status=2', '_self');">Показать архивные</button>
                                         <?php } ?>
                                     </div>
                                 </th>

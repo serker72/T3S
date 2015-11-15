@@ -160,56 +160,49 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
                     '.str_replace(':', ' : ', $dt_created[1]).'
                 </div>
             </td>
-            <td colspan="2">
-            <table class="tbl_distance" style="width: 100%; height: 100%; border: none;">
-                <tr style="border: none;">
-                    <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
-                        <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
-                        <div class="country_flag"><img id ="first_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->from_code.'.png"  width=18 height=12 alt=""></div>
-                    </td>
-                    <td rowspan="2" class="tbl_distance_td2" style="width: 75px; border: none; vertical-align: middle;">
-                        <div class="date_from_label" title="Дата погрузки">
-                            '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_from : $row->sh_date_from).'<br/>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="border: none;">
-                    <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
-                        <div class="region_label">'.(($row->from_rid != NULL && $row->from_rid > 0 && $row->from_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->from_rid))) : '&nbsp;&nbsp;').'</div>
-                    </td>
-                </tr>
-                <tr style="border: none;">
-                <td colspan="2" style="text-align: left; border: none; background: #B7B7B7;">
+            <td style="min-width: 260px; width: 260px;">
+                <div class="tbl_trucks_path_td">
+                    <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
+                    <div class="country_flag"><img id ="first_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->from_code.'.png"  width=18 height=12 alt=""></div>
+                </div>
+                <div class="tbl_trucks_dtc_td">
+                    <div class="date_from_label" title="Дата погрузки">
+                        '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_from : $row->sh_date_from).'<br/>
+                    </div>
+                </div>
+                <div class="tbl_trucks_path_td">
+                    <div class="region_label">'.(($row->from_rid != NULL && $row->from_rid > 0 && $row->from_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->from_rid))) : '&nbsp;&nbsp;').'</div>
+                </div>
+                <div class="tbl_distance_td2">
                     <div class="distance_label">
             ';
     
     if (($row->distance > 0) && ($prefix === 'tr')) {
-        $output_tbody .= 'расстояние '.tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to));
+        $output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to));
     }
     else if (($row->distance > 0) && ($prefix === 'sh')) {
-        $output_tbody .= 'расстояние '.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
+        $output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
     }
 
     $output_tbody .= ' (см. карту)</div>';
-    $output_tbody .='            </td>
-            </tr>
-            <tr style="border: none;">
-                <td style="text-align: right; border: none; border-right: 1px solid #CDE;">
+    $output_tbody .='            </div>
+                <div class="tbl_trucks_path_td">
                     <div class="city_label">'.htmlspecialchars(tzs_get_city($row->to_sid)).'</div>
                     <div class="country_flag"><img id ="second_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->to_code.'.png"  width=18 height=12 alt=""></div>
-                </td>
-                <td rowspan="2" style="border: none;  vertical-align: middle;">
+                </div>
+                <div class="tbl_trucks_dtc_td">
                     <div class="date_to_label" title="Дата выгрузки">
                         '.convert_date_year2(($prefix === 'tr') ? $row->tr_date_to : $row->sh_date_to).'
                     </div>
-                </td>
-            </tr>
-                <tr style="border: none;">
-                    <td style="text-align: left; border: none; border-right: 1px solid #CDE;">
-                        <div class="region_label">'.(($row->to_rid != NULL && $row->to_rid > 0 && $row->to_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->to_rid))) : '&nbsp;&nbsp;').'</div>
-                    </td>
-                </tr>
-            </table>
+                </div>
+                <div class="tbl_trucks_path_td">
+                    <div class="region_label">'.(($row->to_rid != NULL && $row->to_rid > 0 && $row->to_rid != 20070188) ? str_replace('область', 'обл.', htmlspecialchars(tzs_get_region($row->to_rid))) : '&nbsp;&nbsp;').'</div>';
+    
+    if (($row->cash + $row->nocash + $row->way_ship + $row->way_debark + $row->soft + $row->way_prepay) > 5) {
+        $output_tbody .= '<div>&nbsp;<div>';
+    }
+    
+    $output_tbody .= '            </div>
             </td>';
     
     if ($prefix === 'sh') {

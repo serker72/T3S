@@ -71,7 +71,7 @@ function tzs_print_truck_form($errors, $edit=false) {
     </div>
     
     <div class="row-fluid"  style="width: 100%; ">
-        <div id="div_trans_type" class="span3">
+        <div id="" class="span3">
             <select id="trans_type" name="trans_type">
             <?php
                 tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');

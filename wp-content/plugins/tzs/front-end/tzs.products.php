@@ -36,7 +36,9 @@ function tzs_front_end_products_handler($atts) {
                         <div id="thead_h1" class="div_td_left"><h1 class="entry-title"><strong>ПОИСК ТОВАРА</strong></h1></div>
                         <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
                         <!--div class="thead_button">выбор критериев поиска</div-->
-                        <div class="thead_info">для добавления товаров, пожалуйста, войдите или зарегистрируйтесь</div>
+                    <?php if (get_current_user_id() == 0) {?>
+                        <div class="thead_info">Для добавления товаров, пожалуйста, <a href="/account/login">войдите</a> или <a href="/account/registration/">зарегистрируйтесь</a></div>
+                    <?php }?>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>
                 </tr>
