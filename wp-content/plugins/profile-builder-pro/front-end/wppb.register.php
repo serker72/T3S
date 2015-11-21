@@ -918,11 +918,11 @@ function wppb_front_end_register($atts){
 					if ( current_user_can( 'create_users' ) ){
 					
 						if ($multisite_message){
-							$registerFilterArray['wpmuRegistrationMessage1'] = '<p class="success">' . sprintf(__( 'An email has been sent to %1$s with information on how to activate his/her account.', 'profilebuilder'), $userdata['user_email']) . '</p><!-- .success -->';
+							$registerFilterArray['wpmuRegistrationMessage1'] = '<p class="success">' . sprintf(__( 'Письмо было отправлено %1$s с информацией о том, как активировать его / ее аккаунт.', 'profilebuilder'), $userdata['user_email']) . '</p><!-- .success -->';
 							echo $registerFilterArray['registrationMessage1'] = apply_filters('wppb_wpmu_register_account_created1', $registerFilterArray['wpmuRegistrationMessage1'], $registered_name, $userdata['user_email']);
 						
 						}else{
-							$registerFilterArray['registrationMessage1'] = '<p class="success">' . sprintf(__( 'A user account has been created for %1$s.', 'profilebuilder'), $registered_name) . '</p><!-- .success -->';
+							$registerFilterArray['registrationMessage1'] = '<p class="success">' . sprintf(__( 'Учетная запись пользователя была создана для %1$s.', 'profilebuilder'), $registered_name) . '</p><!-- .success -->';
 							echo $registerFilterArray['registrationMessage1'] = apply_filters('wppb_register_account_created1', $registerFilterArray['registrationMessage1'], $registered_name);
 						}
 						
@@ -942,17 +942,17 @@ function wppb_front_end_register($atts){
 							}
 						}
 						
-						$registerFilterArray['redirectMessage1'] = '<font id="messageTextColor">' . sprintf(__( 'You will soon be redirected automatically. If you see this page for more than 3 seconds, please click %1$s.%2$s', 'profilebuilder'), '<a href="'.$redirectLink.'">'.__('here', 'profilebuilder').'</a>', '<meta http-equiv="Refresh" content="3;url='.$redirectLink.'" />') . '</font><br/><br/>';
+						$registerFilterArray['redirectMessage1'] = '<font id="messageTextColor">' . sprintf(__( 'Вы скоро будете перенаправлены автоматически. Если вы видите эту страницу более чем 3 секунды, пожалуйста, нажмите %1$s.%2$s', 'profilebuilder'), '<a href="'.$redirectLink.'">'.__('here', 'profilebuilder').'</a>', '<meta http-equiv="Refresh" content="3;url='.$redirectLink.'" />') . '</font><br/><br/>';
 						echo $registerFilterArray['redirectMessage1'] = apply_filters('wppb_register_redirect_after_creation1', $registerFilterArray['redirectMessage1'], $redirectLink);		
 						
 					}else{
 					
 						if ($multisite_message){
-							$registerFilterArray['wpmuRegistrationMessage2'] = '<p class="success">'. __('An email has been sent to you with information on how to activate your account.', 'profilebuilder') .'</p><!-- .success -->';
+							$registerFilterArray['wpmuRegistrationMessage2'] = '<p class="success">'. __('Письмо было отправлено Вам с информацией о том, как активировать свою учетную запись.', 'profilebuilder') .'</p><!-- .success -->';
 							echo $registerFilterArray['wpmuRegistrationMessage2'] = apply_filters('wppb_register_account_created2', $registerFilterArray['wpmuRegistrationMessage2'], $registered_name);
 						
 						}else{
-							$registerFilterArray['registrationMessage2'] = '<p class="success">' . sprintf(__( 'Thank you for registering %1$s.', 'profilebuilder'), $registered_name) .'</p><!-- .success -->';
+							$registerFilterArray['registrationMessage2'] = '<p class="success">' . sprintf(__( 'Спасибо за регистрацию %1$s.', 'profilebuilder'), $registered_name) .'</p><!-- .success -->';
 							echo $registerFilterArray['registrationMessage2'] = apply_filters('wppb_register_account_created2', $registerFilterArray['registrationMessage2'], $registered_name);
 						}
 						
@@ -972,24 +972,24 @@ function wppb_front_end_register($atts){
 							}
 						}
 						
-						$registerFilterArray['redirectMessage2'] = '<font id="messageTextColor">' . sprintf(__( 'You will soon be redirected automatically. If you see this page for more than 3 seconds, please click %1$s.%2$s', 'profilebuilder'), '<a href="'.$redirectLink.'">'.__('here', 'profilebuilder').'</a>', '<meta http-equiv="Refresh" content="3;url='.$redirectLink.'" />') . '</font><br/><br/>';
+						$registerFilterArray['redirectMessage2'] = '<font id="messageTextColor">' . sprintf(__( 'Вы скоро будете перенаправлены автоматически. Если вы видите эту страницу более чем 3 секунды, пожалуйста, нажмите %1$s.%2$s', 'profilebuilder'), '<a href="'.$redirectLink.'">'.__('here', 'profilebuilder').'</a>', '<meta http-equiv="Refresh" content="3;url='.$redirectLink.'" />') . '</font><br/><br/>';
 						echo $registerFilterArray['redirectMessage2'] = apply_filters('wppb_register_redirect_after_creation2', $registerFilterArray['redirectMessage2'], $redirectLink);
 					}
 
 			
 				if(isset($_POST['send_credentials_via_email'])){
 					if ($sentEmailStatus == 1){
-						$registerFilterArray['emailMessage1'] = '<p class="error">'. __('An error occured while trying to send the notification email.', 'profilebuilder') .'</p><!-- .error -->';
+						$registerFilterArray['emailMessage1'] = '<p class="error">'. __('Произошла ошибка при попытке отправить уведомления по электронной почте.', 'profilebuilder') .'</p><!-- .error -->';
 						$registerFilterArray['emailMessage1'] = apply_filters('wppb_register_send_notification_email_fail', $registerFilterArray['emailMessage1']);
 						echo $registerFilterArray['emailMessage1'];
 					}elseif ($sentEmailStatus == 2){
 						if ($multisite_message){
-							$registerFilterArray['wpmuEmailMessage2'] = '<p class="success">'. __('An email containing activation instructions was successfully sent.', 'profilebuilder') .'</p><!-- .success -->';
+							$registerFilterArray['wpmuEmailMessage2'] = '<p class="success">'. __('Письмо, содержащее инструкции по активации было успешно отправлено.', 'profilebuilder') .'</p><!-- .success -->';
 							$registerFilterArray['wpmuEmailMessage2'] = apply_filters('wppb_register_send_notification_email_success', $registerFilterArray['wpmuEmailMessage2']);
 							echo $registerFilterArray['wpmuEmailMessage2'];
 
 						}else{
-							$registerFilterArray['emailMessage2'] = '<p class="success">'. __('An email containing the username and password was successfully sent.', 'profilebuilder') .'</p><!-- .success -->';
+							$registerFilterArray['emailMessage2'] = '<p class="success">'. __('Письмо, содержащее логин и пароль было успешно отправлено.', 'profilebuilder') .'</p><!-- .success -->';
 							$registerFilterArray['emailMessage2'] = apply_filters('wppb_register_send_notification_email_success', $registerFilterArray['emailMessage2']);
 							echo $registerFilterArray['emailMessage2'];
 						}
@@ -1025,6 +1025,7 @@ function wppb_front_end_register($atts){
 					do_action( 'wppb_before_register_fields' );
 ?>
 					<form enctype="multipart/form-data" method="post" id="adduser" class="user-forms" action="<?php wppb_curpageurl(); ?>">
+                                            <div class="wrapper-reg">
 <?php 					
 						echo '<input type="hidden" name="MAX_FILE_SIZE" value="'.WPPB_SERVER_MAX_UPLOAD_SIZE_BYTE.'" /><!-- set the MAX_FILE_SIZE to the server\'s current max upload size in bytes -->'; 
 	
@@ -1405,6 +1406,7 @@ function wppb_front_end_register($atts){
 <?php 
 						wp_nonce_field('verify_true_registration','register_nonce_field'); 
 ?>
+                                                </div>
 					</form><!-- #adduser -->
 
 <?php	

@@ -335,12 +335,47 @@ function wppb_signup_user_notification($user, $user_email, $key, $meta = '') {
 		
 	$from_name = get_site_option( 'site_name' ) == '' ? 'WordPress' : esc_html( get_site_option( 'site_name' ) );
 	$from_name = apply_filters ('wppb_signup_user_notification_email_from_field', $from_name);
-	$message_headers = apply_filters ("wppb_signup_user_notification_from", "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n");
+	//$message_headers = apply_filters ("wppb_signup_user_notification_from", "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n");
+        // ksk - Content-Type: multipart/alternative; boundary
+        $bound = "t3s-biz-1234";
+	$message_headers = apply_filters ("wppb_signup_user_notification_from", "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: multipart/alternative; boundary=" . $bound . "\n");
 
 	$siteURL = wppb_curpageurl().wppb_passed_arguments_check().'key='.$key;
 	
 	$subject = sprintf(apply_filters( 'wppb_signup_user_notification_subject', __( '[%1$s] Activate %2$s', 'profilebuilder'), $user, $user_email, $key, $meta ), $from_name, $user);
-	$message = sprintf(apply_filters( 'wppb_signup_user_notification_email', __( "To activate your user, please click the following link:\n\n%s%s%s\n\nAfter you activate, you will receive *another email* with your login.\n\n", "profilebuilder" ),$user, $user_email, $key, $meta), '<a href="'.$siteURL.'">', $siteURL, '</a>.');
+	//$message = sprintf(apply_filters( 'wppb_signup_user_notification_email', __( "To activate your user, please click the following link:\n\n%s%s%s\n\nAfter you activate, you will receive *another email* with your login.\n\n", "profilebuilder" ),$user, $user_email, $key, $meta), '<a href="'.$siteURL.'">', $siteURL, '</a>.');
+        
+        // ksk
+        // Текст письма содержится на странице, ID которой указан в параметре t3s_setting_signup_user_notification_page_id
+        $page_id = get_option('t3s_setting_signup_user_notification_page_id');
+        $page_data = get_page($page_id); 
+        $page_content = apply_filters('the_content', $page_data->post_content);
+        $user_meta = unserialize($meta);
+        $message  = '--' . $bound . '\n';
+	$message .= 'Content-type: text/html; charset="' . get_option('blog_charset') . '"\n';
+	$message .= 'Content-Transfer-Encoding: 8bit\n\n';
+	$message .= str_replace('#url#', $siteURL, str_replace('#login#', $user, str_replace('#fio#', ($user_meta['first_name'].' '.$user_meta['last_name']), $page_content)));
+        $message .= '\n\n--' . $bound . '\n';
+        
+        $fname1 = '/wp-content/themes/twentytwelve/images/reg_mail_logo.png';
+        $fname2 = '/wp-content/themes/twentytwelve/images/reg_mail_bottom.png';
+        
+        $message .= 'Content-Type: image/png; name=' . basename($fname1) . '"\n';
+	$message .= 'Content-Transfer-Encoding:base64\n';
+	$message .= 'Content-ID: <t3s_biz_img_1>\n\n';
+	$f = fopen($fname1, "rb");
+	$message .= base64_encode(fread($f, filesize($fname1))) . '\n';
+        fclose($f);
+	$message .= '--' . $bound . '--\n\n';
+        
+        $message .= 'Content-Type: image/png; name=' . basename($fname2) . '"\n';
+	$message .= 'Content-Transfer-Encoding:base64\n';
+	$message .= 'Content-ID: <t3s_biz_img_2>\n\n';
+	$f = fopen($fname2, "rb");
+	$message .= base64_encode(fread($f, filesize($fname2))) . '\n';
+        fclose($f);
+	$message .= '--' . $bound . '--\n\n';
+        //
 	
 	wppb_mail( $user_email, $subject, $message, $from_name, '', $user, '', $user_email, 'register_w_email_confirmation', $siteURL, $meta );
 	

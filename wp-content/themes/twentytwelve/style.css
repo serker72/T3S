@@ -2892,3 +2892,119 @@ margin-top: 20px;
     max-width: 120px;
     min-height: 120px;
 }
+
+
+/* Desi4ik */
+.block-reg{
+    width: 21%;
+    float: left;
+}
+.img-avatar, .txt-avatar{
+    float: left;
+    
+}
+.img-avatar{
+    border: solid 1px #007FFF;
+    margin-right:15px;
+}
+.img-avatar img
+{
+    width: 94px;
+}
+.txt-avatar{
+    width: 70%;
+}
+.reg-reg .col-3{
+    width: 40%;
+}
+.cab-req .col-4{
+    width: 37% ;
+    margin-bottom: 45px;
+}
+.dopForm{
+    margin-top: 25px;
+}
+.dopForm .coll-3{
+    width: 40% !important;
+}
+.dopForm .coll-4{
+    width: 18% !important;
+}
+.dopForm .coll-3 input{
+    width: 92% !important;
+}
+.dopForm .coll-4 .form-input22 input{
+    width: 50% !important;
+}
+ .dopForm .coll-4 .form-input22 label{
+    display: block !important;
+    float: left !important;
+    margin-right: 5px !important;
+    width: 36% !important;
+    padding: 0px !important;
+}
+.dopForm .form-submit{
+    float: right;
+    margin-top: -22px;
+}
+ .col-1 div, .col-1 p, .cab-req .col-3 div, .cab-req .col-3 p, .col-2 div, .col-2 p {
+    margin-bottom: 18px;
+}
+.form-password{
+    margin-top: 7px;
+}
+ .cab-req label, .reg-reg label{
+    display: none;
+    
+}
+ .reg-reg p, #show_pas label, h3, .reg-reg div{
+    color: #007FFF;
+    
+}
+.cab-req #regForm .col-3 .form-password{
+    margin-top: 107px;
+}
+
+
+.reg-reg .registerNameHeading, .reg-req .registerContactInfoHeading, .reg-reg .registerAboutYourselfHeader, 
+.cab-req .nameHeader, .cab-req .contactInfoHeader, .cab-req .aboutYourselfHeader, .cab-req .wppb-description-delimiter,
+.reg-reg .form-input13, .reg-reg .form-upload16, .cab-req .form-upload16, .reg-reg .form-input5, .reg-reg .form-input2, .reg-reg .extraFieldHeading,
+.reg-reg .form-input18, .reg-reg .form-input19, .reg-reg .form-input21, .reg-reg .form-input20, .reg-reg .form-input22{
+    display: none;
+} 
+.wrapper-reg{
+    display: none;
+}
+#show_pas label{
+    display: block;
+}
+.username label {
+    display: block;
+    float: left;
+    margin-top: 5px;
+    font-size: 20px;
+    color: #007FFF;
+    width: auto !important;
+    padding-right: 10px !important;
+    
+}
+.username{
+    float: right;
+    width: 38%;
+    margin-top: -45px;
+    padding-right: 0px;
+}
+.ref-submit{
+    margin-top: -43px;
+    margin-left: 193px;
+}
+.dopForm .cab-ref-submit{
+    margin-top: 10px;
+    margin-left: 40%;
+}
+.reg-req p.error{
+    color: red;
+}
+.reg-req p.success{
+    color: green;
+}

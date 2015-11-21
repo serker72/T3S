@@ -11,7 +11,7 @@
 	<script src="https://jquery-ui.googlecode.com/svn-history/r3982/trunk/ui/i18n/jquery.ui.datepicker-ru.js"></script-->
 	<script src="/wp-content/themes/twentytwelve/js/jquery-ui.min.js"></script>
 	<script src="/wp-content/themes/twentytwelve/js/jquery.ui.datepicker-ru.js"></script>
-        
+        <script src="/wp-content/themes/twentytwelve/js/jquery.maskedinput.min.js"></script>
         <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 	<link rel="stylesheet" href="/ui/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../info/tooltip.css"/>
