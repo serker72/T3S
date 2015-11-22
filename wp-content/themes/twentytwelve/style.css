@@ -632,18 +632,18 @@ input[disabled=disabled] {
 	background: url(images/icon_set.png) no-repeat bottom;
 }
 #menu_set {
-	background: #fff;
+	/*background: #fff;
 	border-radius: 3px;
 	position: absolute;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);*/
 }
 #menu_set ul {
 	margin: 0;
-	padding: 0;
+	padding: 2px 2px;
 }
 #menu_set a {
 	color: #9a9a9a;
-	width: 60px;
+	/*width: 60px;*/
 	font-size: 13px;
 	line-height: 20px;
 	display: block;
@@ -652,7 +652,9 @@ input[disabled=disabled] {
 	padding: 1px 5px;
 }
 #menu_set a:hover {
-	color: #4f4f4f;
+	/*color: #4f4f4f;*/
+	color: #ffffff;
+        background-color: #0B5792;
 }
 #menu_set #red {
 	color: #fe7575;
@@ -662,7 +664,7 @@ input[disabled=disabled] {
 	color: red;
 }
 #actions {
-    width: 75px;
+    width: 85px;
 }
 
 .nameHeader {
@@ -732,7 +734,8 @@ input[type=text], input[type=password], select {
 #menu-profile li {
 	float: left;
 	/*border-left: 1px solid #d0d0d0;*/
-        border-left: 1px solid #0B5792;
+        /*border-left: 1px solid #0B5792;*/
+        border-right: 1px solid #0B5792;
 	list-style: none;
 }
 /*#menu-profile #menu-item-77 {
@@ -2609,7 +2612,7 @@ height:180px;
 input[type="text"], select{
     color: #007FFF;
     border: 1px solid #007FFF;
-    border-radius: 2px;
+    border-radius: 10px;
     width: 185px;
     height: 30px;
     background: white;
@@ -2632,7 +2635,7 @@ input[type="radio"]{
     width: 100%;
 }
 
-#adduser button, .form_wrapper input[type=submit], button {
+#adduser button, .form_wrapper input[type=submit], input[type=button], button {
     color: white;
     background: #0b5792;
     border-radius: 10px;

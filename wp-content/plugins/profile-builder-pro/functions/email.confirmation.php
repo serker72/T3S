@@ -336,9 +336,19 @@ function wppb_signup_user_notification($user, $user_email, $key, $meta = '') {
 	$from_name = get_site_option( 'site_name' ) == '' ? 'WordPress' : esc_html( get_site_option( 'site_name' ) );
 	$from_name = apply_filters ('wppb_signup_user_notification_email_from_field', $from_name);
 	//$message_headers = apply_filters ("wppb_signup_user_notification_from", "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n");
+        //
         // ksk - Content-Type: multipart/alternative; boundary
-        $bound = "t3s-biz-1234";
-	$message_headers = apply_filters ("wppb_signup_user_notification_from", "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: multipart/alternative; boundary=" . $bound . "\n");
+        $EOF = "\r\n";
+
+        //Письмо с вложением состоит из нескольких частей, которые разделяются разделителем
+        // Генерируем разделитель    
+        $boundary = md5(uniqid(time()));
+        
+	//$message_headers = apply_filters ("wppb_signup_user_notification_from", "MIME-Version: 1.0;".$EOF."From: \"{$from_name}\" <{$admin_email}>".$EOF."Content-Type: multipart/mixed; boundary=$boundary".$EOF);
+	$message_headers  = "MIME-Version: 1.0;".$EOF;
+	$message_headers .= "From: $from_name <$admin_email>".$EOF;
+	//$message_headers .= "Content-Type: multipart/alternative; boundary=$boundary".$EOF;
+	$message_headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"".$EOF;
 
 	$siteURL = wppb_curpageurl().wppb_passed_arguments_check().'key='.$key;
 	
@@ -351,35 +361,29 @@ function wppb_signup_user_notification($user, $user_email, $key, $meta = '') {
         $page_data = get_page($page_id); 
         $page_content = apply_filters('the_content', $page_data->post_content);
         $user_meta = unserialize($meta);
-        $message  = '--' . $bound . '\n';
-	$message .= 'Content-type: text/html; charset="' . get_option('blog_charset') . '"\n';
-	$message .= 'Content-Transfer-Encoding: 8bit\n\n';
-	$message .= str_replace('#url#', $siteURL, str_replace('#login#', $user, str_replace('#fio#', ($user_meta['first_name'].' '.$user_meta['last_name']), $page_content)));
-        $message .= '\n\n--' . $bound . '\n';
+        $fname1 = get_site_url().'/wp-content/themes/twentytwelve/images/reg_mail_logo.png';
+        $fname2 = get_site_url().'/wp-content/themes/twentytwelve/images/reg_mail_bottom.png';
         
-        $fname1 = '/wp-content/themes/twentytwelve/images/reg_mail_logo.png';
-        $fname2 = '/wp-content/themes/twentytwelve/images/reg_mail_bottom.png';
-        
-        $message .= 'Content-Type: image/png; name=' . basename($fname1) . '"\n';
-	$message .= 'Content-Transfer-Encoding:base64\n';
-	$message .= 'Content-ID: <t3s_biz_img_1>\n\n';
-	$f = fopen($fname1, "rb");
-	$message .= base64_encode(fread($f, filesize($fname1))) . '\n';
-        fclose($f);
-	$message .= '--' . $bound . '--\n\n';
-        
-        $message .= 'Content-Type: image/png; name=' . basename($fname2) . '"\n';
-	$message .= 'Content-Transfer-Encoding:base64\n';
-	$message .= 'Content-ID: <t3s_biz_img_2>\n\n';
-	$f = fopen($fname2, "rb");
-	$message .= base64_encode(fread($f, filesize($fname2))) . '\n';
-        fclose($f);
-	$message .= '--' . $bound . '--\n\n';
+        $message  = "--$boundary".$EOF;
+	$message .= 'Content-type: text/html; charset="' . get_option('blog_charset') . '"'.$EOF;
+	//$message .= "Content-Transfer-Encoding: base64".$EOF;
+	$message .= "Content-Transfer-Encoding: 8bit".$EOF;
+        $message .= $EOF;
+        $message .= "<html>".$EOF;
+        $message .= "<head>".$EOF;
+        $message .= "  <meta content=\"text/html; charset=".get_option('blog_charset')."\" http-equiv=\"Content-Type\">".$EOF;
+        $message .= "</head>".$EOF;
+        $message .= "<body>".$EOF;
+	$message .= str_replace('#t3s_biz_img_1#', $fname1, str_replace('#t3s_biz_img_2#', $fname2, str_replace('#url#', $siteURL, str_replace('#login#', $user, str_replace('#fio#', ($user_meta['first_name'].' '.$user_meta['last_name']), $page_content))))).$EOF;
+        $message .= "</body>".$EOF;
+        $message .= "</html>".$EOF;
         //
 	
-	wppb_mail( $user_email, $subject, $message, $from_name, '', $user, '', $user_email, 'register_w_email_confirmation', $siteURL, $meta );
+	//wppb_mail( $user_email, $subject, $message, $from_name, '', $user, '', $user_email, 'register_w_email_confirmation', $siteURL, $meta );
+        // отправляем письмо 
+        $result = mail($user_email, $subject, $message, $message_headers);
 	
-	return true;
+	return $result;
 }
 
 

@@ -106,8 +106,8 @@ function tzs_front_end_my_orders_handler($atts) {
                                     <?php echo $row->dt_expired ? convert_date($row->dt_expired) : '';?>
                                 </td>
                                 <td>
-                                        <a href="javascript:doDisplay(<?php echo $row->id;?>);" at="<?php echo $row->id;?>" id="icon_set">Действия</a>
-                                        <div id="menu_set" id2="menu" for="<?php echo $row->id;?>" style="display:none;">
+                                        <!--a href="javascript:doDisplay(<?php //echo $row->id;?>);" at="<?php //echo $row->id;?>" id="icon_set">Действия</a-->
+                                        <div id="menu_set" id2="menu" for="<?php echo $row->id;?>"><!-- style="display:none;"-->
                                                 <ul>
                                                     <?php if ($status === '0') { ?>
                                                         <a href="/account/view-order/?id=<?php echo $row->id;?>&link=my-orders&status=<?php echo $status; ?>">Оплатить</a>

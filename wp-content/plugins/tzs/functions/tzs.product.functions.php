@@ -54,6 +54,8 @@ function tzs_get_user_meta($user_id) {
             'user_nicename' => $user_info->user_nicename,
             'user_email' => $user_info->user_email,
             'user_status' => $user_info->user_status,
+            'first_name' => get_user_meta($user_id, 'first_name', true),
+            'last_name' => get_user_meta($user_id, 'last_name', true),
             'fio' => get_user_meta($user_id, 'fio', true),
             'skype' => get_user_meta($user_id, 'skype', true),
             'telephone' => get_user_meta($user_id, 'telephone', true),

@@ -141,8 +141,9 @@ function tzs_front_end_my_shipments_handler($atts) {
                         <tbody>
                             <?php
                             foreach ( $res as $row ) {
-                                $profile_td_text = '<a href="javascript:doDisplay('.$row->id.');" at="'.$row->id.'" id="icon_set">Действия</a>
-                                        <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
+                                //$profile_td_text = '<a href="javascript:doDisplay('.$row->id.');" at="'.$row->id.'" id="icon_set">Действия</a>
+                                //        <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
+                                $profile_td_text = '<div id="menu_set" id2="menu" for="'.$row->id.'">
                                             <ul>
                                                 <a href="/account/view-shipment/?id='.$row->id.'&link=my-shipments&active='.$active.'">Смотреть</a>
                                                 <a href="/account/edit-shipment/?id='.$row->id.'">Изменить</a>';

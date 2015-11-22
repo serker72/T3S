@@ -150,7 +150,7 @@
 			<a href="/account/profile">Личный кабинет</a>
 		</div>
                 <div id="logined">
-                        <?php echo "Вы вошли как: ".$user_info['fio']." Логин: "; echo $user_info['user_login'];?>
+                        <?php echo "Вы вошли как: ".$user_info['first_name']." ".$user_info['last_name']." Логин: "; echo $user_info['user_login'];?>
 			
 		</div>
 		<?php }?>

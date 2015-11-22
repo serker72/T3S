@@ -107,7 +107,8 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array, $profil
     $output_tbody .= '<td><div>';
 
                 if ($row->fixed_or_tender == 2) {
-                    $output_tbody .= '<span class="btnGray" title="Купить товар по фиксированной цене">Купить</span>';
+                    //$output_tbody .= '<span class="btnGray" title="Купить товар по фиксированной цене">Купить</span>';
+                    $output_tbody .= '<a class="btnBlue" title="Купить товар по фиксированной цене">Купить</a>';
                     $output_tbody .= '<a class="btnBlue" title="Предложить свою цену за товар">Предложить свою цену</a>';
                 } else {
                     $output_tbody .= '<a class="btnBlue" title="Купить товар по фиксированной цене">Купить</a>';
@@ -144,7 +145,7 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
     $dt_created = convert_time($row->time, "d.m.Y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
     
-    $output_tbody = '<tr rid="'.$row->id.'"'.($row->order_status == 1 ? ' class="top_record"' : '').'>';
+    $output_tbody = '<tr rid="'.$row->id.'"'.($row->order_status == 1 ? ' class="top_record"' : ($profile_td_text && $row->order_status !== null && $row->order_status == 0 ? ' class="pre_top_record"' : '')).'>';
 
     $output_tbody .= '
             <td>

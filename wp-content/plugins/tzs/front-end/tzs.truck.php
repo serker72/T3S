@@ -5,7 +5,7 @@ include_once(TZS_PLUGIN_DIR.'/functions/tzs.truck.functions.php');
 function tzs_print_truck_form($errors, $edit=false) {
     $d = date("d.m.Y");
 
-    print_errors($errors);
+    //print_errors($errors);
     ?>
 
     <script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
@@ -634,8 +634,8 @@ function tzs_edit_truck($id) {
 	$tr_height = get_param('tr_height');
 	$tr_width = get_param('tr_width');
 
-        $cost = get_param('cost');
-        $price = get_param('price');
+        $cost = get_param_def('cost', '0');
+        $price = get_param_def('price', '0');
         $cost_curr = get_param_def('cost_curr', '1');
         $prepayment = get_param('prepayment');
 
@@ -667,10 +667,10 @@ function tzs_edit_truck($id) {
 	
 	$errors = array();
 	
-        if (!is_valid_num($cost)) 
+        if (($price_query && !is_valid_num_zero($cost)) || (!$price_query && !is_valid_num($cost))) 
             array_push($errors, "Неверно задана стоимость");
         
-        if (!is_valid_num($price)) 
+        if (($price_query && !is_valid_num_zero($price)) || (!$price_query && !is_valid_num($price))) 
             array_push($errors, "Неверно задана цена");
         
         if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)]))
@@ -680,8 +680,8 @@ function tzs_edit_truck($id) {
             array_push($errors, "Неверно задан размер предоплаты");
                                 
 		
-        if (!$cash && !$nocash)
-            array_push($errors, "Необходимо выбрать тип оплаты: наличная или безналичная");
+        if (!$price_query && !$cash && !$nocash && !way_ship && !way_debark)
+            array_push($errors, "Необходимо выбрать хотя бы один способ в блоке \"Форма расчета\".");
 	
 	if ($tr_date_from == null || $tr_date_to == null) {
 		array_push($errors, "Неверный формат даты");

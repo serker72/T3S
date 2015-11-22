@@ -641,8 +641,8 @@ function tzs_edit_shipment($id) {
 	$sh_height = get_param('sh_height');
 	$sh_width = get_param('sh_width');
 
-        $cost = get_param('cost');
-        $price = get_param('price');
+        $cost = get_param_def('cost', '0');
+        $price = get_param_def('price', '0');
         $cost_curr = get_param_def('cost_curr', '1');
         $prepayment = get_param('prepayment');
 
@@ -673,11 +673,10 @@ function tzs_edit_shipment($id) {
 	
 	$errors = array();
 	
-
-        if (!is_valid_num($cost)) 
+        if (($price_query && !is_valid_num_zero($cost)) || (!$price_query && !is_valid_num($cost))) 
             array_push($errors, "Неверно задана стоимость.");
         
-        if (!is_valid_num($price)) 
+        if (($price_query && !is_valid_num_zero($price)) || (!$price_query && !is_valid_num($price))) 
             array_push($errors, "Неверно задана цена.");
         
         if (!is_valid_num($cost_curr) || !isset($GLOBALS['tzs_curr'][intval($cost_curr)]))
@@ -687,7 +686,7 @@ function tzs_edit_shipment($id) {
             array_push($errors, "Неверно задан размер предоплаты.");
                                 
 		
-        if (!$cash && !$nocash && !$way_ship && !$way_debark && !$soft && !$way_prepay)
+        if (!$price_query && !$cash && !$nocash && !$way_ship && !$way_debark && !$soft && !$way_prepay)
             array_push($errors, "Необходимо выбрать хотя бы один способ в блоке \"Форма расчета\".");
 	
 	if ($sh_date_from == null || $sh_date_to == null) {

@@ -98,6 +98,7 @@ get_header(); ?>
                             jQuery('#pass2').get(0).type = 'password';
                         }
                         });
+                        jQuery("#input15").mask("38(999) 999-9999");
                         if (jQuery('.success').html() != undefined){
                             
                             jQuery('#regForm').hide();
