@@ -9,6 +9,11 @@ get_header(); ?>
 
 <div id="primary" class="site-content">
     <div id="content" role="main">
+			<?php while ( have_posts() ) : the_post(); ?>
+				<?php get_template_part( 'content', 'page' ); ?>
+				<?php comments_template( '', true ); ?>
+			<?php endwhile; // end of the loop. ?>
+        
         <div class="reg-req" style="display: block;">
             <div class="cab-req"> 
                 <div class="headerForm">
@@ -115,7 +120,8 @@ get_header(); ?>
                         jQuery('.coll-4').append(jQuery('.form-input22'));
                         jQuery('.form-input22 input').attr('placeholder', 'Форма');
                         jQuery('.dopForm').append(jQuery('.form-submit'));
-                        jQuery('.form-submit input').val('СОХРАНИТЬ ИЗМЕНЕНИЯ');
+                        //jQuery('.form-submit input').val('СОХРАНИТЬ ИЗМЕНЕНИЯ');
+                        jQuery('.form-submit #updateuser').val('СОХРАНИТЬ ИЗМЕНЕНИЯ');
                         jQuery('#header-user').html('ДАННЫЕ ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ: ' + jQuery('.last_name input').val() + ' ' + jQuery('.first_name input').val());
                         jQuery('.username label').html('логин пользователя');
                         jQuery('.img-avatar img').attr('src', jQuery('.form-upload16 img').attr('src'));

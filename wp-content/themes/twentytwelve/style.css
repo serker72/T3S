@@ -203,7 +203,7 @@
 	font-size: 20px;
 }
 .extraFieldHeading strong { 
-	font-weight: normal;
+	//font-weight: normal;
 }
 #view_feedback {
 	padding: 15px;
@@ -3010,4 +3010,10 @@ margin-top: 20px;
 }
 .reg-req p.success{
     color: green;
+}
+#regForm .extraFieldHeading {
+    background: none;
+    color: #007FFF;
+    font-size: 21px;
+    text-transform: uppercase;
 }

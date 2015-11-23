@@ -75,7 +75,8 @@ function wppb_front_end_login( $atts ){
 		else
 			$display_name = $wppb_login->display_name;
 
-		$loginFilterArray['loginMessage2'] = '<p class="success">'. sprintf(__('You have successfully logged in as %1$s', 'profilebuilder'), '<a href="'.$authorPostsUrl = get_author_posts_url( $wppb_login->ID ).'" title="'.$display_name.'">'.$display_name.'</a>') . '</p><!-- .success-->';
+		//$loginFilterArray['loginMessage2'] = '<p class="success">' . sprintf(__('You have successfully logged in as %1$s', 'profilebuilder'), '<a href="'.$authorPostsUrl = get_author_posts_url( $wppb_login->ID ).'" title="'.$display_name.'">'.$display_name.'</a>') . '</p><!-- .success-->';
+		$loginFilterArray['loginMessage2'] = '<p class="success">' . sprintf(__('Вы вошли как %1$s', 'profilebuilder'), '<a href="'.$authorPostsUrl = get_author_posts_url( $wppb_login->ID ).'" title="'.$display_name.'">'.$display_name.'</a>') . '</p><!-- .success-->';
 		echo $loginFilterArray['loginMessage2'] = apply_filters('wppb_login_login_message2', $loginFilterArray['loginMessage2'], $wppb_login->ID, $display_name);
 		
 		if (isset($_POST['button']) && isset($_POST['formName']) ){
@@ -95,7 +96,8 @@ function wppb_front_end_login( $atts ){
 					}
 					
 					$permaLnk2 = "/account/profile/";
-					$loginFilterArray['redirectMessage'] = '<font id="messageTextColor">' . sprintf(__('You will soon be redirected automatically. If you see this page for more than 1 second, please click %1$s', 'profilebuilder'), '<a href="'.$permaLnk2.'">'. __('here', 'profilebuilder').'</a>.<meta http-equiv="Refresh" content="1;url='.$permaLnk2.'" />') . '</font><br/><br/>';
+					//$loginFilterArray['redirectMessage'] = '<font id="messageTextColor">' . sprintf(__('You will soon be redirected automatically. If you see this page for more than 1 second, please click %1$s', 'profilebuilder'), '<a href="'.$permaLnk2.'">'. __('here', 'profilebuilder').'</a>.<meta http-equiv="Refresh" content="1;url='.$permaLnk2.'" />') . '</font><br/><br/>';
+					$loginFilterArray['redirectMessage'] = '<font id="messageTextColor">' . sprintf(__('В ближайшее время вы будете перенаправлены на другую страницу. Если прошло более 1 секунды, то нажмите на эту ссылку %1$s', 'profilebuilder'), '<a href="'.$permaLnk2.'">'. __('here', 'profilebuilder').'</a>.<meta http-equiv="Refresh" content="1;url='.$permaLnk2.'" />') . '</font><br/><br/>';
 					echo $loginFilterArray['redirectMessage'] = apply_filters('wppb_login_redirect_message', $loginFilterArray['redirectMessage'], $permaLnk2);
 
 				}elseif($_POST['button'] == 'widget'){

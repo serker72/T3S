@@ -910,7 +910,7 @@ function wppb_front_end_register($atts){
 			$login->display_name = $login->user_login;
 		}
 			$registerFilterArray['loginLogoutError'] = '
-				<p class="log-in-out alert">'. __('You are logged in as', 'profilebuilder') .' <a href="'.get_author_posts_url( $login->ID ).'" title="'.$login->display_name.'">'.$login->display_name.'</a>. '. __('You don\'t need another account.', 'profilebuilder') .' <a href="'.wp_logout_url(get_permalink()).'" title="'. __('Log out of this account.', 'profilebuilder') .'">'. __('Logout', 'profilebuilder') .'  &raquo;</a></p><!-- .log-in-out .alert -->';
+				<p class="log-in-out alert">'. __('Вы вошли как', 'profilebuilder') .' <a href="'.get_author_posts_url( $login->ID ).'" title="'.$login->display_name.'">'.$login->display_name.'</a>. '. __('You don\'t need another account.', 'profilebuilder') .' <a href="'.wp_logout_url(get_permalink()).'" title="'. __('Log out of this account.', 'profilebuilder') .'">'. __('Logout', 'profilebuilder') .'  &raquo;</a></p><!-- .log-in-out .alert -->';
 			$registerFilterArray['loginLogoutError'] = apply_filters('wppb_register_have_account_alert', $registerFilterArray['loginLogoutError'], $login->ID);
 			echo $registerFilterArray['loginLogoutError'];
 			
@@ -941,7 +941,7 @@ function wppb_front_end_register($atts){
 								}
 							}
 						}
-						
+						$redirectLink="";
 						$registerFilterArray['redirectMessage1'] = '<font id="messageTextColor">' . sprintf(__( 'Вы скоро будете перенаправлены автоматически. Если вы видите эту страницу более чем 3 секунды, пожалуйста, нажмите %1$s.%2$s', 'profilebuilder'), '<a href="'.$redirectLink.'">'.__('here', 'profilebuilder').'</a>', '<meta http-equiv="Refresh" content="3;url='.$redirectLink.'" />') . '</font><br/><br/>';
 						echo $registerFilterArray['redirectMessage1'] = apply_filters('wppb_register_redirect_after_creation1', $registerFilterArray['redirectMessage1'], $redirectLink);		
 						
@@ -957,7 +957,7 @@ function wppb_front_end_register($atts){
 						}
 						
 						$redirectLink = wppb_curpageurl();
-						
+						$redirectLink="";
 						if (file_exists ( WPPB_PLUGIN_DIR . '/premium/addons/addon.php' )){
 							//check to see if the redirecting addon is present and activated
 							$wppb_addon_settings = get_option('wppb_addon_settings');
