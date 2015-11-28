@@ -175,6 +175,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                     <script>
                     // Функция, отрабатывающая после готовности HTML-документа
                     jQuery(document).ready(function(){
+                        jQuery('.entry-title').hide();
                         jQuery('#tbl_products').on('click', 'td', function(e) {  
                                 var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                                 var id = this.parentNode.getAttribute("rid");

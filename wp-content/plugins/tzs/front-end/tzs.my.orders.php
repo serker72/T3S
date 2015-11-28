@@ -128,6 +128,7 @@ function tzs_front_end_my_orders_handler($atts) {
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>
             <script>
                 jQuery(document).ready(function(){
+                        jQuery('.entry-title').hide();
                         jQuery('table').on('click', 'td', function(e) {  
                                 var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');
                                 var id = this.parentNode.getAttribute("rid");

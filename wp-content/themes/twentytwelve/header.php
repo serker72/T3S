@@ -58,34 +58,10 @@
                     
                 }
                 
-            <?php if (!isset($_SESSION["timezone_offset"])) { ?>
-                // Функция, отрабатывающая после готовности HTML-документа
-                jQuery(document).ready(function(){
-                //jQuery("#masthead").load(function(){
-                    var vDate = new Date();
-                    //var vTimezone = vDate.getTimezone;
-                    var vTimezoneOffset = -vDate.getTimezoneOffset()/60;
-                    
-                    jQuery.ajax({
-                            url: "/wp-admin/admin-ajax.php?action=tzs_timezone_offset_session_set",
-                            type: "POST",
-                            data: "timezone_offset="+vTimezoneOffset,
-                            success: function(data){
-                                //alert(data);
-                            },
-                            error: function(data){
-                                if (data.responseText !== 'undefined') {
-                                    alert('Ошибка записи TimezoneOffset: ' + data.responseText);
-                                }
-                            }			
-                    });
-                })
-            <?php } ?>
-                
                 function HeaderClockUpdate() {
                     var newDate = new Date();
                     var v_day = newDate.getDate();
-                    var v_month = newDate.getMonth();
+                    var v_month = newDate.getMonth()+1;
                     var v_year = newDate.getFullYear();
                     var v_hour = newDate.getHours();
                     var v_minute = newDate.getMinutes();
@@ -201,117 +177,142 @@
             <center><button class="btn-success" style="margin: 5px;" onclick="tel_click();" ata-dismiss="modal" aria-hidden="true">Заказать</button></center>
 	</div>
 </div>
-    <script>
- jQuery(document).ready(function(){
-     // Clock start
-     HeaderClockUpdate();
-     // Clock update interval 60 seconds
-     setInterval(function() { HeaderClockUpdate(); }, 60000);
-     
-    if(document.getElementById('ninja_forms_form_2')) {
-	if(document.getElementById('tel-user')){
-	   document.getElementById('ninja_forms_field_3').value=document.getElementById('tel-user').value;   
-	}
-        
-        jQuery("#ninja_forms_form_2").attr('action', '');
-        jQuery("#ninja_forms_field_7").attr('type', 'button');
-        jQuery("#ninja_forms_form_2_response_msg").hide();
-    
-        jQuery("#ninja_forms_field_7").click(function() {
-            if ((jQuery('#ninja_forms_field_1').val() == '') || (jQuery('#ninja_forms_field_2').val() == '') || (jQuery('#ninja_forms_field_6').val() == '')) {
-                //alert('Не заполнены обязательные поля формы');
-                jQuery("#ninja_forms_form_2_response_msg").html('<p>Не заполнены обязательные поля формы</p>');
-                jQuery("#ninja_forms_form_2_response_msg").show();
-                return false;
-            } else {
-                jQuery("#ninja_forms_form_2_response_msg").hide();
+<script>
+        // Функция, отрабатывающая после готовности HTML-документа
+    jQuery(document).ready(function(){
+	<?php if (get_current_user_id() != 0) {?>
+                jQuery('#menu-profile li:last-child a').attr('href', "<?php echo htmlspecialchars_decode(wp_logout_url($redirectTo = "/account/login/")); ?>");
+                //jQuery('#menu-profile li:last-child a').css({'text-transform': 'uppercase'});
+        <?php } ?>
+                        
+        <?php if (!isset($_SESSION["timezone_offset"])) { ?>
+            var vDate = new Date();
+            //var vTimezone = vDate.getTimezone;
+            var vTimezoneOffset = -vDate.getTimezoneOffset()/60;
+
+            jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php?action=tzs_timezone_offset_session_set",
+                    type: "POST",
+                    data: "timezone_offset="+vTimezoneOffset,
+                    success: function(data){
+                        //alert(data);
+                    },
+                    error: function(data){
+                        if (data.responseText !== 'undefined') {
+                            alert('Ошибка записи TimezoneOffset: ' + data.responseText);
+                        }
+                    }			
+            });
+        <?php } ?>
+                
+        // Clock start
+        HeaderClockUpdate();
+        // Clock update interval 60 seconds
+        setInterval(function() { HeaderClockUpdate(); }, 60000);
+
+        if(document.getElementById('ninja_forms_form_2')) {
+            if(document.getElementById('tel-user')){
+               document.getElementById('ninja_forms_field_3').value=document.getElementById('tel-user').value;   
             }
 
-            paramstr = "ninja_forms_field_1=" + encodeURIComponent(jQuery('#ninja_forms_field_1').val()) + "&ninja_forms_field_2="+encodeURIComponent(jQuery('#ninja_forms_field_2').val()) + "&ninja_forms_field_3=" + encodeURIComponent(jQuery('#ninja_forms_field_3').val()) + "&ninja_forms_field_6=" + encodeURIComponent(jQuery('#ninja_forms_field_6').val());
-            //paramstr=jQuery("#ninja_forms_form_2").serialize();
-            //alert('paramstr: '+paramstr);
+            jQuery("#ninja_forms_form_2").attr('action', '');
+            jQuery("#ninja_forms_field_7").attr('type', 'button');
             jQuery("#ninja_forms_form_2_response_msg").hide();
-            jQuery("#ninja_forms_field_7").val('Идет отправка');   
+
+            jQuery("#ninja_forms_field_7").click(function() {
+                if ((jQuery('#ninja_forms_field_1').val() == '') || (jQuery('#ninja_forms_field_2').val() == '') || (jQuery('#ninja_forms_field_6').val() == '')) {
+                    //alert('Не заполнены обязательные поля формы');
+                    jQuery("#ninja_forms_form_2_response_msg").html('<p>Не заполнены обязательные поля формы</p>');
+                    jQuery("#ninja_forms_form_2_response_msg").show();
+                    return false;
+                } else {
+                    jQuery("#ninja_forms_form_2_response_msg").hide();
+                }
+
+                paramstr = "ninja_forms_field_1=" + encodeURIComponent(jQuery('#ninja_forms_field_1').val()) + "&ninja_forms_field_2="+encodeURIComponent(jQuery('#ninja_forms_field_2').val()) + "&ninja_forms_field_3=" + encodeURIComponent(jQuery('#ninja_forms_field_3').val()) + "&ninja_forms_field_6=" + encodeURIComponent(jQuery('#ninja_forms_field_6').val());
+                //paramstr=jQuery("#ninja_forms_form_2").serialize();
+                //alert('paramstr: '+paramstr);
+                jQuery("#ninja_forms_form_2_response_msg").hide();
+                jQuery("#ninja_forms_field_7").val('Идет отправка');   
+                jQuery.ajax({
+                    url: "/wp-admin/admin-ajax.php?action=add_message",
+                    type: "POST",
+                    data: paramstr,
+                    success: function(data){
+                        //document.forms["bet_form"].submit();
+                        document.getElementById('ninja_forms_form_2').submit();
+                        document.getElementById('ninja_forms_form_2_cont').style.display='none';
+                        jQuery("#well-form").html('<h2>Спасибо за Ваше обращение!</h2>');
+                    },
+                    error: function(data){
+                        if (data.responseText !== 'undefined') {
+                            jQuery("#ninja_forms_form_2_response_msg").html('<p>Ошибка отправки формы:<br>' + data.responseText + '</p>');
+                            jQuery("#ninja_forms_form_2_response_msg").show();
+                            //alert('Ошибка отправки формы: ' + data.responseText);
+                        }
+                    }			
+                });
+            });		   
+        }           
+    });       
+
+    function tel_click()
+    {
+        flag_subs = 0;
+
+        paramstr = document.getElementById('name-tel').id+"=" + encodeURIComponent(document.getElementById('name-tel').value) + "&"+document.getElementById('fam-tel').id+"="+encodeURIComponent(document.getElementById('fam-tel').value)+"&"+document.getElementById('tel-tel').id+"="+encodeURIComponent(document.getElementById('tel-tel').value)+"&"+document.getElementById('tel-time-from').id+"="+encodeURIComponent(document.getElementById('tel-time-from').value)+"&"+document.getElementById('tel-time-to').id+"="+encodeURIComponent(document.getElementById('tel-time-to').value);
+
+        if  ((document.getElementById('name-tel').value != "") )
+        {
+            flag_subs = flag_subs+1;
+        }
+        else
+        {
+
+          document.getElementById('tel_error').innerHTML="Заполните поле имя !";
+          return false;  
+        }
+
+        if  ((document.getElementById('tel-tel').value != "") )
+        {
+            flag_subs=flag_subs+1;
+        }
+        else
+        {
+          document.getElementById('tel_error').innerHTML="Заполните номер телефона !";
+          return false;  
+        }
+
+        if  ((document.getElementById('tel-time-from').value != "") && (document.getElementById('tel-time-to').value != ""))
+        {
+            flag_subs=flag_subs+1;
+        }
+        else
+        {
+          document.getElementById('tel_error').innerHTML="Заполните удобное время !";
+          return false;  
+        }
+
+        if(flag_subs>=3)
+        {
             jQuery.ajax({
-                        url: "/wp-admin/admin-ajax.php?action=add_message",
+                        url: "/wp-admin/admin-ajax.php?action=add_tel",
+               // url: "/wp-content/plugins/tzs/functions/tzs.functions.php?action=add_bet",
                         type: "POST",
                         data: paramstr,
                         success: function(data){
                                 //document.forms["bet_form"].submit();
-                                document.getElementById('ninja_forms_form_2').submit();
-                                document.getElementById('ninja_forms_form_2_cont').style.display='none';
-                                jQuery("#well-form").html('<h2>Спасибо за Ваше обращение!</h2>');
+                                alert(data);
+                                jQuery('#modal').modal('hide');
 
                         },
                         error: function(data){
-                                if (data.responseText !== 'undefined') {
-                                    jQuery("#ninja_forms_form_2_response_msg").html('<p>Ошибка отправки формы:<br>' + data.responseText + '</p>');
-                                    jQuery("#ninja_forms_form_2_response_msg").show();
-                                    //alert('Ошибка отправки формы: ' + data.responseText);
-                                }
-                        }			
-            });
-        });		   
-    }           
-});       
-
-function tel_click()
-{
-    flag_subs = 0;
-
-    paramstr = document.getElementById('name-tel').id+"=" + encodeURIComponent(document.getElementById('name-tel').value) + "&"+document.getElementById('fam-tel').id+"="+encodeURIComponent(document.getElementById('fam-tel').value)+"&"+document.getElementById('tel-tel').id+"="+encodeURIComponent(document.getElementById('tel-tel').value)+"&"+document.getElementById('tel-time-from').id+"="+encodeURIComponent(document.getElementById('tel-time-from').value)+"&"+document.getElementById('tel-time-to').id+"="+encodeURIComponent(document.getElementById('tel-time-to').value);
-
-    if  ((document.getElementById('name-tel').value != "") )
-    {
-        flag_subs = flag_subs+1;
-    }
-    else
-    {
-
-      document.getElementById('tel_error').innerHTML="Заполните поле имя !";
-      return false;  
-    }
-    
-    if  ((document.getElementById('tel-tel').value != "") )
-    {
-        flag_subs=flag_subs+1;
-    }
-    else
-    {
-      document.getElementById('tel_error').innerHTML="Заполните номер телефона !";
-      return false;  
-    }
-    
-    if  ((document.getElementById('tel-time-from').value != "") && (document.getElementById('tel-time-to').value != ""))
-    {
-        flag_subs=flag_subs+1;
-    }
-    else
-    {
-      document.getElementById('tel_error').innerHTML="Заполните удобное время !";
-      return false;  
-    }
-
-    if(flag_subs>=3)
-    {
-        jQuery.ajax({
-                    url: "/wp-admin/admin-ajax.php?action=add_tel",
-           // url: "/wp-content/plugins/tzs/functions/tzs.functions.php?action=add_bet",
-                    type: "POST",
-                    data: paramstr,
-                    success: function(data){
-                            //document.forms["bet_form"].submit();
+                                //document.forms["bet_form"].submit();
                             alert(data);
-                            jQuery('#modal').modal('hide');
-
-                    },
-                    error: function(data){
-                            //document.forms["bet_form"].submit();
-                        alert(data);
-                    }			
-            });		   
+                        }			
+                });		   
+        }
     }
-}
-    </script>
+</script>
 <div id="page" class="hfeed site">
 	<div id="main" class="wrapper">

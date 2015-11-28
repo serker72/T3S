@@ -11,7 +11,7 @@ get_header(); ?>
     <div id="content" role="main">
 			<?php while ( have_posts() ) : the_post(); ?>
 				<?php get_template_part( 'content', 'page' ); ?>
-				<?php comments_template( '', true ); ?>
+				<?php //comments_template( '', true ); ?>
 			<?php endwhile; // end of the loop. ?>
         
         <div class="reg-req" style="display: block;">
@@ -83,6 +83,7 @@ get_header(); ?>
 
                 <script>
                     jQuery( document ).ready(function() {
+                        jQuery('.entry-title').hide();
                         jQuery('.col-1').append(jQuery('.first_name'));
                         jQuery('.col-1').append(jQuery('.form-email'));
                         jQuery('.col-1').append(jQuery('.form-username'));

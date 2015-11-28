@@ -262,7 +262,7 @@ function wppb_activate_signup($key) {
 			clean_object_term_cache( $user_id, 'user_status' );
 		}
 		
-		wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval']);
+		wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval'], $meta);
 		
 		do_action('wppb_activate_user', $user_id, $password, $meta);
 		

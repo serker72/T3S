@@ -333,12 +333,13 @@ function wppb_signup_user_notification($user, $user_email, $key, $meta = '') {
 	if ( $admin_email == '' )
 		$admin_email = 'support@' . $_SERVER['SERVER_NAME'];
 		
-	$from_name = get_site_option( 'site_name' ) == '' ? 'WordPress' : esc_html( get_site_option( 'site_name' ) );
-	$from_name = apply_filters ('wppb_signup_user_notification_email_from_field', $from_name);
+	//$from_name = get_site_option( 'site_name' ) == '' ? 'WordPress' : esc_html( get_site_option( 'site_name' ) );
+	//$from_name = apply_filters ('wppb_signup_user_notification_email_from_field', $from_name);
 	//$message_headers = apply_filters ("wppb_signup_user_notification_from", "From: \"{$from_name}\" <{$admin_email}>\n" . "Content-Type: text/plain; charset=\"" . get_option('blog_charset') . "\"\n");
         //
         // ksk - Content-Type: multipart/alternative; boundary
         $EOF = "\r\n";
+	$from_name = 'Т3С';
 
         //Письмо с вложением состоит из нескольких частей, которые разделяются разделителем
         // Генерируем разделитель    
@@ -352,11 +353,12 @@ function wppb_signup_user_notification($user, $user_email, $key, $meta = '') {
 
 	$siteURL = wppb_curpageurl().wppb_passed_arguments_check().'key='.$key;
 	
-	$subject = sprintf(apply_filters( 'wppb_signup_user_notification_subject', __( '[%1$s] Activate %2$s', 'profilebuilder'), $user, $user_email, $key, $meta ), $from_name, $user);
+	//$subject = sprintf(apply_filters( 'wppb_signup_user_notification_subject', __( '[%1$s] Activate %2$s', 'profilebuilder'), $user, $user_email, $key, $meta ), $from_name, $user);
 	//$message = sprintf(apply_filters( 'wppb_signup_user_notification_email', __( "To activate your user, please click the following link:\n\n%s%s%s\n\nAfter you activate, you will receive *another email* with your login.\n\n", "profilebuilder" ),$user, $user_email, $key, $meta), '<a href="'.$siteURL.'">', $siteURL, '</a>.');
         
         // ksk
         // Текст письма содержится на странице, ID которой указан в параметре t3s_setting_signup_user_notification_page_id
+	$subject = 'Подтвердите регистрацию на портале Т3С';
         $page_id = get_option('t3s_setting_signup_user_notification_page_id');
         $page_data = get_page($page_id); 
         $page_content = apply_filters('the_content', $page_data->post_content);
@@ -439,7 +441,7 @@ function wppb_manual_activate_signup($key) {
 					clean_object_term_cache( $user_id, 'user_status' );
 				}
 				
-				wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval']);
+				wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval'], $meta);
 				
 				do_action('wppb_activate_user', $user_id, $password, $meta);
 				
@@ -477,7 +479,7 @@ function wppb_create_user( $user_name, $password, $email) {
 }
 
 //send an email to the admin regarding each and every new subscriber, and - if selected - to the user himself
-function wppb_notify_user_registration_email($bloginfo, $user_name, $email, $send_credentials_via_email, $passw1, $adminApproval){
+function wppb_notify_user_registration_email($bloginfo, $user_name, $email, $send_credentials_via_email, $passw1, $adminApproval, $user_meta){
 
 	$registerFilterArray['adminMessageOnRegistration']  = sprintf(__( 'New subscriber on %1$s.<br/><br/>Username:%2$s<br/>E-mail:%3$s<br/>', 'profilebuilder'), $bloginfo, $user_name, $email);
 	if ($adminApproval == 'yes')
@@ -494,7 +496,7 @@ function wppb_notify_user_registration_email($bloginfo, $user_name, $email, $sen
 	//send an email to the newly registered user, if this option was selected
 	if (isset($send_credentials_via_email) && ($send_credentials_via_email == 'sending')){
 		//change these variables to modify sent email message, destination and source.	
-		
+		/*
 		$registerFilterArray['userMessageFrom'] = $bloginfo;
 		$registerFilterArray['userMessageFrom'] = apply_filters('wppb_register_from_email_content', $registerFilterArray['userMessageFrom']);
 
@@ -507,7 +509,57 @@ function wppb_notify_user_registration_email($bloginfo, $user_name, $email, $sen
 		$registerFilterArray['userMessageContent'] = apply_filters('wppb_register_email_content', $registerFilterArray['userMessageContent'], $registerFilterArray['userMessageFrom'], $user_name, $passw1);
 		
 		$messageSent = wppb_mail( $email, $registerFilterArray['userMessageSubject'], $registerFilterArray['userMessageContent'], $registerFilterArray['userMessageFrom'], '', $user_name, $passw1, $email, 'register_w_o_admin_approval', $adminApproval, '' );
-		
+                */
+                //
+                // ksk - Content-Type: multipart/alternative; boundary
+                $admin_email = get_site_option( 'admin_email' );
+                if ( $admin_email == '' )
+                        $admin_email = 'support@' . $_SERVER['SERVER_NAME'];
+                
+                $EOF = "\r\n";
+                $from_name = 'Т3С';
+
+                //Письмо с вложением состоит из нескольких частей, которые разделяются разделителем
+                // Генерируем разделитель    
+                $boundary = md5(uniqid(time()));
+
+                //$message_headers = apply_filters ("wppb_signup_user_notification_from", "MIME-Version: 1.0;".$EOF."From: \"{$from_name}\" <{$admin_email}>".$EOF."Content-Type: multipart/mixed; boundary=$boundary".$EOF);
+                $message_headers  = "MIME-Version: 1.0;".$EOF;
+                $message_headers .= "From: $from_name <$admin_email>".$EOF;
+                //$message_headers .= "Content-Type: multipart/alternative; boundary=$boundary".$EOF;
+                $message_headers .= "Content-Type: multipart/mixed; boundary=\"$boundary\"".$EOF;
+
+                // ksk
+                // Текст письма содержится на странице, ID которой указан в параметре t3s_setting_signup_user_notification_page_id
+                $subject = 'Ваша регистрация на портале Т3С завершена успешно';
+                $page_id = get_option('t3s_setting_registration_user_notification_page_id');
+                $page_data = get_page($page_id); 
+                $page_content = apply_filters('the_content', $page_data->post_content);
+                //$user_meta = unserialize($meta);
+                $fname1 = get_site_url().'/wp-content/themes/twentytwelve/images/reg_mail_logo.png';
+                $fname2 = get_site_url().'/wp-content/themes/twentytwelve/images/reg_mail_bottom.png';
+
+                $message  = "--$boundary".$EOF;
+                $message .= 'Content-type: text/html; charset="' . get_option('blog_charset') . '"'.$EOF;
+                //$message .= "Content-Transfer-Encoding: base64".$EOF;
+                $message .= "Content-Transfer-Encoding: 8bit".$EOF;
+                $message .= $EOF;
+                $message .= "<html>".$EOF;
+                $message .= "<head>".$EOF;
+                $message .= "  <meta content=\"text/html; charset=".get_option('blog_charset')."\" http-equiv=\"Content-Type\">".$EOF;
+                $message .= "</head>".$EOF;
+                $message .= "<body>".$EOF;
+                $message .= str_replace('#t3s_biz_img_1#', $fname1, str_replace('#t3s_biz_img_2#', $fname2, str_replace('#login#', $user_name, str_replace('#fio#', ($user_meta['first_name'].' '.$user_meta['last_name']), $page_content)))).$EOF;
+                $message .= "</body>".$EOF;
+                $message .= "</html>".$EOF;
+                //
+
+                //wppb_mail( $user_email, $subject, $message, $from_name, '', $user, '', $user_email, 'register_w_email_confirmation', $siteURL, $meta );
+                // отправляем письмо 
+                $messageSent = mail($user_email, $subject, $message, $message_headers);
+                
+                //
+                
 		if( $messageSent == TRUE)
 			return 2; 
 		else

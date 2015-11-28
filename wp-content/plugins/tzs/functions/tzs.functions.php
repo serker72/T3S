@@ -728,20 +728,21 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
     
     $output_tbody .= '">';
 
-    if (($user_info['company'] != '') || ($user_info['fio'] != '')) {
+    if (($user_info['company'] != '') || ($user_info['last_name'] != '') || ($user_info['first_name'] != '')) {
         $output_tbody .= '<a href="/company/?id='.$row->user_id.'&type='.$form_type.'">';
     
         if ($user_info['company'] != '') { $output_tbody .= $user_info['company']; }
-        else { $output_tbody .= $user_info['fio']; }
+        else { $output_tbody .= $user_info['last_name'].' '.$user_info['first_name']; }
 
         $output_tbody .= '</a>';
 
         if ($show_address) {
             if ($show_address == 1) {
-                $meta = explode(',', $user_info['adress']); 
-                $output_tbody .= '<span>'.$meta[0].'</span>';
+                //$meta = explode(',', $user_info['adress']); 
+                //$output_tbody .= '<span>'.$meta[0].'</span>';
+                $output_tbody .= '<span>'.$user_info['city'].' '.$user_info['street'].'</span>';
             } else {
-                $output_tbody .= '<span>'.$user_info['adress'].'</span>';
+                $output_tbody .= '<span>'.$user_info['city'].' '.$user_info['street'].'</span>';
             }
         } else {
             //$output_tbody .= '<span>&nbsp;</span>';
@@ -751,11 +752,11 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
             $output_tbody .= '<div class="tzs_au_contact_view_all" phone-user-not-view="'.$row->user_id.'">Для просмотра контактов необходимо <a href="/account/login/">войти</a> или <a href="/account/registration/">зарегистрироваться</a></div>';
         }
 
-        if ($user_info['company'] != '') {
-            $phone_list = explode(';', $user_info['tel_fax']);
-        } else {
+        //if ($user_info['company'] != '') {
+        //    $phone_list = explode(';', $user_info['tel_fax']);
+        //} else {
             $phone_list = explode(';', $user_info['telephone']);
-        }
+        //}
         
         if ($show_address) {
             $rcnt = count($phone_list);
@@ -776,7 +777,8 @@ function tzs_print_user_contacts($row, $form_type, $show_address=0) {
             </div>';
         }
 
-        if ($show_address && ($user_info['user_email'] != '')) { 
+        //if ($show_address && ($user_info['user_email'] != '')) { 
+        if ($user_info['user_email'] != '') { 
             $output_tbody .= '<div class="tbl_products_contact_email" phone-user="'.$row->user_id.'">
             <b>'.  substr($user_info['user_email'], 0, 3).'XX@XX</b>
             <span>'.$user_info['user_email'].'</span>
@@ -922,7 +924,7 @@ function tzs_tr_sh_table_record_out_cont($row, $form_type) {
     
 
     $output_tbody .= '<td><div title="Стоимость перевозки груза">';
-    if ($row->price > 0) {
+    if (($row->price > 0) && ($row->distance > 0)) {
         $output_tbody .= $row->price.' '.$GLOBALS['tzs_curr'][$row->price_val].'<br><br>'.
                 round($row->price / $row->distance, 2).' '.$GLOBALS['tzs_curr'][$row->price_val].'/км'; 
     } else {

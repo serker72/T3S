@@ -101,6 +101,14 @@ function t3s_settings_api_init() {
             'general', // страница
             't3s_setting_section' // секция
     );
+    
+    add_settings_field(
+            't3s_setting_registration_user_notification_page_id',
+            'ID страницы с текстом письма о завершении регистрации пользователя',
+            't3s_setting_callback_function11',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
 
     // Регистрируем опции, чтобы они сохранялись при отправке 
     // $_POST параметров и чтобы callback функции опций выводили их значение.
@@ -114,6 +122,7 @@ function t3s_settings_api_init() {
     register_setting('general', 't3s_setting_merchant_pass');
     register_setting('general', 't3s_setting_pay_count');
     register_setting('general', 't3s_setting_signup_user_notification_page_id');
+    register_setting('general', 't3s_setting_registration_user_notification_page_id');
 }
 
 // ------------------------------------------------------------------
@@ -222,6 +231,15 @@ function t3s_setting_callback_function10() {
 		name="t3s_setting_signup_user_notification_page_id"  
 		type="text" 
 		value="' . get_option('t3s_setting_signup_user_notification_page_id') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function11() {
+	echo '<input 
+		name="t3s_setting_registration_user_notification_page_id"  
+		type="text" 
+		value="' . get_option('t3s_setting_registration_user_notification_page_id') . '" 
 		class="code2"
 	 />';
 }
