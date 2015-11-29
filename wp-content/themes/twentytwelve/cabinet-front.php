@@ -13,7 +13,19 @@ get_header(); ?>
 				<?php get_template_part( 'content', 'page' ); ?>
 				<?php //comments_template( '', true ); ?>
 			<?php endwhile; // end of the loop. ?>
-        
+        <?php 
+        $user_id = get_current_user_id();
+        if ($user_id == 0) {
+                ?>
+                <div>Для просмотра необходимо <a href="/account/login/">войти</a> или <a href="/account/registration/">зарегистрироваться</a></div>
+                <script>
+                    jQuery(document).ready(function(){
+                        jQuery('#menu-profile').hide();
+                    });
+                </script>
+                <?php
+        } else {
+        ?>
         <div class="reg-req" style="display: block;">
             <div class="cab-req"> 
                 <div class="headerForm">
@@ -151,6 +163,7 @@ get_header(); ?>
                 </script> 
 
             </div>
+        <?php } ?>
         </div><!-- #content -->
     </div><!-- #primary -->
 </div>

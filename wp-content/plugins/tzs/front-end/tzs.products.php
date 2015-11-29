@@ -407,6 +407,10 @@ function tzs_front_end_products_handler($atts) {
         
         // Функция, отрабатывающая после готовности HTML-документа
         jQuery(document).ready(function(){
+                <?php if ($user_id == 0) { ?>
+                    jQuery('#menu-profile').hide();
+                <?php } ?>
+                    
                 // Установим обработчик "клика" в строках таблицы
                 jQuery('#tbl_products').on('click', 'td', function(e) {  
                         var nonclickable = 'true' == e.delegateTarget.rows[1].cells[this.cellIndex].getAttribute('nonclickable');

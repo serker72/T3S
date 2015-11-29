@@ -315,8 +315,8 @@ function tzs_front_end_view_productsd_handler($atts) {
                         $sql = "SELECT MAX(rate) FROM ".TZS_PRODUCT_RATES_TABLE." WHERE product_id=$sh_id $active";
                         /*$max = $wpdb->get_results($sql); */
                         $max=$wpdb->get_var($sql);
-                        if ($max > 0) echo "<input id='act_rate' style='display: none;' value=".round($max,2)." />";
-                        else echo "<input id='act_rate' style='display: none;' value=".$row->price." ".$GLOBALS['tzs_pr_curr'][$row->currency]." />";
+                        if ($max > 0) echo "<input id='act_rate' style='display: none;' value='".round($max,2)."' />";
+                        else echo "<input id='act_rate' style='display: none;' value='".$row->price." ".$GLOBALS['tzs_pr_curr'][$row->currency]."' />";
                         $sql = "SELECT COUNT(*) FROM ".TZS_PRODUCT_RATES_TABLE." WHERE product_id=$sh_id $active";
                         /*$max = $wpdb->get_results($sql); */
                         $cnt_rate=$wpdb->get_var($sql);

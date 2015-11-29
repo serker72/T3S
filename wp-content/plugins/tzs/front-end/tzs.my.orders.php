@@ -14,6 +14,11 @@ function tzs_front_end_my_orders_handler($atts) {
     if ($user_id == 0) {
             ?>
             <div>Для просмотра необходимо <a href="/account/login/">войти</a> или <a href="/account/registration/">зарегистрироваться</a></div>
+            <script>
+                jQuery(document).ready(function(){
+                    jQuery('#menu-profile').hide();
+                });
+            </script>
             <?php
     } else {
         $sql = "SELECT COUNT(*) as cnt FROM ".TZS_ORDERS_TABLE." WHERE user_id=$user_id AND status=$status;";
