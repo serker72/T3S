@@ -29,8 +29,8 @@ function tzs_print_product_form($errors, $edit=false) {
         }
     }
     
-    echo '<div style="clear: both;"></div>';
-    print_errors($errors);
+    //echo '<div style="clear: both;"></div>';
+    //print_errors($errors);
     ?>
     <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
     
@@ -89,7 +89,7 @@ function tzs_print_product_form($errors, $edit=false) {
     <div class="row-fluid"  style="width: 100%; margin-bottom: 20px;">
         <div class="span8">
             <?php
-            $args = array(  'wpautop' => 1,
+            /*$args = array(  'wpautop' => 1,
                             'media_buttons' => 0,
                             'textarea_name' => 'pr_description', //нужно указывать!
                             'textarea_rows' => 4,
@@ -115,7 +115,27 @@ function tzs_print_product_form($errors, $edit=false) {
                             'drag_drop_upload' => false
                         );
             wp_editor($_POST['pr_description'], 'editpost', $args);
-            ?>
+            */?>
+            
+                <textarea name="pr_description" id="pr_description" cols="45" rows="3"><?php echo $_POST['pr_description']; ?></textarea>
+                <script type="text/javascript">
+                    //CKEDITOR.replace( 'editor1');
+                    CKEDITOR.config.toolbar = 'WB';
+                    CKEDITOR.config.toolbar_WB = [
+                        ['Bold','Italic','Underline','StrikeThrough','-','NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','Undo','Redo','-','Image','Table','-','Link','Flash','Smiley','TextColor','BGColor','Source']
+                        
+                    ] ;
+                    /*CKEDITOR.config.toolbar_WB = [
+                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight'] },
+                        { name: 'links', items: [ 'Link', 'Unlink' ] },
+                        { name: 'insert', items: [ 'Image', 'SpecialChar' ] }
+                        ];*/
+                    CKEDITOR.replace( 'pr_description',
+                        {
+                            toolbar : 'WB'
+                        });
+                </script>
         </div>
         <div class="span4">
             <div class="span12" style="margin-bottom: 10px;">
@@ -331,12 +351,12 @@ function tzs_print_product_form($errors, $edit=false) {
                 jQuery('#pr_title').css({'border': '1px solid #007FFF'});
             }
 
-            if (jQuery('#editpost').val().length < 1) {
+            /*if (jQuery('#editpost').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не заполнено описание товара.<br>\n';
                 jQuery('#editpost').css({'border': '2px solid #F00'});
             } else {
                 jQuery('#editpost').css({'border': '1px solid #007FFF'});
-            }
+            }*/
 
             if (jQuery('#pr_copies').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указано количество товара.<br>\n';

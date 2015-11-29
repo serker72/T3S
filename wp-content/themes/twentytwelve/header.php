@@ -154,8 +154,8 @@
 <?php } ?>
 
 
-        <?php if (!dynamic_sidebar("Тендеры и Товары") ) : ?>
-        <?php endif; ?>
+        <?php //if (!dynamic_sidebar("Тендеры и Товары") ) : ?>
+        <?php //endif; ?>
 		<?php //if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("Слайдер") ) : ?>
 		<?php //endif; ?>
            

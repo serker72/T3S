@@ -46,6 +46,9 @@ if ( $total_pages > 1) {
 //        'next_text' => __( 'Next >>' )
 }
 ?>
+<div style="text-align: center; margin: 10px 0 0 0;">
+    <?php the_title('<h2>', '</h2>'); ?>
+</div>
 <div id="left-block" style="float: left; margin: 15px;">
             <ul class="tiled-menu">
                 

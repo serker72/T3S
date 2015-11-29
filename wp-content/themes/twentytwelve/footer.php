@@ -9,7 +9,8 @@
 			<?php wp_nav_menu('menu=footer_1'); ?>
 		</div>
 		<div id="footer_menu_2">
-			<!-- <?php wp_nav_menu('menu=footer_2'); ?> -->
+			<!-- <?php //wp_nav_menu('menu=footer_2'); ?> -->
+			<?php wp_nav_menu('menu=tender-menu'); ?>
 		</div>
 		<div id="social">
 			

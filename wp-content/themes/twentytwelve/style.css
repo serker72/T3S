@@ -2421,7 +2421,7 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
 .tiled-menu {
   list-style: none;
   list-style-image: none;
-  padding: 20px 0 10px 0;
+  padding: 0px 0 10px 0;
   position: relative;
   float: right;
   min-height: 172px;

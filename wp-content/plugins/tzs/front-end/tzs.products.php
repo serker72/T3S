@@ -407,7 +407,7 @@ function tzs_front_end_products_handler($atts) {
         
         // Функция, отрабатывающая после готовности HTML-документа
         jQuery(document).ready(function(){
-                <?php if ($user_id == 0) { ?>
+                <?php if (get_current_user_id() == 0) { ?>
                     jQuery('#menu-profile').hide();
                 <?php } ?>
                     
