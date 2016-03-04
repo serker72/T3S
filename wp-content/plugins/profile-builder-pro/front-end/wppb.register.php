@@ -262,7 +262,7 @@ function wppb_activate_signup($key) {
 			clean_object_term_cache( $user_id, 'user_status' );
 		}
 		
-		wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval'], $meta);
+		wppb_notify_user_registration_email($bloginfo, $user_login, $user_email, 'sending', $password, $wppb_generalSettings['adminApproval']);
 		
 		do_action('wppb_activate_user', $user_id, $password, $meta);
 		
@@ -631,6 +631,7 @@ function wppb_front_end_register($atts){
 			}else
 				$error = apply_filters('wppb_register_userlogin_error1', __('A username is required for registration.', 'profilebuilder'));
 		}elseif ( username_exists($userdata['user_login']) ){
+                        if (strlen($userdata['user_login']) < 6) $error = apply_filters('wppb_register_userlogin_error1', __('A username is required for registration.', 'profilebuilder'));
 			if (isset($wppb_generalSettings['loginWith']) && ($wppb_generalSettings['loginWith'] == 'email')){
 			}else
 				$error = apply_filters('wppb_register_userlogin_error2', __('Sorry, that username already exists!', 'profilebuilder'));
@@ -1399,7 +1400,7 @@ function wppb_front_end_register($atts){
 ?>
 							
 						<p class="form-submit">
-							<input name="adduser" type="submit" id="addusersub" class="submit button" value="<?php if ( current_user_can( 'create_users' ) ) _e('Add User', 'profilebuilder'); else _e('Register', 'profilebuilder'); ?>" />
+							<input name="adduser" type="submit" onClick="subm_click()" id="addusersub" class="submit button" value="<?php if ( current_user_can( 'create_users' ) ) _e('Add User', 'profilebuilder'); else _e('Register', 'profilebuilder'); ?>" />
 							<input name="action" type="hidden" id="action" value="adduser" />
 							<input type="hidden" name="formName" value="register" />
 						</p><!-- .form-submit -->

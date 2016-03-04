@@ -13,6 +13,7 @@ get_header(); ?>
                      <div class="reg-req" style="display: block;">
                          <div class="mark" style="margin-bottom: 10px; color: #007FFF">
                              <span style="color: red">* </span>- поля помеченные этим знаком обязательны к заполнению
+                             <div style="color: red" class="myerror"></div>
                          </div>
                          <div class="reg-reg">
                              
@@ -98,6 +99,13 @@ get_header(); ?>
                             jQuery('#pass2').get(0).type = 'password';
                         }
                         });
+                          
+                         if ((jQuery('#first_name').val()) == undefined){
+                            jQuery('#regForm').hide();
+                            jQuery('.mark').hide();
+                            jQuery('.ref-submit').hide();
+                        } 
+                        jQuery('#addusersub').get(0).type = 'button';
                         jQuery("#input15").mask("38(999) 999-9999");
                         if (jQuery('.success').html() != undefined){
                             
@@ -106,8 +114,43 @@ get_header(); ?>
                             jQuery('.ref-submit').hide();
                             
                         }
+                      
+
             });
-            
+         function subm_click()
+            { 
+                
+                var usrLen=document.getElementById('user_name').value;
+                var passLen=document.getElementById('pass1').value;
+                var filter  = /^([a-zA-Z0-9_\.\-])+$/;
+                var str='';
+                var flag = 0;
+                if (filter.test(passLen)) {
+                    
+                    } else {
+                        flag=1;
+                        str=str+'<p>Пароль содержит недопустимые символы</p>';
+                        
+                    }
+                if ((usrLen.length) < 6) {
+                    flag=1;
+                    str=str+'<p>Длинна логина меньше 6 символов</p>';
+                    
+                }
+                if ((passLen.length) < 6) {
+                    flag=1;
+                    str=str+'<p>Длинна пароля меньше 6 символов</p>';
+                    
+                }
+                if (flag == 1) {
+                    //alert(str);
+                    jQuery('.myerror').html(str);
+                    return false;
+                }
+                if (flag == 0) {
+                document.forms["adduser"].submit();
+            }
+            }  
         </script>
             
                          </div>
