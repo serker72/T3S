@@ -938,9 +938,12 @@ input[type=text], input[type=password], select {
     border-bottom: 2px solid #0B5792;
 }
 .top_record {
+    background: #FFF582;
+}
+.vip_top_record {
     background: #B0E0E6;
 }
-.pre_top_record {
+.pre_vip_top_record {
     background: #C6C82E;
 }
 #tbl_products td div {
@@ -991,8 +994,13 @@ input[type=text], input[type=password], select {
 #tbl_products_comm {
     min-width: 150px;
 }
+#tbl_trucks_rb {
+    min-width: 20px;
+    max-width: 20px;
+}
 #tbl_trucks_id {
     min-width: 60px;
+    max-width: 70px;
 }
 .tbl_trucks_path {
     width: 170px;
@@ -1731,6 +1739,7 @@ max-height: 46px !important;
 #my_products_button {
     /*padding-left: 20px;*/
     text-align: right;
+    margin-bottom: 10px;
 }
 #view_add {
 	background: #04acec;
@@ -2394,6 +2403,12 @@ label.switch input[type="checkbox"]:checked + span.switch  	{
     /*width: 100%;*/
     text-align: left;
     color: #0B5792;
+    float: left;
+    font-family: "Open Sans";
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    padding: 5px 0 0 0;
 }
 .div_td_right {
     width: 100%;
@@ -3033,4 +3048,11 @@ margin-top: 20px;
     color: #007FFF;
     font-size: 21px;
     text-transform: uppercase;
+}
+
+#pickup_button {
+    color: #FFCC00;
+}
+#vip_pickup_button {
+    color: #0F0;
 }

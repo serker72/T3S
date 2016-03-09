@@ -145,22 +145,60 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
     $dt_created = convert_time($row->time, "d.m.Y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
     
-    $output_tbody = '<tr rid="'.$row->id.'"'.($row->order_status == 1 ? ' class="top_record"' : ($profile_td_text && $row->order_status !== null && $row->order_status == 0 ? ' class="pre_top_record"' : '')).'>';
+    if ($row->dt_pickup != '0000-00-00 00:00:00') {
+        $dt_pickup = convert_time($row->dt_pickup, "d.m.Y (Hч:iмин)");
+        $dt_pickup = explode(" ", $dt_pickup);
+    } else {
+        $dt_pickup = '';
+    }
+    
+    // Определение статуса записи
+    $output_tbody = '<tr rid="'.$row->id.'"';
+    
+    if ($row->top_status == 2) {
+        $output_tbody .= ($row->order_status == 1 ? ' class="vip_top_record"' : ($profile_td_text && $row->order_status !== null && $row->order_status == 0 ? ' class="pre_vip_top_record"' : ''));
+    } else if ($row->top_status == 1) {
+        $output_tbody .= ' class="top_record"';
+    } else {
+    }
+    
+    $output_tbody .= '>';
 
-    $output_tbody .= '
-            <td>
+    if ($profile_td_text == 'no') {
+        $output_tbody .= '<td><input type="radio" order-status="'.($row->order_status == null ? '' : $row->order_status).'" top-status="'.$row->top_status.'" order-id="'.$row->order_id.'" id="r_table_record_id" name="r_table_record_id" value="'.$row->id.'"';
+
+        if (isset($_POST['table_record_id']) && $_POST['table_record_id'] == "$row->id") $output_tbody .= 'checked="checked"';
+
+        $output_tbody .= '></td>';
+    }
+    
+    /*
                 <div class="record_number">
                     <span class="middle" title="Номер заявки">
                            № '.$row->id.'
                     </span>
                 </div><br>
+     */
+    
+    $output_tbody .= '
+            <td>
                 <div class="date_label" title="Дата публикации заявки">
                     '.$dt_created[0].'
                 </div>
                 <div class="time_label" title="Время публикации заявки">
                     '.str_replace(':', ' : ', $dt_created[1]).'
+                </div><br>';
+    
+    if ($dt_pickup != '') {
+        $output_tbody .= '<div class="date_label" title="Дата бесплатного поднятия заявки в ТОП">
+                    '.$dt_pickup[0].'
                 </div>
-            </td>
+                <div class="time_label" title="Время бесплатного поднятия заявки в ТОП">
+                    '.str_replace(':', ' : ', $dt_pickup[1]).'
+                </div>';
+    }
+    
+    $output_tbody .= '</td>
             <td style="min-width: 260px; width: 260px;">
                 <div class="tbl_trucks_path_td">
                     <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
@@ -293,7 +331,9 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
         //$output_tbody .= '<td><div title="Комментарии">'.$row->comment.'</div></td>';
     }
     
-    if ($profile_td_text) {
+    if ($profile_td_text == 'no') {
+        $output_tbody .= '';
+    } else if ($profile_td_text) {
         $output_tbody .= '<td>'.$profile_td_text.'</td>';
     } else {
         $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>';
