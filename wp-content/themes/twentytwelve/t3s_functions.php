@@ -55,9 +55,17 @@ function t3s_settings_api_init() {
     );
     
     add_settings_field(
+            't3s_setting_record_pickup_time',
+            'Период временного поднятия объявления в ТОП, минут',
+            't3s_setting_callback_function5',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
             't3s_setting_record_pickup_days',
             'Период поднятия объявления в ТОП, дней',
-            't3s_setting_callback_function5',
+            't3s_setting_callback_function6',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -65,7 +73,7 @@ function t3s_settings_api_init() {
     add_settings_field(
             't3s_setting_record_pickup_cost',
             'Стоимость поднятия объявления в ТОП, грн',
-            't3s_setting_callback_function6',
+            't3s_setting_callback_function7',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -73,7 +81,7 @@ function t3s_settings_api_init() {
     add_settings_field(
             't3s_setting_merchant_id',
             'ID мерчанта в Приват-24',
-            't3s_setting_callback_function7',
+            't3s_setting_callback_function8',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -81,7 +89,7 @@ function t3s_settings_api_init() {
     add_settings_field(
             't3s_setting_merchant_pass',
             'Пароль мерчанта в Приват-24',
-            't3s_setting_callback_function8',
+            't3s_setting_callback_function9',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -89,7 +97,7 @@ function t3s_settings_api_init() {
     add_settings_field(
             't3s_setting_pay_count',
             'Количество попыток оплаты счета в Приват-24',
-            't3s_setting_callback_function9',
+            't3s_setting_callback_function10',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -97,7 +105,7 @@ function t3s_settings_api_init() {
     add_settings_field(
             't3s_setting_signup_user_notification_page_id',
             'ID страницы с текстом письма о подтверждении регистрации пользователя',
-            't3s_setting_callback_function10',
+            't3s_setting_callback_function11',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -105,7 +113,7 @@ function t3s_settings_api_init() {
     add_settings_field(
             't3s_setting_registration_user_notification_page_id',
             'ID страницы с текстом письма о завершении регистрации пользователя',
-            't3s_setting_callback_function11',
+            't3s_setting_callback_function12',
             'general', // страница
             't3s_setting_section' // секция
     );
@@ -116,6 +124,7 @@ function t3s_settings_api_init() {
     register_setting('general', 't3s_setting_email_callback');
     register_setting('general', 't3s_setting_email_support');
     register_setting('general', 't3s_setting_pr_publication_min_days');
+    register_setting('general', 't3s_setting_record_pickup_time');
     register_setting('general', 't3s_setting_record_pickup_days');
     register_setting('general', 't3s_setting_record_pickup_cost');
     register_setting('general', 't3s_setting_merchant_id');
@@ -183,6 +192,15 @@ function t3s_setting_callback_function4() {
 
 function t3s_setting_callback_function5() {
 	echo '<input 
+		name="t3s_setting_record_pickup_time"  
+		type="text" 
+		value="' . get_option('t3s_setting_record_pickup_time') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function6() {
+	echo '<input 
 		name="t3s_setting_record_pickup_days"  
 		type="text" 
 		value="' . get_option('t3s_setting_record_pickup_days') . '" 
@@ -190,7 +208,7 @@ function t3s_setting_callback_function5() {
 	 />';
 }
 
-function t3s_setting_callback_function6() {
+function t3s_setting_callback_function7() {
 	echo '<input 
 		name="t3s_setting_record_pickup_cost"  
 		type="text" 
@@ -199,7 +217,7 @@ function t3s_setting_callback_function6() {
 	 />';
 }
 
-function t3s_setting_callback_function7() {
+function t3s_setting_callback_function8() {
 	echo '<input 
 		name="t3s_setting_merchant_id"  
 		type="text" 
@@ -208,7 +226,7 @@ function t3s_setting_callback_function7() {
 	 />';
 }
 
-function t3s_setting_callback_function8() {
+function t3s_setting_callback_function9() {
 	echo '<input 
 		name="t3s_setting_merchant_pass"  
 		type="text" 
@@ -217,7 +235,7 @@ function t3s_setting_callback_function8() {
 	 />';
 }
 
-function t3s_setting_callback_function9() {
+function t3s_setting_callback_function10() {
 	echo '<input 
 		name="t3s_setting_pay_count"  
 		type="text" 
@@ -226,7 +244,7 @@ function t3s_setting_callback_function9() {
 	 />';
 }
 
-function t3s_setting_callback_function10() {
+function t3s_setting_callback_function11() {
 	echo '<input 
 		name="t3s_setting_signup_user_notification_page_id"  
 		type="text" 
@@ -235,7 +253,7 @@ function t3s_setting_callback_function10() {
 	 />';
 }
 
-function t3s_setting_callback_function11() {
+function t3s_setting_callback_function12() {
 	echo '<input 
 		name="t3s_setting_registration_user_notification_page_id"  
 		type="text" 
