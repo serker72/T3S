@@ -9,6 +9,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
     ?>
 		<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
 		<script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
+                <script src="/wp-content/plugins/tzs/assets/js/ksk_city_form.js" type="text/javascript"></script>
 
     <div style="clear: both;"></div>
     
@@ -16,6 +17,48 @@ function tzs_print_shipment_form($errors, $edit=false) {
 <div class="form_wrapper">
     <form enctype="multipart/form-data" method="post" id="form_shipment" class="" action="">
         
+        <div class="row-fluid"  style="width: 100%; ">
+            <div class="span5">
+                <div class="city_input_div">
+                    <table id="citiesTable">
+                        <tbody>
+                            <tr class="city_row">
+                                <td class="city_title">Откуда</td>
+                                <td class="city_distance"></td>
+                                <td class="city_input">
+                                    <div class="input_div">
+                                        <input autocomplete="city" id="" type="text" size="" name="input_city[]" value="" autocomplete="on" placeholder="Населенный пункт погрузки">
+                                    </div>
+                                    <div class="add_city_div">
+                                        <span class="add_city_span" onclick="addCity(this);">добавить пункт</span>
+                                    </div>
+                                </td>
+                                <td class="city_delete">
+                                    <div class="delete_city_button" onclick="removeCity(this);">&nbsp;</div>
+                                </td>
+                            </tr>
+                            
+                            <tr class="city_row">
+                                <td class="city_title">Куда</td>
+                                <td class="city_distance"></td>
+                                <td class="city_input">
+                                    <div class="input_div">
+                                        <input autocomplete="city" id="" type="text" size="" name="input_city[]" value="" autocomplete="on" placeholder="Населенный пункт погрузки">
+                                    </div>
+                                    <div class="add_city_div">
+                                        <span class="add_city_span" onclick="addCity(this);">добавить пункт</span>
+                                    </div>
+                                </td>
+                                <td class="city_delete">
+                                    <div class="delete_city_button" onclick="removeCity(this);">&nbsp;</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span3">
             <input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', ''); ?>" placeholder="Дата погрузки" readonly="true">
@@ -224,13 +267,50 @@ function tzs_print_shipment_form($errors, $edit=false) {
             }
         ?>
         
+        function add_city_div(e) {
+            var el = e.currentTarget.parentElement.parentElement;
+            jQuery(el).after('<tr class="city_row">'+
+                                '<td class="city_title">Откуда</td>'+
+                                '<td class="city_distance"></td>'+
+                                '<td class="city_input">'+
+                                '    <input autocomplete="city" id="" type="text" size="" name="input_city[]" value="" autocomplete="on" placeholder="Населенный пункт погрузки">'+
+                                '    <a class="add_city" href="#"><img src="/wp-content/plugins/tzs/assets/images/button_add.png"></a>'+
+                                '</td>'+
+                                '<td class="city_delete">'+
+                                '    <a class="del_city" href="#"><img src="/wp-content/plugins/tzs/assets/images/button_cancel.png"></a>'+
+                                '</td>'+
+                            '</tr>');
+        
+            jQuery("a.add_city").click(function(eventObject) { add_city_div(eventObject); });
+            jQuery("a.del_city").click(function(eventObject) { del_city_div(eventObject); });
+            
+            if (jQuery("tr.city_row").length < 3) {
+                jQuery("a.del_city").hide();
+            } else {
+                jQuery("a.del_city").show();
+            }
+        }
+        
+        function del_city_div(e) {
+            var el = e.currentTarget.parentElement.parentElement;
+            el.remove();
+            jQuery("a.add_city").click(function(eventObject) { add_city_div(eventObject); });
+            jQuery("a.del_city").click(function(eventObject) { del_city_div(eventObject); });
+            
+            if (jQuery("tr.city_row").length < 3) {
+                jQuery("a.del_city").hide();
+            } else {
+                jQuery("a.del_city").show();
+            }
+        }
+        
         // Расчет расстояния между пунктами
 	function calculate_distance() {
 		var length = 0;		
 		var routeFrom = document.getElementById('first_city').value;
 		var routeTo = document.getElementById('second_city').value;
 		// Создание маршрута
-		ymaps.route([routeFrom, routeTo]).then(
+		ymaps.route([routeFrom, 'Житомир', routeTo]).then(
 			function(route) {
 				//alert('Длина маршрута = ' + route.getHumanLength());
 				length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
@@ -297,7 +377,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         function showDistanceDialog() {
             if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
                 //displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
-                displayDistance([jQuery('#first_city').val(), jQuery('#second_city').val()], null);
+                displayDistance([jQuery('#first_city').val(), 'Житомир', jQuery('#second_city').val()], null);
             } else {
 
             }
@@ -539,6 +619,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
+            CITY_NAMES = ['Киев', 'Чоп'];
+            
             jQuery('#show_dist_link').hide();
 
             jQuery('#set_dim').click(function() {

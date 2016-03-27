@@ -51,7 +51,7 @@ function print_distance_calculator_form($errors, $city, $map, $form) {
 		var routeFrom = city[0];
 		var routeTo = city[1];
 		
-		ymaps.route([routeFrom, routeTo], {mapStateAutoApply:true}).then(
+		ymaps.route([routeFrom, <?php echo tzs_encode('Житомир') ?>, routeTo], {mapStateAutoApply:true}).then(
           function(route) {
             map.geoObjects.add(route);
 			var length = route.getHumanLength().replace(/&#160;/,' ');

@@ -55,6 +55,7 @@ function tzs_front_end_my_shipments_handler($atts) {
     $page = current_page_number();
     $pp = TZS_RECORDS_PER_PAGE;
     $active = isset($_GET['active']) ? trim($_GET['active']) : '1';
+    $record_pickup_time = get_option('t3s_setting_record_pickup_time', '30');
 	
     if ($user_id == 0) {
         ?>
@@ -69,7 +70,7 @@ function tzs_front_end_my_shipments_handler($atts) {
         $sql = "SELECT COUNT(*) as cnt FROM ".TZS_SHIPMENT_TABLE." WHERE user_id=$user_id AND active=$active;";
         $res = $wpdb->get_row($sql);
         if (count($res) == 0 && $wpdb->last_error != null) {
-                print_error('Не удалось отобразить список грузов. Свяжитесь, пожалуйста, с администрацией сайта');
+            print_error('Не удалось отобразить список грузов. Свяжитесь, пожалуйста, с администрацией сайта');
         } else {
             $records = $res->cnt;
             $pages = ceil($records / $pp);
@@ -91,7 +92,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                 $sql .= " b.dt_pay AS order_dt_pay,";
                 $sql .= " b.dt_expired AS order_dt_expired,";
                 $sql .= " IFNULL(b.dt_pay, a.time) AS dt_sort,";
-                $sql .= " IF(b.status IS NOT NULL, 2, IF(a.dt_pickup <> '0000-00-00 00:00:00', 1, 0)) AS top_status,";
+                $sql .= " IF(b.status IS NOT NULL, 2, IF(ROUND((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(a.dt_pickup))/60, 0) <= ".$record_pickup_time.", 1, 0)) AS top_status,";
                 $sql .= " LOWER(c.code) AS from_code, LOWER(d.code) AS to_code";
                 $sql .= " FROM ".TZS_SHIPMENT_TABLE." a";
                 $sql .= " LEFT OUTER JOIN wp_tzs_orders b ON (b.tbl_type = 'SH' AND a.id = b.tbl_id AND ((b.status=1 AND b.dt_expired > NOW()) OR b.status=0) )";
@@ -119,7 +120,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                         <table id="tbl_products">
                         <thead>
                             <tr id="tbl_thead_records_per_page">
-                                <th colspan="9" style="border: 0;">
+                                <th colspan="8" style="border: 0;">
                                     <div class="div_td_left">
                                         <?php echo ($active === '1') ? 'Публикуемые' : 'Архивные'; ?> грузы
                                     </div>
@@ -190,6 +191,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                     </div>
                 </div>
                     
+                <?php include_once WP_PLUGIN_DIR.'/tzs/front-end/tzs.my.record_pickup.php'; ?>
                 <?php include_once WP_PLUGIN_DIR.'/tzs/front-end/tzs.my.new_order.php'; ?>
     
     <script src="/wp-content/plugins/tzs/assets/js/jquery.stickytableheaders.min.js"></script>
@@ -249,6 +251,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                         jQuery("#pickup_button").on('click', function(event) {  
                             id = jQuery("#table_record_id").attr('value');
                             if (id !== '0') {
+                                promptPickUp(id, 'SH');
                             } else {
                                 ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
                                 event.preventDefault();
@@ -263,7 +266,7 @@ function tzs_front_end_my_shipments_handler($atts) {
                             
                             if (id !== '0') {
                                 if (order_status == '') {
-                                    promptPickUp(id, 'SH');
+                                    promptVipPickUp(id, 'SH');
                                 } else {
                                     window.location.replace("<?php echo get_site_url(); ?>/account/view-order/?id=" + order_id);
                                 }

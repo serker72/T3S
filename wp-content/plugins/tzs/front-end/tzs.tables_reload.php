@@ -6,29 +6,63 @@
 function tzs_products_table_record_out($row, $form_type, $pr_type_array, $profile_td_text=null) {
 //    $user_info = tzs_get_user_meta($row->user_id);
 
-    $output_tbody = '<tr rid="'.$row->id.'" id="';
+    $output_tbody = '<tr rid="'.$row->id.'" id=';
 
-    if ($row->sale_or_purchase == 1) { $output_tbody .= 'tbl_auctions_tr_lot_1'; } else { $output_tbody .= 'tbl_auctions_tr_lot_0'; }
+    if ($row->sale_or_purchase == 1) { $output_tbody .= '"tbl_auctions_tr_lot_1"'; } else { $output_tbody .= '"tbl_auctions_tr_lot_0"'; }
     
-    $output_tbody .= '"'.($row->order_status == 1 ? ' class="top_record"' : '').'>';
+    if ($row->top_status == 2) {
+        $output_tbody .= ($row->order_status == 1 ? ' class="vip_top_record"' : ($profile_td_text && $row->order_status !== null && $row->order_status == 0 ? ' class="pre_vip_top_record"' : ''));
+    } else if ($row->top_status == 1) {
+        $output_tbody .= ' class="top_record"';
+    } else {
+    }
+    
+    $output_tbody .= '>';
+    
+    if ($profile_td_text == 'no') {
+        $output_tbody .= '<td><input type="radio" order-status="'.($row->order_status == null ? '' : $row->order_status).'" top-status="'.$row->top_status.'" order-id="'.$row->order_id.'" id="r_table_record_id" name="r_table_record_id" value="'.$row->id.'"';
+
+        if (isset($_POST['table_record_id']) && $_POST['table_record_id'] == "$row->id") $output_tbody .= 'checked="checked"';
+
+        $output_tbody .= '></td>';
+    }
     
     $dt_created = convert_time($row->created, "d.m.y (Hч:iмин)");
     $dt_created = explode(" ", $dt_created);
     
-    $output_tbody .= '
-            <td>
-                <div class="record_number">
+    if ($row->dt_pickup != '0000-00-00 00:00:00') {
+        $dt_pickup = convert_time($row->dt_pickup, "d.m.y (Hч:iмин)");
+        $dt_pickup = explode(" ", $dt_pickup);
+    } else {
+        $dt_pickup = '';
+    }
+    
+                /*<div class="record_number">
                     <span class="middle" title="Номер заявки">
                            № '.$row->id.'
                     </span>
-                </div>
+                </div>*/
+    
+    $output_tbody .= '
+            <td>
                 <div>
-                    <span class="date_label" title="Дата публикации заявки">
+                    <div class="date_label" title="Дата публикации заявки">
                         '.$dt_created[0].'
-                    </span><br><br>
-                    <span class="time_label" title="Время публикации заявки">
+                    </div>
+                    <div class="time_label" title="Время публикации заявки">
                         '.$dt_created[1].'
-                    </span>
+                    </div><br>';
+    
+    if ($dt_pickup != '') {
+        $output_tbody .= '<div class="date_label" title="Дата бесплатного поднятия заявки в ТОП">
+                    '.$dt_pickup[0].'
+                </div>
+                <div class="time_label" title="Время бесплатного поднятия заявки в ТОП">
+                    '.$dt_pickup[1].'
+                </div>';
+    }
+    
+    $output_tbody .= '
                 </div>
             </td>
             <td>
@@ -117,7 +151,9 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array, $profil
 
     $output_tbody .= '</div></td>';
                 
-    if ($profile_td_text) {
+    if ($profile_td_text == 'no') {
+        $output_tbody .= '';
+    } else if ($profile_td_text) {
         $output_tbody .= '<td>'.$profile_td_text.'</td>';
     } else {
         $output_tbody .= '<td>'.tzs_print_user_contacts($row, $form_type, 0).'</td>';
@@ -363,6 +399,7 @@ function tzs_front_end_tables_reload() {
     $p_title = get_param_def('p_title', '');
     $page = get_param_def('page', '1');
     $records_per_page = get_param_def('records_per_page', ''.TZS_RECORDS_PER_PAGE);
+    $record_pickup_time = get_option('t3s_setting_record_pickup_time', '30');
     
 
     //$p_id = get_the_ID();
@@ -468,6 +505,7 @@ function tzs_front_end_tables_reload() {
             $sql .= " b.dt_pay AS order_dt_pay,";
             $sql .= " b.dt_expired AS order_dt_expired,";
             $sql .= " IFNULL(b.dt_pay, a.".$table_order_by.") AS dt_sort,";
+            $sql .= " IF(b.status IS NOT NULL, 2, IF(ROUND((UNIX_TIMESTAMP() - UNIX_TIMESTAMP(a.dt_pickup))/60, 0) <= ".$record_pickup_time.", 1, 0)) AS top_status,";
             $sql .= " LOWER(c.code) AS from_code";
             if ($form_type != 'products') 
                 $sql .= ", LOWER(d.code) AS to_code";
@@ -477,7 +515,7 @@ function tzs_front_end_tables_reload() {
             if ($form_type != 'products')
                 $sql .= " LEFT OUTER JOIN wp_tzs_countries d ON (a.to_cid = d.country_id)";
             $sql .= " WHERE active=1 $sql1 $s_sql";
-            $sql .= " ORDER BY order_status DESC, dt_sort DESC";
+            $sql .= " ORDER BY top_status DESC, order_status DESC, dt_sort DESC";
             $sql .= " LIMIT $from,$pp;";
             $res = $wpdb->get_results($sql);
             if (count($res) == 0 && $wpdb->last_error != null) {

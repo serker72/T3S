@@ -3056,3 +3056,27 @@ margin-top: 20px;
 #vip_pickup_button {
     color: #0F0;
 }
+
+/* */
+.input_city_div {
+    width: 100%;
+}
+.city_input_div {
+    /*height: 35px;*/
+    vertical-align: middle;
+}
+.city_title, .city_distance, .city_input, .city_delete {
+    vertical-align: top;
+}
+.city_delete {
+    width: 40px;
+}
+.delete_city_button {
+    background: url(images/button_cancel.png) no-repeat;
+    height: 32px;
+}
+.add_city_span {
+    margin: 0;
+    padding: 0;
+    height: 20px;
+}

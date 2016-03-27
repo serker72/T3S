@@ -332,4 +332,47 @@ function tzs_check_order_exist_p24() {
     return $output;
 }
 
+/*******************************************************************************
+ * 
+ * tzs_record_pickup_top - поднятие записи в ТОП
+ * 
+ *******************************************************************************/
+function tzs_record_pickup_top() {
+    global $wpdb;
+    
+    $errors = array();
+    $ret_flag = '0';
+    
+    $user_id = get_current_user_id();
+    
+    $pickup_tbl_type = get_param('pickup_tbl_type');
+    $pickup_tbl_id = get_param('pickup_tbl_id');
+    
+    if ($pickup_tbl_type === 'SH') {
+        $table_name = TZS_SHIPMENT_TABLE;
+    } else if ($pickup_tbl_type === 'TR') {
+        $table_name = TZS_TRUCK_TABLE;
+    } else {
+        $table_name = TZS_PRODUCTS_TABLE;
+    }
+
+    $sql = $wpdb->prepare("UPDATE ".$table_name." SET dt_pickup=now() WHERE id=%d AND user_id=%d;", $pickup_tbl_id, $user_id);
+    
+    if (false === $wpdb->query($sql)) {
+        array_push($errors, "Не удалось поднять заявку в ТОП. Свяжитесь, пожалуйста, с администрацией сайта");
+        array_push($errors, $wpdb->last_error);
+    } else {
+        array_push($errors, "Успешно поднята заявка в ТОП");
+        $ret_flag = '1';
+    }
+    
+    
+    $output = array(
+        'output_error' => implode('<br>', $errors),
+        'ret_flag' => $ret_flag,
+    );
+
+    return $output;
+}
+
 ?>
