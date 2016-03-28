@@ -3,8 +3,8 @@
  */
 
 var MAX_CITY_CNT = 10;
-var CITY_NAMES = [];
-var CITY_IDS = [];
+//var CITY_NAMES = [];
+//var CITY_IDS = [];
 
 // Подсчет кол-ва строк для ввода города
 function countOfCityRows() {
@@ -21,6 +21,7 @@ function addCity(el) {
         //alert('index=' + index);
         addCityRow(index, true);
         changeCityTitle();
+        showDelCityLink();
         jQuery('.city_input').eq(index).focus();
     }
 }
@@ -54,8 +55,18 @@ function addCityRow(index, from_ui) {
     $tr.append($td);
     $tr.append('<td class="city_delete"><div class="delete_city_button" onclick="removeCity(this);">&nbsp;</div></td>');
     
+    // cell 5 - delete button
+    var $last_tr,
+        button_text = 'Рассчитать';
+    if (!from_ui && (index == CITY_NAMES.length - 1)) {
+        $last_tr = jQuery('<tr></tr>');
+        $last_tr.append('<td id="totalDistance" colspan="2"></td>');
+        $last_tr.append('<td colspan="2" style="text-align: right;"><input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="submitCityForm();"></td>');
+        //$last_tr.append('<td></td>');
+    }
+    
     if (!from_ui) {
-        jQuery('#citiesTable').append($tr);//.append($last_tr);
+        jQuery('#citiesTable').append($tr).append($last_tr);
     } else if (index > 0) {
         jQuery('.city_row').eq(index - 1).after($tr);
     }
@@ -81,9 +92,10 @@ function removeCity(el) {
     }
     
     changeCityTitle();
+    showDelCityLink();
 }
 
-//
+// Изменение надписи
 function changeCityTitle() {
     jQuery('.city_title').each(function(){
         var el = jQuery(this);
@@ -96,4 +108,27 @@ function changeCityTitle() {
             jQuery('td.city_title').eq(index).html('Через');
         }
     });
+}
+
+function showDelCityLink() {
+    if (countOfCityRows() < 3) {
+        jQuery("div.delete_city_button").hide();
+    } else {
+        jQuery("div.delete_city_button").show();
+    }
+}
+    
+// Построение формы
+function initCitiesTable() {
+    if (CITY_NAMES.length == 0) {
+        CITY_NAMES[0] = '';
+        CITY_NAMES[1] = '';
+    }
+    
+    for (var index = 0; index < CITY_NAMES.length; index += 1) {
+        addCityRow(index, false);
+    }
+    changeCityTitle();
+    showDelCityLink();
+    jQuery("#citiesTable").find(":text[value='']:first").focus();    
 }

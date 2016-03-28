@@ -58,9 +58,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 </div>
             </div>
             <div class="span4">
-                <div><input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', ''); ?>" placeholder="Дата погрузки" readonly="true" style="width: 60px;"></div>
-                <div><input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', ''); ?>" placeholder="Дата выгрузки" readonly="true" style="width: 60x;"></div>
-                <div><input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий"></div>
+                <div><input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', ''); ?>" placeholder="Дата погрузки" readonly="true"></div>
+                <div><input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', ''); ?>" placeholder="Дата выгрузки" readonly="true"></div>
                 <div>
                     <select id="trans_type" name="trans_type">
                     <?php
@@ -68,44 +67,10 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     ?>
                     </select>
                 </div>
-                <div class="span12">
+                <div><input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий"></div>
+                <div>
                     <label for="trans_count">Кол-во машин:</label>&nbsp;
-                    <input type="text" size="5" id="trans_count" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "0" style="width: 55px;">
-                </div>
-                <div class="span12">
-                    <input type="hidden" name="cost_curr" id="cost_curr" value="1">
-                    <label for="cost">Стоимость перевозки:</label>&nbsp;
-                    <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
-                    <div class="post-input">грн</div>
-                </div>
-                <div class="span12">
-                    <label for="price">Цена&nbsp;=</label>&nbsp;
-                    <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
-                    <div class="post-input">грн/км</div>
-                </div>
-                <div class="span12">
-                    <label for="">Загрузка:</label>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load1" name="load1" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="load1">верхняя</label><br>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load2" name="load2" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="load2">боковая</label><br>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load3" name="load3" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="load3">задняя</label><br>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load4" name="load4" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="load4">с полной растентовкой</label><br>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load5" name="load5" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="load5">со снятием поперечин</label><br>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load6" name="load6" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="load6">со снятием стоек</label><br>
-                </div>
-                <div class="chekbox span12">
-                    <input type="checkbox" id="load7" name="load7" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="load7">без ворот</label><br>
+                    <input type="text" size="5" id="trans_count" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "0" style="width: 25px;">
                 </div>
                 
             </div>
@@ -137,32 +102,16 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     <label for="sh_weight">Вес груза:</label>&nbsp;
                     <input type="text" id="sh_weight" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5" style="width: 50px;"><div class="post-input">т</div>
                 </div>
-                <div>
-                    <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
-                </div>
-                <div class="chekbox form-group">
-                    <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label><br>
-                    <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label><br>
-                    <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label><br>
-                    <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label><br>
-                    <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label><br>
-                    <input type="checkbox" id="way_prepay" name="way_prepay" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label><br>
-                    <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"><div class="post-input">%</div><br>
-                    <input type="checkbox" id="price_query" name="price_query" <?php echo isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
-                </div>
                 
             </div>
         </div>
         
-        
-        
-        
-        
-        
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span3">
+            <input type="text" id="datepicker1" name="sh_date_from" size="" value="<?php echo_val_def('sh_date_from', ''); ?>" placeholder="Дата погрузки" readonly="true">
         </div>
         <div class="span3">
+            <input autocomplete="city" id="first_city" type="text" size="35" name="sh_city_from" value="<?php echo_val('sh_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
 	   </div>
         <div class="span1">
             <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
@@ -172,6 +121,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <input type="hidden" name="length" id="route-length"-->
         </div>
         <div id="div_sh_active" class="span3">
+            <input type="hidden" name="sh_active" id="sh_active" value="1">
             <!--label for="sh_active">Статус</label>
             <select id="sh_active" name="sh_active">
                 <option value="1" <?php //if (isset($_POST["sh_active"]) && ($_POST["sh_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
@@ -182,8 +132,10 @@ function tzs_print_shipment_form($errors, $edit=false) {
     
     <div class="row-fluid"  style="width: 100%; ">
         <div class="span3">
+            <input type="text" id="datepicker2" name="sh_date_to" size="" value="<?php echo_val_def('sh_date_to', ''); ?>" placeholder="Дата выгрузки" readonly="true">
         </div>
         <div id="div_second_city" class="span3 form-group">
+            <input autocomplete="city" id="second_city" type="text" size="35" name="sh_city_to" value="<?php echo_val('sh_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1">
             <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
@@ -195,14 +147,109 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
     </div>
                     
-
     <div class="row-fluid"  style="width: 100%; ">
-            <input type="hidden" name="sh_active" id="sh_active" value="1">
+        <div id="" class="span3">
+            <select id="sh_type" name="sh_type" placeholder="Тип груза">
+            <?php
+                tzs_print_array_options($GLOBALS['tzs_sh_types'], '', 'sh_type', 'Тип груза');
+            ?>
+            </select>
+        </div>
+        <div class="span3">
+            <input type="text" id="sh_descr" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="Описание груза">
+        </div>
+        <div class="span3">
+            <input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий">
+        </div>
+        <div class="span3 chekbox"><!-- style="text-align: right;"-->
+            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>><label for="set_dim">Указать габариты груза (м):</label>
+            <!--div class="post-input gabarite"></div-->
+        </div>
+    </div>
+    
+    <div class="row-fluid"  style="width: 100%; ">
+        <div id="" class="span3">
+            <select id="trans_type" name="trans_type">
+            <?php
+                tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
+            ?>
+            </select>
+        </div>
         <div class="span1">
             <span><img id="trans_type_img" src="" alt=""></img></span>&nbsp;&nbsp;
         </div>
+        <div class="span2">
+            <label for="trans_count">Кол-во машин:</label>&nbsp;
+            <input type="text" size="5" id="trans_count" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "0" style="width: 25px;">
+        </div>
+        <div class="span3">
+            <label for="sh_weight">Вес груза:</label>&nbsp;
+            <input type="text" id="sh_weight" name="sh_weight" value="<?php echo_val('sh_weight'); ?>" maxlength = "5" style="width: 50px;"><div class="post-input">т</div>
+        </div>
+        <div class="span3">
+            <input type="text" name="sh_length" id="sh_length" value="<?php echo_val('sh_length'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Длина" style="width: 50px; margin-right: 5px;">&nbsp;&nbsp;
+            <input type="text" name="sh_width" id="sh_width" value="<?php echo_val('sh_width'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Ширина" style="width: 50px; margin-left: 5px;">&nbsp;&nbsp;
+            <input type="text" name="sh_height" id="sh_height" value="<?php echo_val('sh_height'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Высота" style="width: 50px; margin-left: 5px;">
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; ">
+        <div class="span4">
+            <label for="cost">Стоимость перевозки:</label>&nbsp;
+            <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
+            <div class="post-input">грн</div>
+            <input type="hidden" name="cost_curr" id="cost_curr" value="1">
+        </div>
+        <div class="span4">
+            <label for="price">Цена&nbsp;=</label>&nbsp;
+            <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
+            <div class="post-input">грн/км</div>
+        </div>
+        <div class="span1">
+        </div>
+        <div class="span3"><!-- style="text-align: right; float: right;"-->
+            <label for="sh_volume">Объем груза&nbsp;=</label>&nbsp;
+            <input type="text" id="sh_volume" name="sh_volume" value="<?php echo_val('sh_volume'); ?>" readonly="true" style="width: 80px;">
+            <div class="post-input">м<sup>3</sup></div>
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
+        <div class="span8">
+            <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
+        </div>
+        <div class="span4" style="text-align: right;">
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%;">
+        <div class="span2 chekbox">
+            <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
+        </div>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
+        </div>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label>
+        </div>
+        <div class="span2 chekbox">
+            <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label>
+        </div>
+        <div class="span1 chekbox">
+            <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label>
+        </div>
+        <div class="span2 chekbox" style="text-align: right;">
+            <input type="checkbox" id="way_prepay" name="way_prepay" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label>
+        </div>
+        <div class="span1" style="padding-top: 10px;">
+            <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"><div class="post-input">%</div>
+        </div>
+    </div>
+
+    <div class="row-fluid"  style="width: 100%; ">
         <div class="span8">
             <div class="span12 chekbox" style="margin-bottom: 20px;">
+                <input type="checkbox" id="price_query" name="price_query" <?php echo isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
             </div>
             <div class="span4">
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
