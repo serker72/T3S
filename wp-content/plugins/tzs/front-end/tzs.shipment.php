@@ -55,6 +55,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                             </tr-->
                         </tbody>
                     </table>
+                    <div id="map_canvas"></div>
                 </div>
             </div>
             <div class="span4">

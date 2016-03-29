@@ -61,7 +61,7 @@ function addCityRow(index, from_ui) {
     if (!from_ui && (index == CITY_NAMES.length - 1)) {
         $last_tr = jQuery('<tr></tr>');
         $last_tr.append('<td id="totalDistance" colspan="2"></td>');
-        $last_tr.append('<td colspan="2" style="text-align: right;"><input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="submitCityForm();"></td>');
+        $last_tr.append('<td colspan="2" style="text-align: right;"><input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="calcCitiesDistance();"></td>');
         //$last_tr.append('<td></td>');
     }
     
@@ -110,6 +110,7 @@ function changeCityTitle() {
     });
 }
 
+// Скрытие кнопок удаления при указании 2 пунктов
 function showDelCityLink() {
     if (countOfCityRows() < 3) {
         jQuery("div.delete_city_button").hide();
@@ -131,4 +132,107 @@ function initCitiesTable() {
     changeCityTitle();
     showDelCityLink();
     jQuery("#citiesTable").find(":text[value='']:first").focus();    
+}
+
+    
+// Рассчет расстояний
+function calcCitiesDistance() {
+    // Получим список введенных городов
+    var cities = document.getElementsByName('input_city[]');
+    var city_names = [];
+    var city_ids = [];
+    var encodedPoints = [];
+    var filledCitiesCnt = 0;
+    var map, mapRoute;
+
+    
+    // Подсчитаем кол-во заполненных полей
+    //for(i = 0; i < cities.length; i += 1) {
+    for(i = 0; i < 3; i += 1) {
+        if (cities[i].value !== '') {
+            city_names[filledCitiesCnt] = cities[i].value;
+            city_ids[filledCitiesCnt] = cities[i].getAttribute('city_id');
+            encodedPoints[filledCitiesCnt] = stringBase64EncodeDecode(cities[i].value, 'encode');
+            filledCitiesCnt += 1;
+        }
+    }
+    
+    if (city_names.length < 2) {
+        alert('Укажите, пожалуйста, как минимум две точки Вашего маршрута!');
+        return;
+    } 
+    
+    // Если указано только 2 пункта - проверим, а не одинаковы ли они
+    if (city_names.length == 2) {
+        if ((city_names[0] == city_names[1]) || ((city_ids[0] == city_ids[1]) && (city_ids[0] != 0))) {
+            alert('Укажите, пожалуйста, различные точки Вашего маршрута!');
+            return;
+        }
+    }
+
+    map = new ymaps.Map("map_canvas", {
+        center: [55.76, 37.64],
+        zoom: 5,
+        controls: ['zoomControl','typeSelector']
+    });
+
+    // Удаление старого маршрута
+    if (mapRoute) {
+      map.geoObjects.remove(mapRoute);
+    } 
+    
+    // Построим маршрут
+    ymaps.route(encodedPoints, {mapStateAutoApply:true}).then(
+        function(route) {
+            map.geoObjects.add(route);
+            var length = route.getDistance() / 1000;
+            //var length = route.getHumanLength().replace(/&#160;/,' ');
+            //var time = route.getHumanTime().replace(/&#160;/g,' ');
+            var segments = route.getNumRouteSegments();
+            
+            for(i = 0; i < segments; i += 1) {
+                var segment = route.getRouteSegment(i);
+                var distance = segment.getDistance() / 1000;
+                var $distance_cell = jQuery('td.distance').eq(i);
+                $distance_cell.html(distance + ' км');
+            }
+
+            //jQuery('.route_node1').text(routeFrom);
+            //jQuery('.route_node2').text(routeTo);
+            //jQuery('.distance').text('Длина маршрута: '+ length +', '+ 'приблизительное время в пути: ' + time);
+            //mapRoute = route;
+            
+            jQuery('#sh_distance').attr('value', length);
+        },
+        function(error) {
+            alert('Невозможно построить маршрут:\n' + error.message);
+            return;
+        }
+    ); 
+    
+}
+
+function stringBase64EncodeDecode(str, action) {
+    if ((typeof(str) !== 'string') || (str == '')) {
+        alert('Необходимо указать строку !');
+        return '';
+    }
+    
+    // Create Base64 Object
+    var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/rn/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
+
+    if (action === 'encode') {
+        // Encode the String
+        var encodedString = Base64.encode(str);
+        console.log(encodedString); // Outputs: "SGVsbG8gV29ybGQh"
+        return encodedString;
+    } else if (action === 'decode') {
+        // Decode the String
+        var decodedString = Base64.decode(str);
+        console.log(decodedString); // Outputs: "Hello World!"
+        return decodedString;
+    } else {
+        alert('Необходимо указать значение action decode или encode !');
+        return '';
+    }
 }
