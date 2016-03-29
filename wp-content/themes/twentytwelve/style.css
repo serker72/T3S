@@ -3065,15 +3065,18 @@ margin-top: 20px;
     /*height: 35px;*/
     vertical-align: middle;
 }
-.city_title, .city_distance, .city_input, .city_delete {
+.city_title, .city_input, .city_delete {
     vertical-align: top;
+}
+.city_distance {
+    vertical-align: bottom;
 }
 .city_delete {
     width: 40px;
 }
 .delete_city_button {
-    background: url(images/button_cancel.png) no-repeat;
-    height: 32px;
+    background: url(images/button_cancel.png) no-repeat 4px 6px;
+    height: 30px;
 }
 .add_city_span {
     margin: 0;

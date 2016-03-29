@@ -2,6 +2,7 @@
  * Функции для работы со списком городов
  */
 
+var map, mapRoute;
 var MAX_CITY_CNT = 10;
 //var CITY_NAMES = [];
 //var CITY_IDS = [];
@@ -22,6 +23,8 @@ function addCity(el) {
         addCityRow(index, true);
         changeCityTitle();
         showDelCityLink();
+        changeCityNames();
+        clearDistanceLabels();
         jQuery('.city_input').eq(index).focus();
     }
 }
@@ -61,7 +64,7 @@ function addCityRow(index, from_ui) {
     if (!from_ui && (index == CITY_NAMES.length - 1)) {
         $last_tr = jQuery('<tr></tr>');
         $last_tr.append('<td id="totalDistance" colspan="2"></td>');
-        $last_tr.append('<td colspan="2" style="text-align: right;"><input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="calcCitiesDistance();"></td>');
+        $last_tr.append('<td colspan="2" style="text-align: right;"><a id="show_dist_link" href="javascript:showDistanceModal();">см. карту</a>&nbsp;&nbsp;<input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="calcCitiesDistance();"></td>');
         //$last_tr.append('<td></td>');
     }
     
@@ -93,6 +96,8 @@ function removeCity(el) {
     
     changeCityTitle();
     showDelCityLink();
+    changeCityNames();
+    clearDistanceLabels();
 }
 
 // Изменение надписи
@@ -118,7 +123,24 @@ function showDelCityLink() {
         jQuery("div.delete_city_button").show();
     }
 }
-    
+
+function clearDistanceLabels() {
+    jQuery('#sh_distance').attr('value', '');
+    //jQuery("div.city_distance").html('');
+    jQuery('div').find('.city_distance').each(function () {
+        jQuery(this).html('');
+    });
+}
+
+// Изменение списка городов
+function changeCityNames() {
+    var i = 0;
+    jQuery('#citiesTable').find('input[type=text]').each(function () {
+        CITY_NAMES[i] = jQuery(this).val();
+        i += 1;
+    });
+}
+
 // Построение формы
 function initCitiesTable() {
     if (CITY_NAMES.length == 0) {
@@ -139,16 +161,19 @@ function initCitiesTable() {
 function calcCitiesDistance() {
     // Получим список введенных городов
     var cities = document.getElementsByName('input_city[]');
+    //var cities = [];
     var city_names = [];
     var city_ids = [];
     var encodedPoints = [];
     var filledCitiesCnt = 0;
-    var map, mapRoute;
 
+    /*jQuery('#citiesTable').find('input[type=text]').each(function () {
+        cities.push(jQuery(this).val());
+    });*/
+    
     
     // Подсчитаем кол-во заполненных полей
-    //for(i = 0; i < cities.length; i += 1) {
-    for(i = 0; i < 3; i += 1) {
+    for(i = 0; i < cities.length; i += 1) {
         if (cities[i].value !== '') {
             city_names[filledCitiesCnt] = cities[i].value;
             city_ids[filledCitiesCnt] = cities[i].getAttribute('city_id');
@@ -165,42 +190,55 @@ function calcCitiesDistance() {
     // Если указано только 2 пункта - проверим, а не одинаковы ли они
     if (city_names.length == 2) {
         if ((city_names[0] == city_names[1]) || ((city_ids[0] == city_ids[1]) && (city_ids[0] != 0))) {
-            alert('Укажите, пожалуйста, различные точки Вашего маршрута!');
+            alert('Укажите, пожалуйста, различные точки Вашего маршрута !');
             return;
         }
     }
+    
+    if (filledCitiesCnt < cities.length) {
+        alert('Укажите, пожалуйста, все добавленные пункты Вашего маршрута или удалите ненужные поля !');
+        return;
+    } 
 
+    var $mapElement = jQuery('#ViewMapModal #map_canvas');
     map = new ymaps.Map("map_canvas", {
         center: [55.76, 37.64],
         zoom: 5,
         controls: ['zoomControl','typeSelector']
     });
+    /*map = new ymaps.Map(
+        $mapElement[0],
+        ymaps.util.bounds.getCenterAndZoom(
+            [[55.7, 37.6], [55.8, 37.7]],
+            [$mapElement.width(), $mapElement.height()]
+        )
+    );*/
 
     // Удаление старого маршрута
     if (mapRoute) {
-      map.geoObjects.remove(mapRoute);
+        map.geoObjects.remove(mapRoute);
     } 
     
     // Построим маршрут
-    ymaps.route(encodedPoints, {mapStateAutoApply:true}).then(
+    ymaps.route(city_names, {mapStateAutoApply:true}).then(
         function(route) {
             map.geoObjects.add(route);
-            var length = route.getDistance() / 1000;
+            var length = Math.round(route.getLength() / 1000);
             //var length = route.getHumanLength().replace(/&#160;/,' ');
             //var time = route.getHumanTime().replace(/&#160;/g,' ');
-            var segments = route.getNumRouteSegments();
+            var segments = route.getPaths().getLength();
             
             for(i = 0; i < segments; i += 1) {
-                var segment = route.getRouteSegment(i);
-                var distance = segment.getDistance() / 1000;
-                var $distance_cell = jQuery('td.distance').eq(i);
+                var segment = route.getPaths().get(i);
+                var distance = Math.round(segment.getLength() / 1000);
+                var $distance_cell = jQuery('td.city_distance').eq(i);
                 $distance_cell.html(distance + ' км');
             }
 
             //jQuery('.route_node1').text(routeFrom);
             //jQuery('.route_node2').text(routeTo);
             //jQuery('.distance').text('Длина маршрута: '+ length +', '+ 'приблизительное время в пути: ' + time);
-            //mapRoute = route;
+            mapRoute = route;
             
             jQuery('#sh_distance').attr('value', length);
         },
@@ -235,4 +273,11 @@ function stringBase64EncodeDecode(str, action) {
         alert('Необходимо указать значение action decode или encode !');
         return '';
     }
+}
+
+function showDistanceModal() {
+    jQuery("#ViewMapModal").modal('show');
+    //map.redraw();
+    map.container.fitToViewport();
+    map.options.set('mapStateAutoApply', true);
 }

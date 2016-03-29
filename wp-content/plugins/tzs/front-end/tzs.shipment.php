@@ -55,7 +55,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
                             </tr-->
                         </tbody>
                     </table>
-                    <div id="map_canvas"></div>
                 </div>
             </div>
             <div class="span4">
@@ -190,7 +189,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
             <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
-            <a id="show_dist_link" href="javascript:showDistanceDialog();">см. карту</a>
         </div>
         <div class="span3">
         </div>
@@ -250,7 +248,23 @@ function tzs_print_shipment_form($errors, $edit=false) {
 </div>
     <div class="clearfix">&nbsp;</div>
     
+    <!-- Modal -->
+    <div id="ViewMapModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 98%; margin-left: -49%; top: 3%;">
+        <div class="modal-header">
+            <button id="ViewMapModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Просмотр карты маршрута</h3>
+        </div>
+        <div class="modal-body">
+            <h4>?</h4>
+            <div id="map_canvas"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        </div>
+    </div>
+    
     <!-- test new form END -->
+    
     <script>
     jQuery('#sh_type').on('change', function() {
             jQuery('#div_sh_type').addClass("change");    
@@ -629,7 +643,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 '<input type="hidden" name="length" id="route-length">');
             
             
-            jQuery('#show_dist_link').hide();
+            //jQuery('#show_dist_link').hide();
 
             jQuery('#set_dim').click(function() {
                     onSetDim(this.checked);
