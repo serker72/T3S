@@ -3070,6 +3070,8 @@ margin-top: 20px;
 }
 .city_distance {
     vertical-align: bottom;
+    padding-right: 10px;
+    color: #a00;
 }
 .city_delete {
     width: 40px;

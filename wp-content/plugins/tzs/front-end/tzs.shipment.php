@@ -22,37 +22,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 <div class="city_input_div">
                     <table id="citiesTable">
                         <tbody>
-                            <!--tr class="city_row">
-                                <td class="city_title">Откуда</td>
-                                <td class="city_distance"></td>
-                                <td class="city_input">
-                                    <div class="input_div">
-                                        <input autocomplete="city" id="" type="text" size="" name="input_city[]" value="" autocomplete="on" placeholder="Населенный пункт погрузки">
-                                    </div>
-                                    <div class="add_city_div">
-                                        <span class="add_city_span" onclick="addCity(this);">добавить пункт</span>
-                                    </div>
-                                </td>
-                                <td class="city_delete">
-                                    <div class="delete_city_button" onclick="removeCity(this);">&nbsp;</div>
-                                </td>
-                            </tr>
-                            
-                            <tr class="city_row">
-                                <td class="city_title">Куда</td>
-                                <td class="city_distance"></td>
-                                <td class="city_input">
-                                    <div class="input_div">
-                                        <input autocomplete="city" id="" type="text" size="" name="input_city[]" value="" autocomplete="on" placeholder="Населенный пункт погрузки">
-                                    </div>
-                                    <div class="add_city_div">
-                                        <span class="add_city_span" onclick="addCity(this);">добавить пункт</span>
-                                    </div>
-                                </td>
-                                <td class="city_delete">
-                                    <div class="delete_city_button" onclick="removeCity(this);">&nbsp;</div>
-                                </td>
-                            </tr-->
                         </tbody>
                     </table>
                 </div>
@@ -169,7 +138,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
         </div>
         <div class="span2">
             <!--input type="text" id="sh_distance" name="sh_distance" size="" value="<?php //echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>
-            <input type="hidden" name="length" id="route-length"-->
+            -->
         </div>
         <div id="div_sh_active" class="span3">
             <!--label for="sh_active">Статус</label>
@@ -243,20 +212,22 @@ function tzs_print_shipment_form($errors, $edit=false) {
 	<?php } else { ?>
 		<input type="hidden" name="action" value="addshipment"/>
 	<?php } ?>
+        <input type="hidden" name="path_segment_distance" id="path_segment_distance" value="">
+        <input type="hidden" name="route-length" id="route-length" value="">
 	<input type="hidden" name="formName" value="shipment" />
     </form>
 </div>
     <div class="clearfix">&nbsp;</div>
+    <div id="map_canvas"></div><!-- style="display: none;"-->
     
     <!-- Modal -->
-    <div id="ViewMapModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 98%; margin-left: -49%; top: 3%;">
+    <div id="ViewMapModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 98%; margin-left: -49%;  top: 3%;">
         <div class="modal-header">
             <button id="ViewMapModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Просмотр карты маршрута</h3>
+            <h4 id="myModalLabel">Просмотр карты маршрута</h4>
         </div>
-        <div class="modal-body">
-            <h4>?</h4>
-            <div id="map_canvas"></div>
+        <div id="ViewMapModalBody" class="modal-body">
+            <!--div id="map_canvas"></div-->
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" data-dismiss="modal">Закрыть</button>
@@ -281,43 +252,6 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 echo "tzs_tr2_types[$key] = '$val[1]';\n";
             }
         ?>
-        
-        function add_city_div(e) {
-            var el = e.currentTarget.parentElement.parentElement;
-            jQuery(el).after('<tr class="city_row">'+
-                                '<td class="city_title">Откуда</td>'+
-                                '<td class="city_distance"></td>'+
-                                '<td class="city_input">'+
-                                '    <input autocomplete="city" id="" type="text" size="" name="input_city[]" value="" autocomplete="on" placeholder="Населенный пункт погрузки">'+
-                                '    <a class="add_city" href="#"><img src="/wp-content/plugins/tzs/assets/images/button_add.png"></a>'+
-                                '</td>'+
-                                '<td class="city_delete">'+
-                                '    <a class="del_city" href="#"><img src="/wp-content/plugins/tzs/assets/images/button_cancel.png"></a>'+
-                                '</td>'+
-                            '</tr>');
-        
-            jQuery("a.add_city").click(function(eventObject) { add_city_div(eventObject); });
-            jQuery("a.del_city").click(function(eventObject) { del_city_div(eventObject); });
-            
-            if (jQuery("tr.city_row").length < 3) {
-                jQuery("a.del_city").hide();
-            } else {
-                jQuery("a.del_city").show();
-            }
-        }
-        
-        function del_city_div(e) {
-            var el = e.currentTarget.parentElement.parentElement;
-            el.remove();
-            jQuery("a.add_city").click(function(eventObject) { add_city_div(eventObject); });
-            jQuery("a.del_city").click(function(eventObject) { del_city_div(eventObject); });
-            
-            if (jQuery("tr.city_row").length < 3) {
-                jQuery("a.del_city").hide();
-            } else {
-                jQuery("a.del_city").show();
-            }
-        }
         
         // Расчет расстояния между пунктами
 	function calculate_distance() {
@@ -503,6 +437,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
         // Функция проверки правильности заполнения полей формы до отправки
         function onFormValidate() {
+            // test
+            return true;
+            
             //var ErrorMsg1 = 'Список ошибок:<ul>';
             var ErrorMsg1 = '<p>';
             var ErrorMsg2 = '';
@@ -638,9 +575,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             CITY_IDS = [98, 97, 96];
             initCitiesTable();
             
-            jQuery('#totalDistance').append(
-                '<input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>'+
-                '<input type="hidden" name="length" id="route-length">');
+            jQuery('#totalDistance').append('<input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>&nbsp;&nbsp;');
             
             
             //jQuery('#show_dist_link').hide();
@@ -726,6 +661,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
 }
 
 function tzs_edit_shipment($id) {
+        $input_city = isset($_POST['input_city']) ? $_POST['input_city'] : array();
+        $path_segment_distance = get_param('path_segment_distance');
+                
         $sh_active = get_param_def('sh_active', '0');
 	$sh_date_from = get_param('sh_date_from');
 	$sh_date_to = get_param('sh_date_to');
