@@ -155,6 +155,8 @@ function changeCityNames() {
 
 // Построение формы
 function initCitiesTable() {
+    var filledCitiesCnt = 0;
+    
     if (CITY_NAMES.length == 0) {
         CITY_NAMES[0] = '';
         CITY_NAMES[1] = '';
@@ -162,9 +164,15 @@ function initCitiesTable() {
     
     for (var index = 0; index < CITY_NAMES.length; index += 1) {
         addCityRow(index, false);
+        if (CITY_NAMES[index] !== '') {
+            filledCitiesCnt += 1;
+        }
     }
     changeCityTitle();
     showDelCityLink();
+    if (filledCitiesCnt === CITY_NAMES.length) {
+        calcCitiesDistance();
+    }
     jQuery("#citiesTable").find(":text[value='']:first").focus();    
 }
 

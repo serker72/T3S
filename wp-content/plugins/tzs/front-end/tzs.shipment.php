@@ -7,9 +7,9 @@ function tzs_print_shipment_form($errors, $edit=false) {
 	
     //print_errors($errors);
     ?>
-		<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
-		<script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
-                <script src="/wp-content/plugins/tzs/assets/js/ksk_city_form.js" type="text/javascript"></script>
+    <script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
+    <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
+    <script src="/wp-content/plugins/tzs/assets/js/ksk_city_form.js" type="text/javascript"></script>
 
     <div style="clear: both;"></div>
     
@@ -56,25 +56,25 @@ function tzs_print_shipment_form($errors, $edit=false) {
                     <label for="">Загрузка:</label>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load1" name="load1" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="load1">верхняя</label><br>
+                    <input type="checkbox" id="top_loading" name="top_loading" <?php echo isset($_POST['top_loading']) ? 'checked="checked"' : ''; ?>><label for="top_loading">верхняя</label><br>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load2" name="load2" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="load2">боковая</label><br>
+                    <input type="checkbox" id="side_loading" name="side_loading" <?php echo isset($_POST['side_loading']) ? 'checked="checked"' : ''; ?>><label for="side_loading">боковая</label><br>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load3" name="load3" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="load3">задняя</label><br>
+                    <input type="checkbox" id="back_loading" name="back_loading" <?php echo isset($_POST['back_loading']) ? 'checked="checked"' : ''; ?>><label for="back_loading">задняя</label><br>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load4" name="load4" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="load4">с полной растентовкой</label><br>
+                    <input type="checkbox" id="full_movable" name="full_movable" <?php echo isset($_POST['full_movable']) ? 'checked="checked"' : ''; ?>><label for="full_movable">с полной растентовкой</label><br>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load5" name="load5" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="load5">со снятием поперечин</label><br>
+                    <input type="checkbox" id="remove_cross" name="remove_cross" <?php echo isset($_POST['remove_cross']) ? 'checked="checked"' : ''; ?>><label for="remove_cross">со снятием поперечин</label><br>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load6" name="load6" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="load6">со снятием стоек</label><br>
+                    <input type="checkbox" id="remove_racks" name="remove_racks" <?php echo isset($_POST['remove_racks']) ? 'checked="checked"' : ''; ?> ><label for="remove_racks">со снятием стоек</label><br>
                 </div>
                 <div class="chekbox span12">
-                    <input type="checkbox" id="load7" name="load7" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="load7">без ворот</label><br>
+                    <input type="checkbox" id="without_gate" name="without_gate" <?php echo isset($_POST['without_gate']) ? 'checked="checked"' : ''; ?> ><label for="without_gate">без ворот</label><br>
                 </div>
                 
             </div>
@@ -247,10 +247,21 @@ function tzs_print_shipment_form($errors, $edit=false) {
 	
     <script>
         tzs_tr2_types = [];
+        CITY_NAMES = [];
         <?php
             foreach ($GLOBALS['tzs_tr2_types'] as $key => $val) {
                 echo "tzs_tr2_types[$key] = '$val[1]';\n";
             }
+            
+            if (isset($_POST['input_city'])) {
+                foreach ($_POST['input_city'] as $key => $val) {
+                    echo "CITY_NAMES[$key] = '$val';\n";
+                }
+            }
+            
+            //echo "CITY_NAMES = [".$_POST['path_segment_cities']."];\n";
+            //echo "CITY_DISTANCES = [".$_POST['path_segment_distances']."];\n";
+            echo "CITY_IDS = [];\n";
         ?>
         
         // Расчет расстояния между пунктами
@@ -571,8 +582,8 @@ function tzs_print_shipment_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
-            CITY_NAMES = ['Киев', 'Житомир', 'Чоп'];
-            CITY_IDS = [98, 97, 96];
+            //CITY_NAMES = ['Киев', 'Житомир', 'Чоп'];
+            //CITY_IDS = [98, 97, 96];
             initCitiesTable();
             
             jQuery('#totalDistance').append('<input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>&nbsp;&nbsp;');
@@ -667,9 +678,17 @@ function tzs_edit_shipment($id) {
         $sh_active = get_param_def('sh_active', '0');
 	$sh_date_from = get_param('sh_date_from');
 	$sh_date_to = get_param('sh_date_to');
-	$sh_city_from = get_param('sh_city_from');
-	$sh_city_to = get_param('sh_city_to');
 	$comment = get_param('comment');
+        
+        if (count($input_city) > 1) {
+            $sh_city_from = $input_city[0];
+            $sh_city_to = $input_city[count($input_city) - 1];
+            $path_segment_cities = json_encode($input_city);
+        } else {
+            $sh_city_from = get_param('sh_city_from');
+            $sh_city_to = get_param('sh_city_to');
+            $path_segment_cities = '';
+        }
 	
 	$sh_descr = get_param('sh_descr');
 	$sh_weight = get_param_def('sh_weight', '0');
@@ -695,6 +714,15 @@ function tzs_edit_shipment($id) {
         $way_debark = isset($_POST['way_debark']) ? 1 : 0;
         $soft = isset($_POST['soft']) ? 1 : 0;
         $way_prepay = isset($_POST['way_prepay']) ? 1 : 0;
+        
+        $top_loading = isset($_POST['top_loading']) ? 1 : 0;
+        $side_loading = isset($_POST['side_loading']) ? 1 : 0;
+        $back_loading = isset($_POST['back_loading']) ? 1 : 0;
+        $full_movable = isset($_POST['full_movable']) ? 1 : 0;
+        $remove_cross = isset($_POST['remove_cross']) ? 1 : 0;
+        $remove_racks = isset($_POST['remove_racks']) ? 1 : 0;
+        $without_gate = isset($_POST['without_gate']) ? 1 : 0;
+        
         
         // Контроль пересечения дат
         $sh_date_from_str = date("Ymd", strtotime($sh_date_from));
@@ -740,13 +768,21 @@ function tzs_edit_shipment($id) {
             array_push($errors, "Дата выгрузки не может быть РАНЬШЕ даты погрузки.");
         }
 	
-	if (!is_valid_city($sh_city_from)) {
-		array_push($errors, "Неверный пункт погрузки");
-	}
-	
-	if (!is_valid_city($sh_city_to)) {
-		array_push($errors, "Неверный пункт разгрузки");
-	}
+        if (count($input_city) > 1) {
+            for($i = 0; $i < count($input_city); $i++) {
+                if (!is_valid_city($input_city[$i])) {
+                    array_push($errors, "Укажите пункт маршрута № ".($i + 1));
+                }
+            }
+        } else {
+            if (!is_valid_city($sh_city_from)) {
+                array_push($errors, "Неверный пункт погрузки");
+            }
+
+            if (!is_valid_city($sh_city_to)) {
+                array_push($errors, "Неверный пункт разгрузки");
+            }
+        }
 	
 	if (strlen($sh_descr) < 2) {
 		array_push($errors, "Введите описание груза");
@@ -796,6 +832,22 @@ function tzs_edit_shipment($id) {
 	$from_info = null;
 	$to_info = null;
 	if (count($errors) == 0) {
+            if (count($input_city) > 1) {
+                for($i = 0; $i < count($input_city); $i++) {
+                    $city_info = tzs_yahoo_convert($input_city[$i]);
+                    if (isset($city_info["error"])) {
+                        array_push($errors, "Не удалось распознать населенный пункт маршрута № ".($i + 1).": ".$city_info["error"]);
+                    }
+
+                    if ($i == 0) {
+                        $from_info = $city_info;
+                    }
+
+                    if ($i == (count($input_city) - 1)) {
+                        $to_info = $city_info;
+                    }
+                }
+            } else {
 		$from_info = tzs_yahoo_convert($sh_city_from);
 		if (isset($from_info["error"])) {
 			array_push($errors, "Не удалось распознать населенный пункт погрузки: ".$from_info["error"]);
@@ -804,6 +856,7 @@ function tzs_edit_shipment($id) {
 		if (isset($to_info["error"])) {
 			array_push($errors, "Не удалось распознать населенный пункт выгрузки: ".$to_info["error"]);
 		}
+            }
 	}
 	
 	if (count($errors) > 0) {
@@ -839,13 +892,17 @@ function tzs_edit_shipment($id) {
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_SHIPMENT_TABLE.
-				" (time, last_edited, user_id, sh_date_from, sh_date_to, sh_city_from, sh_city_to, sh_descr, sh_weight, sh_volume, sh_length, sh_height, sh_width, trans_count, trans_type, sh_type, active, comment, distance, from_cid, from_rid, from_sid, to_cid, to_rid, to_sid, price, price_val, cost, cash, nocash, way_ship, way_debark, soft, way_prepay, prepayment, price_query)".
-				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d, %f, %d, %d, %d, %d, %d, %d, %f, %d);",
+				" (time, last_edited, user_id, sh_date_from, sh_date_to, sh_city_from, sh_city_to, sh_descr, sh_weight, sh_volume, sh_length, sh_height, sh_width, trans_count, trans_type, sh_type, active, comment, distance,".
+                                " from_cid, from_rid, from_sid, to_cid, to_rid, to_sid, price, price_val, cost, cash, nocash, way_ship, way_debark, soft, way_prepay, prepayment, price_query,".
+                                " top_loading, side_loading, back_loading, full_movable, remove_cross, remove_racks, without_gate, path_segment_cities, path_segment_distances)".
+				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d, %f, %d, %d, %d, %d, %d, %d, %f, %d,".
+                                " %d, %d, %d, %d, %d, %d, %d, %s, %s);",
 				$user_id, $sh_date_from, $sh_date_to, stripslashes_deep($sh_city_from), stripslashes_deep($sh_city_to),
 				stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume), floatval($sh_length),
-				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), $sh_distance,
+				floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), intval($sh_distance),
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query));
+                                floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
+                                intval($top_loading), intval($side_loading), intval($back_loading), intval($full_movable), intval($remove_cross), intval($remove_racks), intval($without_gate), stripslashes_deep($path_segment_cities), stripslashes_deep($path_segment_distance));
 		
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось опубликовать Ваш груз. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -865,12 +922,14 @@ function tzs_edit_shipment($id) {
 			$sql = $wpdb->prepare("UPDATE ".TZS_SHIPMENT_TABLE." SET ".
 				" last_edited=now(), sh_date_from=%s, sh_date_to=%s, sh_city_from=%s, sh_city_to=%s, sh_descr=%s, sh_weight=%f, sh_volume=%f, sh_length=%f, sh_height=%f, sh_width=%f, trans_count=%d, trans_type=%d, sh_type=%d, active=%d, comment=%s, distance=%d, ".
 				" from_cid=%d,from_rid=%d,from_sid=%d,to_cid=%d,to_rid=%d,to_sid=%d, price=%f, price_val=%d,".
-                                " cost=%f, cash=%d, nocash=%d, way_ship=%d, way_debark=%d, soft=%d, way_prepay=%d, prepayment=%f, price_query=%d".
+                                " cost=%f, cash=%d, nocash=%d, way_ship=%d, way_debark=%d, soft=%d, way_prepay=%d, prepayment=%f, price_query=%d,".
+                                " top_loading=%d, side_loading=%d, back_loading=%d, full_movable=%d, remove_cross=%d, remove_racks=%d, without_gate=%d, path_segment_cities=%s, path_segment_distances=%s".
 				" WHERE id=%d AND user_id=%d;", $sh_date_from, $sh_date_to, stripslashes_deep($sh_city_from),
 				stripslashes_deep($sh_city_to), stripslashes_deep($sh_descr), floatval($sh_weight), floatval($sh_volume),
 				floatval($sh_length), floatval($sh_height), floatval($sh_width), intval($trans_count), intval($trans_type), intval($sh_type), intval($sh_active), stripslashes_deep($comment), round($dis['distance'] / 1000),
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
                                 floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
+                                intval($top_loading), intval($side_loading), intval($back_loading), intval($full_movable), intval($remove_cross), intval($remove_racks), intval($without_gate), stripslashes_deep($path_segment_cities), stripslashes_deep($path_segment_distance),
 				$id, $user_id);
 			
 			if (false === $wpdb->query($sql)) {
@@ -998,10 +1057,27 @@ function tzs_front_end_edit_shipment_handler($atts) {
                             $_POST['way_prepay'] = 'on';
                     if ($row->price_query > 0)
                             $_POST['price_query'] = 'on';
+                    
+                    if ($row->top_loading > 0)
+                            $_POST['top_loading'] = 'on';
+                    if ($row->side_loading > 0)
+                            $_POST['side_loading'] = 'on';
+                    if ($row->back_loading > 0)
+                            $_POST['back_loading'] = 'on';
+                    if ($row->full_movable > 0)
+                            $_POST['full_movable'] = 'on';
+                    if ($row->remove_cross > 0)
+                            $_POST['remove_cross'] = 'on';
+                    if ($row->remove_racks > 0)
+                            $_POST['remove_racks'] = 'on';
+                    if ($row->without_gate > 0)
+                            $_POST['without_gate'] = 'on';
 
                     $_POST['sh_distance'] = $row->distance;
                     $_POST['id'] = ''.$row->id;
                     $_POST['sh_active'] = $row->active;
+                    $_POST['path_segment_cities'] = $row->path_segment_cities;
+                    $_POST['path_segment_distances'] = $row->path_segment_distances;
 
                     tzs_print_shipment_form(null, true);
 		}
