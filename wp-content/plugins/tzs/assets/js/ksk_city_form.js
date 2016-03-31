@@ -67,7 +67,7 @@ function addCityRow(index, from_ui) {
     if (!from_ui && (index == CITY_NAMES.length - 1)) {
         $last_tr = jQuery('<tr></tr>');
         $last_tr.append('<td id="totalDistance" colspan="2"></td>');
-        $last_tr.append('<td colspan="2" style="text-align: right;"><input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="calcCitiesDistance();"></td>');
+        $last_tr.append('<td colspan="2" style="text-align: left;"><input type="button" id="function_button" class="button dist_add" tabindex="2" value="' + button_text + '" onclick="calcCitiesDistance();"></td>');
         //$last_tr.append('<td></td>');
     }
     
@@ -77,7 +77,8 @@ function addCityRow(index, from_ui) {
         jQuery('.city_row').eq(index - 1).after($tr);
     }
     
-    autocomplete(jQuery('.city_input').eq(index));
+    //autocomplete(jQuery('.city_input').eq(index));
+    autocomplete($input);
 }
 
 // Удаление строки для ввода города
@@ -121,16 +122,18 @@ function changeCityTitle() {
 
 // Скрытие кнопок удаления при указании 2 пунктов
 function showDelCityLink() {
-    if (countOfCityRows() < 3) {
+    var cnt = countOfCityRows();
+    
+    if (cnt < 3) {
         jQuery("div.delete_city_button").hide();
     } else {
         jQuery("div.delete_city_button").show();
     }
     
-    if (countOfCityRows() >= MAX_CITY_CNT) {
-        jQuery("div.add_city_span").hide();
+    if (cnt >= MAX_CITY_CNT) {
+        jQuery("span.add_city_span").hide();
     } else {
-        jQuery("div.add_city_span").show();
+        jQuery("span.add_city_span").show();
     }
 }
 
@@ -180,7 +183,7 @@ function initCitiesTable() {
 }
 
     
-// Рассчет расстояний
+// Рассчет расстояний между пунктами
 function calcCitiesDistance() {
     var calc_flag = ((jQuery('#route-length').attr('value') === '') || (jQuery('#route-length').attr('value') === 'Ошибка'));
     
@@ -188,7 +191,8 @@ function calcCitiesDistance() {
         jQuery("#function_button").attr('value', 'См. карту');
         showDistanceModal();
     } else {
-        jQuery("#function_button").attr('value', 'Рассчитать');
+        jQuery("#function_button").attr('value', 'Строится маршрут');
+        jQuery("#function_button").attr('disabled', 'disabled');
     }
     
     // Получим список введенных городов
@@ -215,6 +219,8 @@ function calcCitiesDistance() {
     
     if (city_names.length < 2) {
         alert('Укажите, пожалуйста, как минимум две точки Вашего маршрута!');
+        jQuery("#function_button").attr('value', 'Рассчитать');
+        jQuery("#function_button").removeAttr("disabled");
         return;
     } 
     
@@ -222,12 +228,16 @@ function calcCitiesDistance() {
     if (city_names.length == 2) {
         if ((city_names[0] == city_names[1]) || ((city_ids[0] == city_ids[1]) && (city_ids[0] != 0))) {
             alert('Укажите, пожалуйста, различные точки Вашего маршрута !');
+            jQuery("#function_button").attr('value', 'Рассчитать');
+            jQuery("#function_button").removeAttr("disabled");
             return;
         }
     }
     
     if (filledCitiesCnt < cities.length) {
         alert('Укажите, пожалуйста, все добавленные пункты Вашего маршрута или удалите ненужные поля !');
+        jQuery("#function_button").attr('value', 'Рассчитать');
+        jQuery("#function_button").removeAttr("disabled");
         return;
     } 
 
@@ -270,12 +280,14 @@ function calcCitiesDistance() {
             jQuery('#route-length').attr('value', length);
             jQuery('#sh_distance').attr('value', length);
             jQuery("#function_button").attr('value', 'См. карту');
+            jQuery("#function_button").removeAttr("disabled");
             jQuery("#ViewMapModalBody").append(jQuery("#map_canvas"));
         },
         function(error) {
             alert('Невозможно построить маршрут.\nВозможно один из городов введен неверно.\nОшибка:' + error.message);
             jQuery('#route-length').attr('value', 'Ошибка');
             jQuery("#function_button").attr('value', 'Рассчитать');
+            jQuery("#function_button").removeAttr("disabled");
             return;
         }
     ); 

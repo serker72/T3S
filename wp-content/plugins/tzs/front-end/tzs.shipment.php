@@ -451,39 +451,40 @@ function tzs_print_shipment_form($errors, $edit=false) {
             var ErrorMsg2 = '';
             var ErrorMsg3 = '</p>';
 
-            // test
-            if (ErrorMsg1 !== '') {
-                return true;
-            }
-            
+            // Проверка заполненности списка городов
+            var index = 0;
+            jQuery('#citiesTable').find('input[type=text]').each(function () {
+                if (jQuery(this).attr('name') !== 'sh_distance') {
+                    index += 1;
+                    if (jQuery(this).val().length < 1) {
+                        ErrorMsg2 = ErrorMsg2 + 'Не указан пункт маршрута № ' + index + '.<br>\n';
+                        jQuery(this).css({'border': '2px solid #F00'});
+                    } else {
+                        jQuery(this).css({'border': '1px solid #007FFF'});
+                    }
+                } else {
+                    if (jQuery(this).val().length < 1) {
+                        ErrorMsg2 = ErrorMsg2 + 'Не выполнен расчет длины маршрута.<br>\n';
+                        jQuery(this).css({'border': '2px solid #F00'});
+                    } else {
+                        jQuery(this).css({'border': '1px solid #007FFF'});
+                    }
+                }
+            });
+
             if (jQuery('#datepicker1').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата погрузки.<br>\n';
                 jQuery('#datepicker1').css({'border': '2px solid #F00'});
             } else {
                 jQuery('#datepicker1').css({'border': '1px solid #007FFF'});
             }
-
-            /*if (jQuery('#first_city').val().length < 1) {
-                ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт погрузки.<br>\n';
-                //jQuery('#first_city').addClass('form_error_input');
-                jQuery('#first_city').css({'border': '2px solid #F00'});
-            } else {
-                jQuery('#first_city').css({'border': '1px solid #007FFF'});
-            }*/
-
+            
             if (jQuery('#datepicker2').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата выгрузки.<br>\n';
                 jQuery('#datepicker2').css({'border': '2px solid #F00'});
             } else {
                 jQuery('#datepicker2').css({'border': '1px solid #007FFF'});
             }
-
-            /*if (jQuery('#second_city').val().length < 1) {
-                ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт выгрузки.<br>\n';
-                jQuery('#second_city').css({'border': '2px solid #F00'});
-            } else {
-                jQuery('#second_city').css({'border': '1px solid #007FFF'});
-            }*/
 
             if (jQuery('#sh_type').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан тип груза.<br>\n';
