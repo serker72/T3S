@@ -45,7 +45,7 @@ function addCityRow(index, from_ui) {
     
     var $td = jQuery('<td class="city_input">'),
         $div = jQuery('<div class="input_div"></div>'),
-        $input = jQuery('<input type="text" autocomplete="off" name="input_city[]" class="city_input wide_page" tabindex="1">').attr({
+        $input = jQuery('<input type="text" autocomplete="city" autocomplete="on" name="input_city[]" class="city_input wide_page" tabindex="1">').attr({
             value: !from_ui && CITY_NAMES[index] || '',
             city_id: !from_ui && CITY_IDS[index] || 0
         }),
@@ -77,6 +77,7 @@ function addCityRow(index, from_ui) {
         jQuery('.city_row').eq(index - 1).after($tr);
     }
     
+    autocomplete(jQuery('.city_input').eq(index));
 }
 
 // Удаление строки для ввода города
@@ -155,6 +156,8 @@ function changeCityNames() {
 
 // Построение формы
 function initCitiesTable() {
+    //alert('initCitiesTable');
+
     var filledCitiesCnt = 0;
     
     if (CITY_NAMES.length == 0) {
@@ -263,7 +266,7 @@ function calcCitiesDistance() {
             jQuery("#ViewMapModal #myModalLabel").text('Длина маршрута: '+ length_txt +', '+ 'приблизительное время в пути: ' + time_txt);
             mapRoute = route;
             
-            jQuery('#path_segment_distance').attr('value', JSON.stringify(path_segment_distance));
+            jQuery('#path_segment_distance').attr('value', path_segment_distance.join(','));
             jQuery('#route-length').attr('value', length);
             jQuery('#sh_distance').attr('value', length);
             jQuery("#function_button").attr('value', 'См. карту');

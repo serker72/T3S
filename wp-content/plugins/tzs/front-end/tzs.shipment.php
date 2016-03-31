@@ -247,26 +247,24 @@ function tzs_print_shipment_form($errors, $edit=false) {
 	
     <script>
         tzs_tr2_types = [];
-        CITY_NAMES = [];
         <?php
             foreach ($GLOBALS['tzs_tr2_types'] as $key => $val) {
                 echo "tzs_tr2_types[$key] = '$val[1]';\n";
             }
+            
+            echo "CITY_NAMES = [];\n";
+            echo "CITY_IDS = [];\n";
             
             if (isset($_POST['input_city'])) {
                 foreach ($_POST['input_city'] as $key => $val) {
                     echo "CITY_NAMES[$key] = '$val';\n";
                 }
             }
-            
-            //echo "CITY_NAMES = [".$_POST['path_segment_cities']."];\n";
-            //echo "CITY_DISTANCES = [".$_POST['path_segment_distances']."];\n";
-            echo "CITY_IDS = [];\n";
         ?>
         
         // Расчет расстояния между пунктами
 	function calculate_distance() {
-		var length = 0;		
+		/*var length = 0;		
 		var routeFrom = document.getElementById('first_city').value;
 		var routeTo = document.getElementById('second_city').value;
 		// Создание маршрута
@@ -276,27 +274,27 @@ function tzs_print_shipment_form($errors, $edit=false) {
 				length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
 				jQuery('#sh_distance').attr('value', length);
 				document.getElementById('route-length').value = length;			
-				/*var x = document.getElementsByName('theForm');
-				x[0].submit(); // Form submission */
+				//var x = document.getElementsByName('theForm');
+				//x[0].submit(); // Form submission
 			},
 			function(error) {
 			 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
 				document.getElementById('route-length').value = 'Ошибка';
 			}
-		); 
+		); */
 	}
 
-	var delay = (function(){
+	/*var delay = (function(){
 	  var timer = 0;
 	  return function(callback, ms){
 		clearTimeout (timer);
 		timer = setTimeout(callback, ms);
 	  };
-	})();
+	})();*/
 	
         // Изменение полей "Населенный пункт погрузки" и "Населенный пункт выгрузки"
 	function onCityChange() {
-            if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+            /*if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
                 calculate_distance();
                 jQuery('#show_dist_link').show();
             } else {
@@ -316,7 +314,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
             
             if (typeof onCostChange === 'function') {
                 onCostChange();
-            }
+            }*/
 	}
 		
 		
@@ -335,17 +333,17 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
         // Вывод карты
         function showDistanceDialog() {
-            if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+            /*if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
                 //displayDistance([jQuery('input[name=sh_city_from]').val(), jQuery('input[name=sh_city_to]').val()], null);
                 displayDistance([jQuery('#first_city').val(), 'Житомир', jQuery('#second_city').val()], null);
             } else {
 
-            }
+            }*/
         }
 
         // Изменение поля "Тип транспорта"
         function onTransTypeChange() {
-            jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
+            //jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
         }
 
         // Изменение поля "Дата загрузки"
@@ -448,14 +446,16 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
         // Функция проверки правильности заполнения полей формы до отправки
         function onFormValidate() {
-            // test
-            return true;
-            
             //var ErrorMsg1 = 'Список ошибок:<ul>';
             var ErrorMsg1 = '<p>';
             var ErrorMsg2 = '';
             var ErrorMsg3 = '</p>';
 
+            // test
+            if (ErrorMsg1 !== '') {
+                return true;
+            }
+            
             if (jQuery('#datepicker1').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата погрузки.<br>\n';
                 jQuery('#datepicker1').css({'border': '2px solid #F00'});
@@ -463,13 +463,13 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 jQuery('#datepicker1').css({'border': '1px solid #007FFF'});
             }
 
-            if (jQuery('#first_city').val().length < 1) {
+            /*if (jQuery('#first_city').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт погрузки.<br>\n';
                 //jQuery('#first_city').addClass('form_error_input');
                 jQuery('#first_city').css({'border': '2px solid #F00'});
             } else {
                 jQuery('#first_city').css({'border': '1px solid #007FFF'});
-            }
+            }*/
 
             if (jQuery('#datepicker2').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата выгрузки.<br>\n';
@@ -478,12 +478,12 @@ function tzs_print_shipment_form($errors, $edit=false) {
                 jQuery('#datepicker2').css({'border': '1px solid #007FFF'});
             }
 
-            if (jQuery('#second_city').val().length < 1) {
+            /*if (jQuery('#second_city').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт выгрузки.<br>\n';
                 jQuery('#second_city').css({'border': '2px solid #F00'});
             } else {
                 jQuery('#second_city').css({'border': '1px solid #007FFF'});
-            }
+            }*/
 
             if (jQuery('#sh_type').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан тип груза.<br>\n';
@@ -582,8 +582,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
-            //CITY_NAMES = ['Киев', 'Житомир', 'Чоп'];
-            //CITY_IDS = [98, 97, 96];
+            //alert('before initCitiesTable');
             initCitiesTable();
             
             jQuery('#totalDistance').append('<input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>&nbsp;&nbsp;');
@@ -633,11 +632,12 @@ function tzs_print_shipment_form($errors, $edit=false) {
            // onCityChange();
             onCostChange();
 
-            jQuery('#first_city, #second_city').on('input',function() { 		
-                                        delay(function(){
-                                                onCityChange();
-                                          //alert('Time elapsed!');
-                                        }, 1000 );/*onCityChange();*/ });
+            /*jQuery('#first_city, #second_city').on('input',function() { 		
+                delay(function(){
+                        onCityChange();
+                  //alert('Time elapsed!');
+                }, 1000 );//onCityChange(); 
+            });*/
 
             jQuery("#sh_length, #sh_width, #sh_height, #cost, #sh_weight, #trans_count").bind("change keyup input click", function() {
                 if (this.value.match(/[^0-9.]/g)) {
@@ -664,7 +664,7 @@ function tzs_print_shipment_form($errors, $edit=false) {
 
             jQuery("#form_button3").click(function(event) { 
                 event.preventDefault();
-                location.href = "/account/profile/";
+                location.href = "/account/my-shipments/";
             });
         });
     </script>
@@ -683,7 +683,7 @@ function tzs_edit_shipment($id) {
         if (count($input_city) > 1) {
             $sh_city_from = $input_city[0];
             $sh_city_to = $input_city[count($input_city) - 1];
-            $path_segment_cities = json_encode($input_city);
+            $path_segment_cities = implode(",", $input_city);
         } else {
             $sh_city_from = get_param('sh_city_from');
             $sh_city_to = get_param('sh_city_to');
@@ -757,7 +757,7 @@ function tzs_edit_shipment($id) {
                                 
 		
         if (!$price_query && !$cash && !$nocash && !$way_ship && !$way_debark && !$soft && !$way_prepay)
-            array_push($errors, "Необходимо выбрать хотя бы один способ в блоке \"Форма расчета\".");
+            array_push($errors, "Необходимо выбрать хотя бы один способ в блоке 'Форма расчета'.");
 	
 	if ($sh_date_from == null || $sh_date_to == null) {
 		array_push($errors, "Неверный формат даты");
@@ -1076,7 +1076,8 @@ function tzs_front_end_edit_shipment_handler($atts) {
                     $_POST['sh_distance'] = $row->distance;
                     $_POST['id'] = ''.$row->id;
                     $_POST['sh_active'] = $row->active;
-                    $_POST['path_segment_cities'] = $row->path_segment_cities;
+                    //$_POST['path_segment_cities'] = $row->path_segment_cities;
+                    $_POST['input_city'] = explode(",", $row->path_segment_cities);
                     $_POST['path_segment_distances'] = $row->path_segment_distances;
 
                     tzs_print_shipment_form(null, true);

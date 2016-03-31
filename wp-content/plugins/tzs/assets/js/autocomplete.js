@@ -42,8 +42,8 @@ var search_result = [];
 var counter = 0;
 
 jQuery(document).ready(function(){
-	autocomplete("#first_city");
-	autocomplete("#second_city");
+	//autocomplete("#first_city");
+	//autocomplete("#second_city");
 });
 
 
@@ -114,7 +114,7 @@ function autocomplete(element) {
                 //в качестве источника результатов указываем массив search_result
                 source: search_result,
                 close: function(event, ui){
-				 var path = "/wp-content/plugins/tzs/assets/images/flags/";
+				 /*var path = "/wp-content/plugins/tzs/assets/images/flags/";
 				 for(var i = 0; i < search_result.length; i++){
 					if(this.value == search_result[i].label){
 						path = path + search_result[i].flag.toLowerCase()+".png";
@@ -125,7 +125,7 @@ function autocomplete(element) {
 				var id = element.substring(1,element.length)+'_flag';
 				document.getElementById(id).src = path;
 				document.getElementById(id).style.visibility = 'visible';
-				//onCityChange();
+				//onCityChange();*/
 				}
             });
         });
