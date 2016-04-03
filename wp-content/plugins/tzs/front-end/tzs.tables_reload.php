@@ -253,10 +253,12 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
             ';
     
     if (($row->distance > 0) && ($prefix === 'tr')) {
-        $output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to));
+        //$output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to));
+        $output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, explode(";", $row->path_segment_cities));
     }
     else if (($row->distance > 0) && ($prefix === 'sh')) {
-        $output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
+        //$output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, array($row->sh_city_from, $row->sh_city_to));
+        $output_tbody .= '&nbsp;расстояние '.tzs_make_distance_link($row->distance, false, explode(";", $row->path_segment_cities));
     }
 
     $output_tbody .= ' (см. карту)</div>';

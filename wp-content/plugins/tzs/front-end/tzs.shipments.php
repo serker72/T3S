@@ -13,7 +13,28 @@ function tzs_front_end_shipments_handler($atts) {
                         <div id="thead_h1" class="div_td_left"><h1 class="entry-title"><strong>ПОИСК ГРУЗА</strong></h1></div>
                         <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
                     <?php if (get_current_user_id() == 0) {?>
-                        <div class="thead_info">Для добавления грузов, пожалуйста, <a href="/account/login">войдите</a> или <a href="/account/registration/">зарегистрируйтесь</a></div>
+                        <button id="" class="search_button add" data-toggle="modal" data-target="#myModal">Добавить <br>груз</button>
+                        
+                        <!-- Modal -->
+                        <div id="myModal" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Добавить груз</h4>
+                              </div>
+                              <div class="modal-body">
+                                <div class="">Для добавления грузов, пожалуйста, <a href="/account/login">войдите</a> или <a href="/account/registration/">зарегистрируйтесь</a></div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
                     <?php }?>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>

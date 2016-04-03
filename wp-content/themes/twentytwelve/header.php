@@ -314,5 +314,11 @@
         }
     }
 </script>
+<script>
+window.onscroll = function vverh() {
+  document.getElementById('vverh').style.display = (window.pageYOffset > '200' ? 'block' : 'none');
+}
+</script>
 <div id="page" class="hfeed site">
 	<div id="main" class="wrapper">
+            <a href='#' id='vverh'>ВВЕРХ</a>

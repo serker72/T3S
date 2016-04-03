@@ -10,150 +10,190 @@ function tzs_print_truck_form($errors, $edit=false) {
 
     <script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
     <script src="/wp-content/plugins/tzs/assets/js/autocomplete.js"></script>
+    <script src="/wp-content/plugins/tzs/assets/js/ksk_city_form.js" type="text/javascript"></script>
     
     <div style="clear: both;"></div>
     
     <!-- test new form -->
 <div class="form_wrapper">
     <form enctype="multipart/form-data" method="post" id="form_truck" class="" action="">
+
+        <div class="row-fluid"  style="width: 100%; ">
+            <div class="span5">
+                <div class="city_input_div">
+                    <table id="citiesTable">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="span7">
+                 <div class="span7">
+                     <div class="span6 margin-null"><input type="text" id="datepicker1" name="tr_date_from" size="" value="<?php echo_val_def('tr_date_from', ''); ?>" placeholder="Дата погрузки" readonly="true" style="width: 100px;"></div>
+                     <div class="span6 margin-null"><input type="text" id="datepicker2" name="tr_date_to" size="" value="<?php echo_val_def('tr_date_to', ''); ?>" placeholder="Дата выгрузки" readonly="true" style="width: 100px;"></div>
+                     <div class="span12 margin-null">
+                        <select id="trans_type" name="trans_type" style="width: 98%">
+                        <?php
+                            tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
+                        ?>
+                        </select>
+                    </div>
+                <div style="clear: both"></div> 
+                    
+                    <div style="clear: both"></div>
+                    <div class="span12 margin-null"><input type="text" id="sh_descr" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="Желаемый груз" style="width: 95%"></div>
+                    <div class="span12 margin-null"><input type="text" size="15" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий" style="width: 95%;"></div>
+                    <div style="clear: both"></div>
+                    <div>
+                    </div>
+                    <div class="span12 margin-null">
+                        <input type="hidden" name="cost_curr" id="cost_curr" value="1">
+                        <label for="cost">Стоимость перевозки:</label>&nbsp;
+                        <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
+                        <div class="post-input">грн</div>
+                    </div>
+                 </div>
+                <div class="span5" style="margin-top: -5px;">
+                    <div class="chekbox span12"><!-- style="text-align: right;"-->
+                        <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>><label for="set_dim">Указать габариты ТС (м):</label>
+                        <!--div class="post-input gabarite"></div-->
+                    </div>
+                    <div class="span12">
+                        <input type="text" name="tr_length" id="tr_length" value="<?php echo_val('tr_length'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Длина" style="width: 50px; margin-right: 5px;">&nbsp;&nbsp;
+                        <input type="text" name="tr_width" id="tr_width" value="<?php echo_val('tr_width'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Ширина" style="width: 50px; margin-left: 5px;">&nbsp;&nbsp;
+                        <input type="text" name="tr_height" id="tr_height" value="<?php echo_val('tr_height'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Высота" style="width: 50px; margin-left: 5px;">
+                    </div>
+                    <div style="clear: both"></div>
+                    <div class="span12"><!-- style="text-align: right; float: right;"-->
+                        <label for="tr_volume">Объем груза&nbsp;=</label>&nbsp;
+                        <input type="text" id="tr_volume" name="tr_volume" value="<?php echo_val('tr_volume'); ?>" readonly="true" style="width: 80px;">
+                        <div class="post-input">м<sup>3</sup></div>
+                    </div>
+                    <div style="clear: both"></div>
+                    <div class="span12">
+                        <label for="tr_weight">Вес груза:</label>&nbsp;
+                        <input type="text" id="tr_weight" name="tr_weight" value="<?php echo_val('tr_weight'); ?>" maxlength = "5" style="width: 50%;"><div class="post-input">т</div>
+                    </div>
+                    <div style="clear: both"></div>
+                    <div class="span12">
+                        <label for="trans_count">Кол-во машин:</label>&nbsp;
+                        <input type="text" size="5" id="trans_count" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "0" style="width: 37%;">
+                    </div>
+               
+                    <div style="clear: both"></div>
+                    <div class="span12">
+                        <label for="price">Цена&nbsp;=</label>&nbsp;
+                        <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
+                        <div class="post-input">грн/км</div>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                <div style="clear: both"></div>
+                
+                
+                
+                <div class="span2">
+                    <label for="">Загрузка:</label>
+                </div>
+                <!--div style="clear: both"></div-->
+                <div class="chekbox span2 margin-checkbox">
+                    <input type="checkbox" id="top_loading" name="top_loading" <?php echo isset($_POST['top_loading']) ? 'checked="checked"' : ''; ?>><label for="top_loading">верхняя</label>
+                </div>
+                <div class="chekbox span2 margin-checkbox">
+                    <input type="checkbox" id="side_loading" name="side_loading" <?php echo isset($_POST['side_loading']) ? 'checked="checked"' : ''; ?>><label for="side_loading">боковая</label>
+                </div>
+                <div class="chekbox span2 margin-checkbox">
+                    <input type="checkbox" id="back_loading" name="back_loading" <?php echo isset($_POST['back_loading']) ? 'checked="checked"' : ''; ?>><label for="back_loading">задняя</label>
+                </div>
+                <div class="chekbox span4 margin-checkbox">
+                    <input type="checkbox" id="without_gate" name="without_gate" style="width: 16%;" <?php echo isset($_POST['without_gate']) ? 'checked="checked"' : ''; ?> ><label for="without_gate">без ворот</label>
+                </div>
+                <div style="clear: both"></div>
+                <div class="chekbox span4 margin-checkbox">
+                    <input type="checkbox" id="full_movable" name="full_movable" <?php echo isset($_POST['full_movable']) ? 'checked="checked"' : ''; ?>><label for="full_movable">с полной растентовкой</label>
+                </div>
+                
+                <div class="chekbox span4 margin-checkbox">
+                    <input type="checkbox" id="remove_cross" name="remove_cross" <?php echo isset($_POST['remove_cross']) ? 'checked="checked"' : ''; ?>><label for="remove_cross">со снятием поперечин</label>
+                </div>
+                <div class="chekbox span4 margin-checkbox">
+                    <input type="checkbox" id="remove_racks" name="remove_racks" <?php echo isset($_POST['remove_racks']) ? 'checked="checked"' : ''; ?> ><label for="remove_racks">со снятием стоек</label>
+                </div>
+            </div>
+            
+            <div class="span5"></div>
+            <div class="span7">
+                <div id="payments-method-label">
+                    <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
+                </div>
+                <div style="clear: both"></div>
+                <div class="chekbox form-group">
+                    <div class="chekbox span2 margin-checkbox">
+                        <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>><label for="cash">Наличная</label>
+                    </div>
+                    <div class="chekbox span3 margin-checkbox">    
+                        <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>><label for="nocash">Безналичная</label>
+                    </div>
+                    <div class="chekbox span3 margin-checkbox">
+                        <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>><label for="way_ship">При погрузке</label>
+                    </div>
+                    <div class="chekbox span3 margin-checkbox">
+                        <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>><label for="way_debark">При выгрузке</label>
+                    </div>
+                    <div class="chekbox span2 margin-checkbox">
+                        <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>><label for="soft">Софт</label>
+                    </div>
+                    <div class="chekbox span4 margin-checkbox">
+                        <input type="checkbox" id="way_prepay" name="way_prepay"  <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> ><label for="way_prepay">Предоплата</label>
+                        <input type="text" id="prepayment" name="prepayment" class="margin-prepay" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;"><div class="post-input margin-prepay">%</div>
+                    </div>
+                    <div class="chekbox span7 margin-checkbox">
+                        <input type="checkbox" id="price_query" name="price_query" <?php echo isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>><label for="price_query">Не указывать стоимость (цена договорная)</label>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
         
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span3">
-            <input type="text" id="datepicker1" name="tr_date_from" size="" value="<?php echo_val_def('tr_date_from', ''); ?>" placeholder="Дата погрузки" readonly="true">
-        </div>
-        <div class="span3">
-            <input autocomplete="city" id="first_city" type="text" size="35" name="tr_city_from" value="<?php echo_val('tr_city_from'); ?>" autocomplete="on" placeholder="Населенный пункт погрузки">
-	   </div>
-        <div class="span1">
-            <img id ="first_city_flag" src="<?php echo $edit ? echo_val('from_code') : "" ?>"  style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
-        </div>
-        <div class="span2">
-            <input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;">&nbsp;&nbsp;км
-            <input type="hidden" name="length" id="route-length">
-        </div>
-        <div id="div_tr_active" class="span3 input_select">
-            <input type="hidden" name="tr_active" id="tr_active" value="1">
-            <!--label for="tr_active">Статус</label-->
-            <!--select id="tr_active" name="tr_active">
-                <option value="1" <?php //if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 1)) echo 'selected="selected"'; ?> >Публикуемый</option>
-                <option value="0" <?php //if (isset($_POST["tr_active"]) && ($_POST["tr_active"] === 0)) echo 'selected="selected"'; ?> >Архивный</option>
-            </select-->
-        </div>
-    </div>
+   
     
-    <div class="row-fluid"  style="width: 100%; ">
+   <!-- <div class="row-fluid"  style="width: 100%; ">
         <div class="span3">
-            <input type="text" id="datepicker2" name="tr_date_to" size="" value="<?php echo_val_def('tr_date_to', ''); ?>" placeholder="Дата выгрузки" readonly="true">
         </div>
         <div id="div_second_city" class="span3 form-group">
-            <input autocomplete="city" id="second_city" type="text" size="35" name="tr_city_to" value="<?php echo_val('tr_city_to'); ?>" autocomplete="on" placeholder="Населенный пункт выгрузки">
         </div>
         <div class="span1">
             <img id ="second_city_flag" src="<?php echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
-            <a id="show_dist_link" href="javascript:showDistanceDialog();">см. карту</a>
         </div>
         <div class="span3">
         </div>
-    </div>
-                    
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span3">
-            <input type="text" id="sh_descr" name="sh_descr" size="" value="<?php echo_val('sh_descr'); ?>" maxlength = "255" placeholder="Желаемый груз">
-        </div>
-        <div class="span5">
-            <input type="text" size="" name="comment" value="<?php echo_val('comment'); ?>" maxlength = "255" placeholder="Комментарий" style="width: 350px;">
-        </div>
-        <div class="span4 chekbox"><!-- style="text-align: right;"-->
-            <input type="checkbox" name="set_dim" id="set_dim" <?php if (isset($_POST['set_dim'])) echo 'checked="checked"'; ?>>&nbsp;<label for="set_dim">Указать габариты транспортного средства (м):</label>
-        </div>
-    </div>
+    </div> -->
     
-    <div class="row-fluid"  style="width: 100%; ">
-        <div id="" class="span3">
-            <select id="trans_type" name="trans_type">
-            <?php
-                tzs_print_array_options($GLOBALS['tzs_tr_types'], '', 'trans_type', 'Тип транспортного средства');
-            ?>
-            </select>
+    <!--div class="row-fluid"  style="width: 100%; ">
+        <div class="span3">
+        </div>
+        <div id="div_second_city" class="span3 form-group">
         </div>
         <div class="span1">
-            <span><img id="trans_type_img" src="" alt=""></img></span>&nbsp;&nbsp;
+            <img id ="second_city_flag" src="<?php //echo $edit ? echo_val('to_code') : "" ?>" style="visibility:<?php echo $edit ? 'visible' : 'hidden' ?>" width=18 height=12 alt="">
         </div>
         <div class="span2">
-            <label for="trans_count">Кол-во машин:</label>&nbsp;
-            <input type="text" size="5" id="trans_count" name="trans_count" value="<?php echo_val('trans_count'); ?>" maxlength = "2" placeholder = "0" style="width: 25px;">
         </div>
         <div class="span3">
-            <label for="tr_weight">Вес груза:</label>&nbsp;
-            <input type="text" id="tr_weight" name="tr_weight" value="<?php echo_val('tr_weight'); ?>" maxlength = "5" style="width: 50px;">&nbsp;т
         </div>
-        <div class="span3">
-            <input type="text" name="tr_length" id="tr_length" value="<?php echo_val('tr_length'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Длина" style="width: 50px;">&nbsp;&nbsp;
-            <input type="text" name="tr_width" id="tr_width" value="<?php echo_val('tr_width'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Ширина" style="width: 50px;">&nbsp;&nbsp;
-            <input type="text" name="tr_height" id="tr_height" value="<?php echo_val('tr_height'); ?>" maxlength = "5" title="Формат: 99.99" placeholder="Высота" style="width: 50px;">
-        </div>
-    </div>
+    </div-->
+                    
 
     <div class="row-fluid"  style="width: 100%; ">
-        <div class="span4">
-            <label for="cost">Стоимость перевозки:</label>&nbsp;
-            <input type="text" id="cost" name="cost" value="<?php echo_val('cost'); ?>" size="10" style="width: 100px;">
-            <span>грн</span>
-            <input type="hidden" name="cost_curr" id="cost_curr" value="1">
-        </div>
-        <div class="span4">
-            <label for="price">Цена&nbsp;=</label>&nbsp;
-            <input type="text" id="price" name="price" value="<?php echo_val('price'); ?>" size="10" readonly="true" style="width: 100px;">
-            &nbsp;грн/км
-        </div>
+            <input type="hidden" name="tr_active" id="tr_active" value="1">
         <div class="span1">
+            <!--span><img id="trans_type_img" src="" alt=""></img></span>&nbsp;&nbsp;-->
         </div>
-        <div class="span3"><!-- style="text-align: right; float: right;"-->
-            <label for="tr_volume">Объем груза&nbsp;=</label>&nbsp;
-            <input type="text" id="tr_volume" name="tr_volume" value="<?php echo_val('tr_volume'); ?>" readonly="true" style="width: 80px;">
-            &nbsp;м<sup>3</sup>
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; margin-top: 10px;">
         <div class="span8">
-            <label for="">Форма расчета (можно указать несколько способов одновременно):</label>
-        </div>
-        <div class="span4" style="text-align: right;">
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%;">
-        <div id="div_cash" class="span2 chekbox">
-            <input type="checkbox" id="cash" name="cash" <?php echo isset($_POST['cash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="cash">Наличная</label>
-        </div>
-        <div id="div_nocash" class="span2 chekbox">
-            <input type="checkbox" id="nocash" name="nocash" <?php echo isset($_POST['nocash']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="nocash">Безналичная</label>
-        </div>
-        <div id="div_way_ship" class="span2 chekbox">
-            <input type="checkbox" id="way_ship" name="way_ship" <?php echo isset($_POST['way_ship']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_ship">При погрузке</label>
-        </div>
-        <div id="div_way_debark" class="span2 chekbox">
-            <input type="checkbox" id="way_debark" name="way_debark" <?php echo isset($_POST['way_debark']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="way_debark">При выгрузке</label>
-        </div>
-        <div id="div_soft" class="span1 chekbox">
-            <input type="checkbox" id="soft" name="soft" <?php echo isset($_POST['soft']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="soft">Софт</label>
-        </div>
-        <div id="div_way_prepay" class="span2 chekbox" style="text-align: right;">
-            <input type="checkbox" id="way_prepay" name="way_prepay" <?php echo isset($_POST['way_prepay']) ? 'checked="checked"' : ''; ?> >&nbsp;<label for="way_prepay">Предоплата</label>
-        </div>
-        <div id="div_prepayment" class="span1">
-            <input type="text" id="prepayment" name="prepayment" value="<?php echo_val('prepayment'); ?>" size="5" placeholder = "0" style="width: 20px;">&nbsp;%
-        </div>
-    </div>
-
-    <div class="row-fluid"  style="width: 100%; ">
-        <div class="span8">
-            <div class="span12 chekbox" style="margin-bottom: 20px;">
-                <input type="checkbox" id="price_query" name="price_query" <?php isset($_POST['price_query']) ? 'checked="checked"' : ''; ?>>&nbsp;<label for="price_query">Не указывать стоимость (цена договорная)</label>
-            </div>
+            <!--div class="span12 chekbox" style="margin-bottom: 20px;">
+            </div-->
             <div class="span4">
                 <button id="form_button1"><?php echo $edit ? "ИЗМЕНИТЬ ЗАЯВКУ" : "РАЗМЕСТИТЬ ЗАЯВКУ" ?></button>
             </div>
@@ -194,10 +234,27 @@ function tzs_print_truck_form($errors, $edit=false) {
 	<?php } else { ?>
 		<input type="hidden" name="action" value="addtruck"/>
 	<?php } ?>
+        <input type="hidden" name="path_segment_distance" id="path_segment_distance" value="">
+        <input type="hidden" name="route-length" id="route-length" value="">
 	<input type="hidden" name="formName" value="truck" />
     </form>
 </div>
     <div class="clearfix">&nbsp;</div>
+    <div id="map_canvas"></div><!-- style="display: none;"-->
+    
+    <!-- Modal -->
+    <div id="ViewMapModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 98%; margin-left: -49%;  top: 3%;">
+        <div class="modal-header">
+            <button id="ViewMapModalCloseButton" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">Просмотр карты маршрута</h4>
+        </div>
+        <div id="ViewMapModalBody" class="modal-body">
+            <!--div id="map_canvas"></div-->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        </div>
+    </div>
     
     <!-- test new form END -->
     <script>
@@ -212,12 +269,21 @@ function tzs_print_truck_form($errors, $edit=false) {
             foreach ($GLOBALS['tzs_tr2_types'] as $key => $val) {
                 echo "tzs_tr2_types[$key] = '$val[1]';\n";
             }
+            
+            echo "CITY_NAMES = [];\n";
+            echo "CITY_IDS = [];\n";
+            
+            if (isset($_POST['input_city'])) {
+                foreach ($_POST['input_city'] as $key => $val) {
+                    echo "CITY_NAMES[$key] = '$val';\n";
+                }
+            }
         ?>
         
         
         // Расчет расстояния между пунктами
 	function calculate_distance() {
-		var length = 0;		
+                /*var length = 0;		
 		var routeFrom = document.getElementById('first_city').value;
 		var routeTo = document.getElementById('second_city').value;
 		// Создание маршрута
@@ -227,27 +293,27 @@ function tzs_print_truck_form($errors, $edit=false) {
 				length = route.getHumanLength().replace(/&#160;/,' ').replace(/ км/,'');
 				jQuery('#sh_distance').attr('value', length);
 				document.getElementById('route-length').value = length;			
-				/*var x = document.getElementsByName('theForm');
-				x[0].submit(); // Form submission */
+				//var x = document.getElementsByName('theForm');
+				//x[0].submit(); // Form submission
 			},
 			function(error) {
 			 alert('Невозможно построить маршрут. Возможно один из городов введен неверно.');
 				document.getElementById('route-length').value = 'Ошибка';
 			}
-		); 
+		);*/ 
 	}
 
-	var delay = (function(){
+	/*var delay = (function(){
 	  var timer = 0;
 	  return function(callback, ms){
 		clearTimeout (timer);
 		timer = setTimeout(callback, ms);
 	  };
-	})();
+	})();*/
 	
         // Изменение полей "Населенный пункт погрузки" и "Населенный пункт выгрузки"
 	function onCityChange() {
-            if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+            /*if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
                 calculate_distance();
                 jQuery('#show_dist_link').show();
             } else {
@@ -267,7 +333,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             
             if (typeof onCostChange === 'function') {
                 onCostChange();
-            }
+            }*/
 	}
 		
 		
@@ -285,18 +351,18 @@ function tzs_print_truck_form($errors, $edit=false) {
 
         // Вывод карты
         function showDistanceDialog() {
-            if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
+            /*if ((jQuery('#first_city').val().length > 0) && (jQuery('#second_city').val().length > 0)) {
                 //displayDistance([jQuery('input[name=tr_city_from]').val(), jQuery('input[name=tr_city_to]').val()], null);
                 displayDistance([jQuery('#first_city').val(), jQuery('#second_city').val()], null);
             } else {
 
-            }
+            }*/
         }
 
         // Изменение поля "Тип транспорта"
         function onTransTypeChange() {
-            jQuery('#trans_type').addClass("change");
-            jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
+            //jQuery('#trans_type').addClass("change");
+            //jQuery('#trans_type_img').attr('src', tzs_tr2_types[jQuery('[name=trans_type]').val()]);
         }
 
         // Изменение поля "Дата загрузки"
@@ -392,6 +458,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             jQuery('#show_dist_link').hide();
 
             jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
+            jQuery("#payments-method-label").css({'border': 'none'});
             
             // Очистим список ошибок
             jQuery("#form_error_message").html('');
@@ -405,6 +472,27 @@ function tzs_print_truck_form($errors, $edit=false) {
             var ErrorMsg2 = '';
             var ErrorMsg3 = '</p>';
 
+            // Проверка заполненности списка городов
+            var index = 0;
+            jQuery('#citiesTable').find('input[type=text]').each(function () {
+                if (jQuery(this).attr('name') !== 'sh_distance') {
+                    index += 1;
+                    if (jQuery(this).val().length < 1) {
+                        ErrorMsg2 = ErrorMsg2 + 'Не указан пункт маршрута № ' + index + '.<br>\n';
+                        jQuery(this).css({'border': '2px solid #F00'});
+                    } else {
+                        jQuery(this).css({'border': '1px solid #007FFF'});
+                    }
+                } else {
+                    if (jQuery(this).val().length < 1) {
+                        ErrorMsg2 = ErrorMsg2 + 'Не выполнен расчет длины маршрута.<br>\n';
+                        jQuery(this).css({'border': '2px solid #F00'});
+                    } else {
+                        jQuery(this).css({'border': '1px solid #007FFF'});
+                    }
+                }
+            });
+
             if (jQuery('#datepicker1').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата погрузки.<br>\n';
                 jQuery('#datepicker1').css({'border': '1px solid #F00'});
@@ -412,26 +500,11 @@ function tzs_print_truck_form($errors, $edit=false) {
                 jQuery('#datepicker1').css({'border': '1px solid #007FFF'});
             }
 
-            if (jQuery('#first_city').val().length < 1) {
-                ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт погрузки.<br>\n';
-                //jQuery('#first_city').addClass('form_error_input');
-                jQuery('#first_city').css({'border': '1px solid #F00'});
-            } else {
-                jQuery('#first_city').css({'border': '1px solid #007FFF'});
-            }
-
             if (jQuery('#datepicker2').val().length < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указана дата выгрузки.<br>\n';
                 jQuery('#datepicker2').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#datepicker2').css({'border': '1px solid #007FFF'});
-            }
-
-            if (jQuery('#second_city').val().length < 1) {
-                ErrorMsg2 = ErrorMsg2 + 'Не указан населенный пункт выгрузки.<br>\n';
-                jQuery('#second_city').css({'border': '1px solid #F00'});
-            } else {
-                jQuery('#second_city').css({'border': '1px solid #007FFF'});
             }
 
             if (jQuery('#tr_type').val() < 1) {
@@ -490,6 +563,7 @@ function tzs_print_truck_form($errors, $edit=false) {
             if (jQuery("#price_query").is(':checked')) {
                 jQuery('#cost, #prepayment').css({'border': '1px solid #007FFF'});
                 jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
+                jQuery("#payments-method-label").css({'border': 'none'});
             } else {
                 if (jQuery('#cost').val().length < 1) {
                     ErrorMsg2 = ErrorMsg2 + 'Не указана стоимость перевозки.<br>\n';
@@ -512,9 +586,11 @@ function tzs_print_truck_form($errors, $edit=false) {
                 // Проверка правильности указания переключателей
                 if ((jQuery("#cash").is(':checked') || jQuery("#nocash").is(':checked') || jQuery("#way_ship").is(':checked') || jQuery("#way_debark").is(':checked') || jQuery("#soft").is(':checked') || jQuery("#way_prepay").is(':checked'))) {
                     jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': 'none'});
+                    jQuery("#payments-method-label").css({'border': 'none'});
                 } else {
                     ErrorMsg2 = ErrorMsg2 + 'Не выбрана форма расчета.<br>\n';
                     jQuery('#div_cash, #div_nocash, #div_way_ship, #div_way_debark, #div_soft, #div_way_prepay').css({'border': '1px solid #F00'});
+                    jQuery("#payments-method-label").css({'border': '1px solid #F00'});
                 }
             }
 
@@ -531,7 +607,10 @@ function tzs_print_truck_form($errors, $edit=false) {
          * Функция, вызываемая после загрузки страницы
          */
         jQuery(document).ready(function(){
-            jQuery('#show_dist_link').hide();
+            initCitiesTable();
+            
+            jQuery('#totalDistance').append('<input type="text" id="sh_distance" name="sh_distance" size="" value="<?php echo_val('sh_distance'); ?>" maxlength = "255" readonly="true" style="width: 50px;"><div class="post-input">км</div>&nbsp;&nbsp;');
+            //jQuery('#show_dist_link').hide();
 
             jQuery('#set_dim').click(function() {
                     onSetDim(this.checked);
@@ -575,11 +654,12 @@ function tzs_print_truck_form($errors, $edit=false) {
            // onCityChange();
             onCostChange();
 
-            jQuery('#first_city, #second_city').on('input',function() { 		
+            /*jQuery('#first_city, #second_city').on('input',function() { 		
                                         delay(function(){
                                                 onCityChange();
                                           //alert('Time elapsed!');
-                                        }, 1000 );/*onCityChange();*/ });
+                                        }, 1000 );///onCityChange(); 
+                                        });*/
 
             jQuery("#tr_length, #tr_width, #tr_height, #cost, #tr_weight, #trans_count").bind("change keyup input click", function() {
                 if (this.value.match(/[^0-9.]/g)) {
@@ -606,7 +686,7 @@ function tzs_print_truck_form($errors, $edit=false) {
 
             jQuery("#form_button3").click(function(event) { 
                 event.preventDefault();
-                location.href = "/account/profile/";
+                location.href = "/account/my-trucks/";
             });
         });
 		
@@ -615,13 +695,24 @@ function tzs_print_truck_form($errors, $edit=false) {
 }
 
 function tzs_edit_truck($id) {
+        $input_city = isset($_POST['input_city']) ? $_POST['input_city'] : array();
+        $path_segment_distance = get_param('path_segment_distance');
+                
         $tr_active = get_param_def('tr_active', '0');
 	$tr_date_from = get_param('tr_date_from');
 	$tr_date_to = get_param('tr_date_to');
-	$tr_city_from = get_param('tr_city_from');
-	$tr_city_to = get_param('tr_city_to');
 	$comment = get_param('comment');
         $sh_descr = get_param('sh_descr');
+        
+        if (count($input_city) > 1) {
+            $tr_city_from = $input_city[0];
+            $tr_city_to = $input_city[count($input_city) - 1];
+            $path_segment_cities = implode(";", $input_city);
+        } else {
+            $tr_city_from = get_param('tr_city_from');
+            $tr_city_to = get_param('tr_city_to');
+            $path_segment_cities = '';
+        }
 	
 	$tr_weight = get_param_def('tr_weight','0');
 	$tr_volume = get_param_def('tr_volume','0');
@@ -646,6 +737,14 @@ function tzs_edit_truck($id) {
         $way_debark = isset($_POST['way_debark']) ? 1 : 0;
         $soft = isset($_POST['soft']) ? 1 : 0;
         $way_prepay = isset($_POST['way_prepay']) ? 1 : 0;
+        
+        $top_loading = isset($_POST['top_loading']) ? 1 : 0;
+        $side_loading = isset($_POST['side_loading']) ? 1 : 0;
+        $back_loading = isset($_POST['back_loading']) ? 1 : 0;
+        $full_movable = isset($_POST['full_movable']) ? 1 : 0;
+        $remove_cross = isset($_POST['remove_cross']) ? 1 : 0;
+        $remove_racks = isset($_POST['remove_racks']) ? 1 : 0;
+        $without_gate = isset($_POST['without_gate']) ? 1 : 0;
 	
         // Контроль пересечения дат
         $tr_date_from_str = date("Ymd", strtotime($tr_date_from));
@@ -692,13 +791,21 @@ function tzs_edit_truck($id) {
             array_push($errors, "Дата выгрузки не может быть РАНЬШЕ даты погрузки");
         }
         
-	if (!is_valid_city($tr_city_from)) {
-		array_push($errors, "Неверный пункт погрузки");
-	}
-	
-	if (!is_valid_city($tr_city_to)) {
-		array_push($errors, "Неверный пункт разгрузки");
-	}
+        if (count($input_city) > 1) {
+            for($i = 0; $i < count($input_city); $i++) {
+                if (!is_valid_city($input_city[$i])) {
+                    array_push($errors, "Укажите пункт маршрута № ".($i + 1));
+                }
+            }
+        } else {
+            if (!is_valid_city($tr_city_from)) {
+                    array_push($errors, "Неверный пункт погрузки");
+            }
+
+            if (!is_valid_city($tr_city_to)) {
+                    array_push($errors, "Неверный пункт разгрузки");
+            }
+        }
 	
 	if (!is_valid_num_zero($tr_weight)) {
 		array_push($errors, "Неверно задан вес");
@@ -748,6 +855,22 @@ function tzs_edit_truck($id) {
 	$from_info = null;
 	$to_info = null;
 	if (count($errors) == 0) {
+            if (count($input_city) > 1) {
+                for($i = 0; $i < count($input_city); $i++) {
+                    $city_info = tzs_yahoo_convert($input_city[$i]);
+                    if (isset($city_info["error"])) {
+                        array_push($errors, "Не удалось распознать населенный пункт маршрута № ".($i + 1).": ".$city_info["error"]);
+                    }
+
+                    if ($i == 0) {
+                        $from_info = $city_info;
+                    }
+
+                    if ($i == (count($input_city) - 1)) {
+                        $to_info = $city_info;
+                    }
+                }
+            } else {
 		$from_info = tzs_yahoo_convert($tr_city_from);
 		if (isset($from_info["error"])) {
 			array_push($errors, "Не удалось распознать населенный пункт погрузки: ".$from_info["error"]);
@@ -756,6 +879,7 @@ function tzs_edit_truck($id) {
 		if (isset($to_info["error"])) {
 			array_push($errors, "Не удалось распознать населенный пункт выгрузки: ".$to_info["error"]);
 		}
+            }
 	}
 	
 	if (count($errors) > 0) {
@@ -781,14 +905,19 @@ function tzs_edit_truck($id) {
 		
 		if ($id == 0) {
 			$sql = $wpdb->prepare("INSERT INTO ".TZS_TRUCK_TABLE.
-				" (time, last_edited, user_id, tr_date_from, tr_date_to, tr_city_from, tr_city_to, tr_weight, tr_volume, tr_length, tr_height, tr_width, trans_count, trans_type, active, tr_type, comment, distance,from_cid,from_rid,from_sid,to_cid,to_rid,to_sid,price,price_val,sh_descr, cost, cash, nocash, way_ship, way_debark, soft, way_prepay, prepayment, price_query)".
-				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d, %s, %f, %d, %d, %d, %d, %d, %d, %f, %d);",
+				" (time, last_edited, user_id, tr_date_from, tr_date_to, tr_city_from, tr_city_to, tr_weight, tr_volume, tr_length, tr_height, tr_width, trans_count, trans_type, active, tr_type, comment, distance,".
+                                " from_cid,from_rid,from_sid,to_cid,to_rid,to_sid,price,price_val,sh_descr, cost, cash, nocash, way_ship, way_debark, soft, way_prepay, prepayment, price_query,".
+                                " top_loading, side_loading, back_loading, full_movable, remove_cross, remove_racks, without_gate, path_segment_cities, path_segment_distances)".
+				" VALUES (now(), NULL, %d, %s, %s, %s, %s, %f, %f, %f, %f, %f, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d, %d, %d, %f, %d, %s, %f, %d, %d, %d, %d, %d, %d, %f, %d,".
+                                " %d, %d, %d, %d, %d, %d, %d, %s, %s);",
 				$user_id, $tr_date_from, $tr_date_to, stripslashes_deep($tr_city_from), stripslashes_deep($tr_city_to),
 				floatval($tr_weight), floatval($tr_volume), floatval($tr_length),
 				floatval($tr_height), floatval($tr_width), intval($trans_count), intval($trans_type), intval($tr_active), intval($tr_type),
 				stripslashes_deep($comment), $sh_distance,
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
-                                floatval($price), intval($cost_curr), stripslashes_deep($sh_descr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query));
+                                floatval($price), intval($cost_curr), stripslashes_deep($sh_descr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
+                                intval($top_loading), intval($side_loading), intval($back_loading), intval($full_movable), intval($remove_cross), intval($remove_racks), intval($without_gate), stripslashes_deep($path_segment_cities), stripslashes_deep($path_segment_distance)
+                        );
 		
 			if (false === $wpdb->query($sql)) {
 				array_push($errors, "Не удалось опубликовать Ваш транспорт. Свяжитесь, пожалуйста, с администрацией сайта");
@@ -808,7 +937,8 @@ function tzs_edit_truck($id) {
 				" last_edited=now(), tr_date_from=%s, tr_date_to=%s, tr_city_from=%s, tr_city_to=%s, tr_weight=%f, tr_volume=%f,".
 				" tr_length=%f, tr_height=%f, tr_width=%f, trans_count=%d, trans_type=%d, tr_type=%d, comment=%s, distance=%d, ".
 				" from_cid=%d,from_rid=%d,from_sid=%d,to_cid=%d,to_rid=%d,to_sid=%d, active=%d, price=%f, price_val=%d, sh_descr=%s,".
-                                " cost=%f, cash=%d, nocash=%d, way_ship=%d, way_debark=%d, soft=%d, way_prepay=%d, prepayment=%f, price_query=%d".
+                                " cost=%f, cash=%d, nocash=%d, way_ship=%d, way_debark=%d, soft=%d, way_prepay=%d, prepayment=%f, price_query=%d,".
+                                " top_loading=%d, side_loading=%d, back_loading=%d, full_movable=%d, remove_cross=%d, remove_racks=%d, without_gate=%d, path_segment_cities=%s, path_segment_distances=%s".
 				" WHERE id=%d AND user_id=%d;", $tr_date_from, $tr_date_to, stripslashes_deep($tr_city_from),
 				stripslashes_deep($tr_city_to), floatval($tr_weight), floatval($tr_volume),
 				floatval($tr_length), floatval($tr_height), floatval($tr_width), intval($trans_count), intval($trans_type),
@@ -816,6 +946,7 @@ function tzs_edit_truck($id) {
 				$from_info["country_id"],$from_info["region_id"],$from_info["city_id"],$to_info["country_id"],$to_info["region_id"],$to_info["city_id"],
                                 intval($tr_active), floatval($price), intval($cost_curr), stripslashes_deep($sh_descr),
                                 floatval($price), intval($cost_curr), floatval($cost), intval($cash), intval($nocash), intval($way_ship), intval($way_debark), intval($soft), intval($way_prepay), floatval($prepayment), intval($price_query),
+                                intval($top_loading), intval($side_loading), intval($back_loading), intval($full_movable), intval($remove_cross), intval($remove_racks), intval($without_gate), stripslashes_deep($path_segment_cities), stripslashes_deep($path_segment_distance),
 				$id, $user_id);
 			
 			if (false === $wpdb->query($sql)) {

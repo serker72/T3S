@@ -42,30 +42,32 @@ function print_distance_calculator_form($errors, $city, $map, $form) {
                 controls: ['zoomControl','typeSelector']
             });	  		  
         } 
-		function createRoute() {
-        // Удаление старого маршрута
-        if (mapRoute) {
-          map.geoObjects.remove(mapRoute);
-        } 
+        
+	function createRoute() {
+            // Удаление старого маршрута
+            if (mapRoute) {
+                map.geoObjects.remove(mapRoute);
+            }
 		
-		var routeFrom = city[0];
-		var routeTo = city[1];
+            var routeFrom = city[0];
+            var routeTo = city[city.length-1];
 		
-		ymaps.route([routeFrom, <?php echo tzs_encode('Житомир') ?>, routeTo], {mapStateAutoApply:true}).then(
-          function(route) {
-            map.geoObjects.add(route);
-			var length = route.getHumanLength().replace(/&#160;/,' ');
-			var time = route.getHumanTime().replace(/&#160;/g,' ');
-			
-			jQuery('.route_node1').text(routeFrom);
-			jQuery('.route_node2').text(routeTo);
-			jQuery('.distance').text('Длина маршрута: '+ length +', '+ 'приблизительное время в пути: ' + time);
-            mapRoute = route;
-          },
-          function(error) {
-            alert('Невозможно построить маршрут');
-			return;
-          }
+            //ymaps.route([routeFrom, routeTo], {mapStateAutoApply:true}).then(
+            ymaps.route(city, {mapStateAutoApply:true}).then(
+                function(route) {
+                    map.geoObjects.add(route);
+                    var length = route.getHumanLength().replace(/&#160;/,' ');
+                    var time = route.getHumanTime().replace(/&#160;/g,' ');
+
+                    jQuery('.route_node1').text(routeFrom);
+                    jQuery('.route_node2').text(routeTo);
+                    jQuery('.distance').text('Длина маршрута: '+ length +', '+ 'приблизительное время в пути: ' + time);
+                mapRoute = route;
+            },
+            function(error) {
+                alert('Невозможно построить маршрут');
+		return;
+            }
         ); 
       }
 		

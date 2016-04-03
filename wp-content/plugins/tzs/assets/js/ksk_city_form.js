@@ -276,9 +276,10 @@ function calcCitiesDistance() {
             jQuery("#ViewMapModal #myModalLabel").text('Длина маршрута: '+ length_txt +', '+ 'приблизительное время в пути: ' + time_txt);
             mapRoute = route;
             
-            jQuery('#path_segment_distance').attr('value', path_segment_distance.join(','));
+            jQuery('#path_segment_distance').attr('value', path_segment_distance.join(';'));
             jQuery('#route-length').attr('value', length);
             jQuery('#sh_distance').attr('value', length);
+            onCostChange();
             jQuery("#function_button").attr('value', 'См. карту');
             jQuery("#function_button").removeAttr("disabled");
             jQuery("#ViewMapModalBody").append(jQuery("#map_canvas"));

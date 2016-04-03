@@ -1666,7 +1666,7 @@ max-height: 46px !important;
 
 /* Код увеличителя начинается здесь */
 /* Если ваше изображение не связано ссылкой с другой страницей, оставьте ссылку в виде <a href="#nogo"> 
-�?наче увеличительне будет работать в IE6 */
+Иначе увеличительне будет работать в IE6 */
 
 .ienlarger {
 	float: left;
@@ -3050,32 +3050,6 @@ margin-top: 20px;
     text-transform: uppercase;
 }
 
-.search_pr_form, #search_pr_form2{
-    margin: 0;
-}
-
-a#vverh {
- display: none;
-    position: fixed;
-    /* margin-left: -17%; */
-    /* margin-left: calc(-12% - 7em); */
-    /* padding: 100% 1% 0 99%; */
-    bottom: 0;
-    font: 11px/100% Arial, Helvetica, sans-serif;
-    text-decoration: none;
-    color: #bbb;
-    -webkit-transition: 1s;
-    transition: 1s;
-    top: 90%;
-    right: 5%;
-}
-a#vverh:before {
- position: absolute;
- content: url(/wp-content/themes/twentytwelve/images/strelka.png);
- margin: -55px 0 0 -12px;
-}
-
-
 #pickup_button {
     color: #FFCC00;
 }
@@ -3110,22 +3084,4 @@ a#vverh:before {
     margin: 0;
     padding: 0;
     height: 20px;
-}
-.search_button.add{
-    width: 157px;
-    margin: 7px 0 5px 10px;
-    padding: 1px 10px 2px 27px;
-}
-.margin-null {
-    margin: 0px !important;
-}
-.margin-checkbox {
-    margin-top: -15px;
-    margin-left: 0px !important;
-}
-.margin-prepay {
-    margin-top: 13px !important;
-}
-.add_city_span {
-    margin-top: -9px !important;
 }

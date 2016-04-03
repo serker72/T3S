@@ -37,28 +37,7 @@ function tzs_front_end_products_handler($atts) {
                         <div id="show-search-form" class="search_button">поиск по<br>критериям</div>
                         <!--div class="thead_button">выбор критериев поиска</div-->
                     <?php if (get_current_user_id() == 0) {?>
-                        <button id="" class="search_button add" data-toggle="modal" data-target="#myModal">Добавить <br>товар</button>
-                        
-                        <!-- Modal -->
-                        <div id="myModal" class="modal fade" role="dialog">
-                          <div class="modal-dialog">
-
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Добавить товар</h4>
-                              </div>
-                              <div class="modal-body">
-                                <div class="">Для добавления товара, пожалуйста, <a href="/account/login">войдите</a> или <a href="/account/registration/">зарегистрируйтесь</a></div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
+                        <div class="thead_info">Для добавления товаров, пожалуйста, <a href="/account/login">войдите</a> или <a href="/account/registration/">зарегистрируйтесь</a></div>
                     <?php }?>
                         <div id="tbl_thead_records_per_page_th"></div>
                     </th>
