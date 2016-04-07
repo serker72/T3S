@@ -20,13 +20,14 @@ function tzs_front_end_view_truck_handler($atts) {
 			print_error('Транспорт не найден');
 		} else {
 			$type = trans_types_to_str($row->trans_type, $row->tr_type);
+                        $path_segment_cities = explode(";", $row->path_segment_cities);
 			
 			?>
 			<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
-			<div class="row-fluid" id="contact-block-right" >
-                <div class="span2 offset10">
+			<div id="contact-block-right"  style="left: 82%;">
+                <div class="span2" style="width: 80%;">
                     <?php
-                        echo "<img src='".get_user_meta($row->user_id, 'company_logo',true)."'/>";
+                        echo "<img src='".get_user_meta($row->user_id, 'company_logo',true)."' width='145px'/>";
                         $form_type = 'trucks';
                         echo tzs_print_user_contacts($row, $form_type);
                     ?>
@@ -110,6 +111,19 @@ function tzs_front_end_view_truck_handler($atts) {
                         <?php echo tzs_city_to_str($row->from_cid, $row->from_rid, $row->from_sid, $row->tr_city_from); ?>
                     </div>
                     <div class="clearfix"></div>
+                    <?php if (count($path_segment_cities) > 2) { ?>
+                    <div class="pull-left label-txt">
+                        <label><strong>Промежуточные<br>пункты:</strong></label>
+                    </div>
+                    <div class="pull-left">
+                        <?php 
+                        for($i=1;$i < count($path_segment_cities)-1;$i++)
+                            echo $path_segment_cities[$i]."<br>";
+                        ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php } ?>
+                    
                     <div class="pull-left label-txt">
                         <label><strong>Пункт выгрузки:</strong></label>
                     </div>
@@ -122,7 +136,7 @@ function tzs_front_end_view_truck_handler($atts) {
                         <label><strong>Расстояние:</strong></label>
                     </div>
                     <div class="pull-left">
-                        <?php echo tzs_make_distance_link($row->distance, false, array($row->tr_city_from, $row->tr_city_to)); ?>
+                        <?php echo tzs_make_distance_link($row->distance, false, $path_segment_cities); ?>
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>

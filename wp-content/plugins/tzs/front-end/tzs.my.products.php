@@ -136,7 +136,7 @@ function tzs_front_end_my_products_handler($atts) {
                                     </div>
                                     <div id="my_products_button">
                                         <?php if ($active === '1') { ?>
-                                            <button id="pickup_button">ТОП</button>
+                                            <button id="pickup_button">Обновить</button>
                                             <button id="vip_pickup_button">ТОП $</button>
                                             <button id="view_button">Смотреть</button>
                                             <button id="edit_button"">Изменить</button>
