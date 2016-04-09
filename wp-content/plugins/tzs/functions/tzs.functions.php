@@ -430,6 +430,47 @@ function tzs_price_query_to_str($row) {
     return array($str1, $str2, $str3);
 }
 
+function tzs_loading_types_to_str($row) {
+    $str1 = '';
+    
+    if ($row->top_loading) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'верхняя';
+    }
+    
+    if ($row->side_loading) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'боковая';
+    }
+    
+    if ($row->back_loading) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'задняя';
+    }
+    
+    if ($row->full_movable) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'без ворот';
+    }
+    
+    if ($row->remove_cross) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'с полной растентовкой';
+    }
+    
+    if ($row->remove_racks) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'со снятием поперечин';
+    }
+    
+    if ($row->without_gate) {
+        if (strlen($str1) > 0) $str1 .= ', ';
+        $str1 .= 'со снятием стоек';
+    }
+    
+    return $str1;
+}
+
 function tzs_cost_to_str($cost_str, $split_flag = false) {
 	$cost = json_decode($cost_str, true);
 	$str = '';

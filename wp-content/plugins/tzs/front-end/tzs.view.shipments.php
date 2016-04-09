@@ -21,6 +21,7 @@ function tzs_front_end_view_shipment_handler($atts) {
 			$type = isset($GLOBALS['tzs_tr_types'][$row->trans_type]) ? $GLOBALS['tzs_tr_types'][$row->trans_type] : "";
 			$sh_type = isset($GLOBALS['tzs_sh_types'][$row->sh_type]) ? $GLOBALS['tzs_sh_types'][$row->sh_type] : "";
                         $path_segment_cities = explode(";", $row->path_segment_cities);
+                        $loading_types = tzs_loading_types_to_str($row);
 			?>
 			<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
                         <div id="contact-block-right" style="left: 82%;">
@@ -195,6 +196,17 @@ function tzs_front_end_view_shipment_handler($atts) {
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>
+                    
+                    <?php if (strlen($loading_types) > 0) { ?>
+                    <div class="pull-left label-txt">
+                        <label><strong>Загрузка:</strong></label>
+                    </div>
+                    <div class="pull-left" style="width: 60%">
+                        <?php echo str_replace(', ', ',<br>', $loading_types);?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php }?>
+                    
                     <?php 
                     //$cost = tzs_cost_to_str($row->cost); 
                     $cost = tzs_price_query_to_str($row); 

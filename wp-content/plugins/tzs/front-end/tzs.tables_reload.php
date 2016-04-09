@@ -20,7 +20,7 @@ function tzs_products_table_record_out($row, $form_type, $pr_type_array, $profil
     $output_tbody .= '>';
     
     if ($profile_td_text == 'no') {
-        $output_tbody .= '<td><input type="radio" order-status="'.($row->order_status == null ? '' : $row->order_status).'" top-status="'.$row->top_status.'" order-id="'.$row->order_id.'" id="r_table_record_id" name="r_table_record_id" value="'.$row->id.'"';
+        $output_tbody .= '<td><input type="radio" order-status="'.($row->order_status == null ? '' : $row->order_status).'" top-status="'.$row->top_status.'" order-id="'.$row->order_id.'" record-active="'.$row->active.'" id="r_table_record_id" name="r_table_record_id" value="'.$row->id.'"';
 
         if (isset($_POST['table_record_id']) && $_POST['table_record_id'] == "$row->id") $output_tbody .= 'checked="checked"';
 
@@ -174,6 +174,7 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
     else { $prefix = 'tr'; }
     
     $type = trans_types_to_str($row->trans_type, $row->tr_type);
+    $path_segment_cities = explode(";", $row->path_segment_cities);
     
     //$cost = tzs_cost_to_str($row->cost, true);
     $cost = tzs_price_query_to_str($row);
@@ -201,7 +202,7 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
     $output_tbody .= '>';
 
     if ($profile_td_text == 'no') {
-        $output_tbody .= '<td><input type="radio" order-status="'.($row->order_status == null ? '' : $row->order_status).'" top-status="'.$row->top_status.'" order-id="'.$row->order_id.'" id="r_table_record_id" name="r_table_record_id" value="'.$row->id.'"';
+        $output_tbody .= '<td><input type="radio" order-status="'.($row->order_status == null ? '' : $row->order_status).'" top-status="'.$row->top_status.'" order-id="'.$row->order_id.'" record-active="'.$row->active.'" id="r_table_record_id" name="r_table_record_id" value="'.$row->id.'"';
 
         if (isset($_POST['table_record_id']) && $_POST['table_record_id'] == "$row->id") $output_tbody .= 'checked="checked"';
 
@@ -237,7 +238,7 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
     $output_tbody .= '</td>
             <td style="min-width: 260px; width: 260px;">
                 <div class="tbl_trucks_path_td">
-                    <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).'</div>
+                    <div class="city_label">'.htmlspecialchars(tzs_get_city($row->from_sid)).((count($path_segment_cities) > 2) ? '...' : '').'</div>
                     <div class="country_flag"><img id ="first_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->from_code.'.png"  width=18 height=12 alt=""></div>
                 </div>
                 <div class="tbl_trucks_dtc_td">
@@ -264,7 +265,7 @@ function tzs_tr_sh_table_record_out($row, $form_type, $profile_td_text=null) {
     $output_tbody .= ' (см. карту)</div>';
     $output_tbody .='            </div>
                 <div class="tbl_trucks_path_td">
-                    <div class="city_label">'.htmlspecialchars(tzs_get_city($row->to_sid)).'</div>
+                    <div class="city_label">'.((count($path_segment_cities) > 2) ? '...' : '').htmlspecialchars(tzs_get_city($row->to_sid)).'</div>
                     <div class="country_flag"><img id ="second_city_flag" src="/wp-content/plugins/tzs/assets/images/flags/'.$row->to_code.'.png"  width=18 height=12 alt=""></div>
                 </div>
                 <div class="tbl_trucks_dtc_td">

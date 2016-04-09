@@ -21,6 +21,7 @@ function tzs_front_end_view_truck_handler($atts) {
 		} else {
 			$type = trans_types_to_str($row->trans_type, $row->tr_type);
                         $path_segment_cities = explode(";", $row->path_segment_cities);
+                        $loading_types = tzs_loading_types_to_str($row);
 			
 			?>
 			<script src="/wp-content/plugins/tzs/assets/js/distance.js"></script>
@@ -183,6 +184,24 @@ function tzs_front_end_view_truck_handler($atts) {
                     </div>
                     <div class="clearfix"></div>
                     <?php }?>
+                    
+                    <?php if (strlen($loading_types) > 0) { ?>
+                    <div class="pull-left label-txt">
+                        <label><strong>Загрузка:</strong></label>
+                    </div>
+                    <div class="pull-left" style="width: 60%">
+                        <?php echo str_replace(', ', ',<br>', $loading_types);?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php }?>
+                    
+                    <div class="pull-left label-txt">
+                        <label><strong>Желаемый груз:</strong></label>
+                    </div>
+                    <div class="pull-left" style="width: 60%">
+                        <?php echo $row->sh_descr;?>
+                    </div>
+                    <div class="clearfix"></div>
                     <?php 
                     //$cost = tzs_cost_to_str($row->cost);
                     $cost = tzs_price_query_to_str($row);

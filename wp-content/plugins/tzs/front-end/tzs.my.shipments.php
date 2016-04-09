@@ -223,8 +223,10 @@ function tzs_front_end_my_shipments_handler($atts) {
                             var order_id = e.target.getAttribute('order-id');
                             var order_status = e.target.getAttribute('order-status');
                             var top_status = e.target.getAttribute('top-status');
+                            var record_active = e.target.getAttribute('record-active');
                             
                             jQuery("#table_record_id").attr('value', e.target.value);
+                            jQuery("#table_record_active").attr('value', record_active);
                             jQuery("#table_record_order_id").attr('value', order_id);
                             jQuery("#table_record_order_status").attr('value', order_status);
                             jQuery("#table_record_top_status").attr('value', top_status);
@@ -278,8 +280,9 @@ function tzs_front_end_my_shipments_handler($atts) {
                         
                         jQuery("#view_button").on('click', function(event) {  
                             id = jQuery("#table_record_id").attr('value');
+                            active = jQuery("#table_record_active").attr('value');
                             if (id !== '0') {
-                                window.location.replace("<?php echo get_site_url(); ?>/account/view-shipment/?id="+id);
+                                window.location.replace("<?php echo get_site_url(); ?>/account/view-shipment/?id=" + id + "&link=my-shipments&active=" + active);
                             } else {
                                 ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
                                 event.preventDefault();
@@ -289,7 +292,17 @@ function tzs_front_end_my_shipments_handler($atts) {
                         jQuery("#edit_button").on('click', function(event) {  
                             id = jQuery("#table_record_id").attr('value');
                             if (id !== '0') {
-                                document.location = "<?php echo get_site_url(); ?>/account/edit-shipment/?id="+id;
+                                document.location = "<?php echo get_site_url(); ?>/account/edit-shipment/?id=" + id;
+                            } else {                            
+                                ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
+                                event.preventDefault();
+                            }
+                        });
+                        
+                        jQuery("#duplicate_button").on('click', function(event) {  
+                            id = jQuery("#table_record_id").attr('value');
+                            if (id !== '0') {
+                                document.location = "<?php echo get_site_url(); ?>/account/add-shipment/?duplicate=" + id;
                             } else {                            
                                 ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
                                 event.preventDefault();

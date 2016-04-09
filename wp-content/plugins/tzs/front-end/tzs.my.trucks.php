@@ -112,6 +112,7 @@ function tzs_front_end_my_trucks_handler($atts) {
 
                     <div id="my_products_table">
                         <input type="hidden" id="table_record_id" name="table_record_id" value="0"/>
+                        <input type="hidden" id="table_record_active" name="table_record_active" value="0"/>
                         <input type="hidden" id="table_record_order_id" name="table_record_order_id" value=""/>
                         <input type="hidden" id="table_record_order_status" name="table_record_order_status" value=""/>
                         <input type="hidden" id="table_record_top_status" name="table_record_top_status" value=""/>
@@ -164,8 +165,8 @@ function tzs_front_end_my_trucks_handler($atts) {
                                 //        <div id="menu_set" id2="menu" for="'.$row->id.'" style="display:none;">
                                 $profile_td_text = '<div id="menu_set" id2="menu" for="'.$row->id.'">
                                             <ul>
-                                                <a href="/account/view-truck/?id='.$row->id.'&link=my-trucks&active='.$active.'">Смотреть</a>
-                                                <a href="/account/edit-truck/?id='.$row->id.'">Изменить</a>';
+                                                <a href="/account/view-truck/?id='.$row->id.'&=my-trucks&active='.$active.'">Смотреть</a>
+                                                <a href="/account/edit-truck/?id='.$row->id.'">linkИзменить</a>';
                                 
                                 if ($row->active && ($row->order_status === null)) {
                                     $profile_td_text .= '<a href="javascript:promptPickUp('.$row->id.', \'TR\');">В ТОП</a>';
@@ -212,8 +213,10 @@ function tzs_front_end_my_trucks_handler($atts) {
                             var order_id = e.target.getAttribute('order-id');
                             var order_status = e.target.getAttribute('order-status');
                             var top_status = e.target.getAttribute('top-status');
+                            var record_active = e.target.getAttribute('record-active');
                             
                             jQuery("#table_record_id").attr('value', e.target.value);
+                            jQuery("#table_record_active").attr('value', record_active);
                             jQuery("#table_record_order_id").attr('value', order_id);
                             jQuery("#table_record_order_status").attr('value', order_status);
                             jQuery("#table_record_top_status").attr('value', top_status);
@@ -267,8 +270,9 @@ function tzs_front_end_my_trucks_handler($atts) {
                         
                         jQuery("#view_button").on('click', function(event) {  
                             id = jQuery("#table_record_id").attr('value');
+                            active = jQuery("#table_record_active").attr('value');
                             if (id !== '0') {
-                                window.location.replace("<?php echo get_site_url(); ?>/account/view-truck/?id="+id);
+                                window.location.replace("<?php echo get_site_url(); ?>/account/view-truck/?id=" + id + "&link=my-trucks&active=" + active);
                             } else {
                                 ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
                                 event.preventDefault();
@@ -279,6 +283,16 @@ function tzs_front_end_my_trucks_handler($atts) {
                             id = jQuery("#table_record_id").attr('value');
                             if (id !== '0') {
                                 document.location = "<?php echo get_site_url(); ?>/account/edit-truck/?id="+id;
+                            } else {                            
+                                ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
+                                event.preventDefault();
+                            }
+                        });
+                        
+                        jQuery("#duplicate_button").on('click', function(event) {  
+                            id = jQuery("#table_record_id").attr('value');
+                            if (id !== '0') {
+                                document.location = "<?php echo get_site_url(); ?>/account/add-truck/?duplicate="+id;
                             } else {                            
                                 ksk_show_msg('Необходимо выбрать запись с помощью переключателя в первом столбце', 'Ошибка');
                                 event.preventDefault();
