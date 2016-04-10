@@ -185,6 +185,7 @@ function initCitiesTable() {
     
 // Рассчет расстояний между пунктами
 function calcCitiesDistance() {
+    //alert('calcCitiesDistance');
     var calc_flag = ((jQuery('#route-length').attr('value') === '') || (jQuery('#route-length').attr('value') === 'Ошибка'));
     
     if (!calc_flag) {
