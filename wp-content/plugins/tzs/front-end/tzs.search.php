@@ -317,14 +317,14 @@ function tzs_search_parameters_to_sql($p, $pref) {
 		$sql .= ' AND sh_type = '.$p['sh_type'];
         
 	if (isset($p['price_from']))
-		$sql .= ' AND price >= '.$p['price_from'];
+		$sql .= ' AND a.cost >= '.$p['price_from'];
 	if (isset($p['price_to']))
-		$sql .= ' AND price <= '.$p['price_to'];
+		$sql .= ' AND a.cost <= '.$p['price_to'];
         
 	if (isset($p['price_km_from']))
-		$sql .= ' AND (price/distance) >= '.$p['price_km_from'];
+		$sql .= ' AND price >= '.$p['price_km_from'];
 	if (isset($p['price_km_to']))
-		$sql .= ' AND (price/distance) <= '.$p['price_km_to'];
+		$sql .= ' AND price <= '.$p['price_km_to'];
         
 	return $sql;
 }

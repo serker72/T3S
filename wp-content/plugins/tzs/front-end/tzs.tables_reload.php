@@ -487,10 +487,10 @@ function tzs_front_end_tables_reload() {
 
         $pp = floatval($records_per_page);
 
-        $sql = "SELECT COUNT(*) as cnt FROM ".$table_name." WHERE active=1 $sql1 $s_sql;";
+        $sql = "SELECT COUNT(*) as cnt FROM ".$table_name." a WHERE active=1 $sql1 $s_sql;";
         $res = $wpdb->get_row($sql);
         if (count($res) == 0 && $wpdb->last_error != null) {
-            $output_error .= '<div>Не удалось отобразить список '.$table_error_msg.'. Свяжитесь, пожалуйста, с администрацией сайта.</div>';
+            $output_error .= '<div>Не удалось отобразить список '.$table_error_msg.'. Свяжитесь, пожалуйста, с администрацией сайта.<br>'.$sql.'<br>'.$wpdb->last_error.'</div>';
         } else {
             $records = $res->cnt;
             $pages = ceil($records / $pp);
@@ -522,7 +522,7 @@ function tzs_front_end_tables_reload() {
             $sql .= " LIMIT $from,$pp;";
             $res = $wpdb->get_results($sql);
             if (count($res) == 0 && $wpdb->last_error != null) {
-                $output_error .= '<div>Не удалось отобразить список '.$table_error_msg.'. Свяжитесь, пожалуйста, с администрацией сайта.</div>';
+                $output_error .= '<div>Не удалось отобразить список '.$table_error_msg.'. Свяжитесь, пожалуйста, с администрацией сайта.<br>'.$sql.'<br>'.$wpdb->last_error.'</div>';
             } else {
                 if (count($res) == 0) {
                     $output_error .= '<div>По Вашему запросу ничего не найдено.</div>';

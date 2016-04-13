@@ -25,6 +25,7 @@ ALTER TABLE `wp_tzs_shipments` ADD `remove_racks` TINYINT NOT NULL DEFAULT '0';
 ALTER TABLE `wp_tzs_shipments` ADD `without_gate` TINYINT NOT NULL DEFAULT '0';
 ALTER TABLE `wp_tzs_shipments` ADD `path_segment_cities` VARCHAR(255) NULL DEFAULT NULL;
 ALTER TABLE `wp_tzs_shipments` ADD `path_segment_distances` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `wp_tzs_shipments` CHANGE `cost` `cost` FLOAT NOT NULL DEFAULT '0';
 
 ALTER TABLE `wp_tzs_trucks` ADD `dt_pickup` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `wp_tzs_trucks` ADD `top_loading` TINYINT NOT NULL DEFAULT '0';
@@ -36,6 +37,7 @@ ALTER TABLE `wp_tzs_trucks` ADD `remove_racks` TINYINT NOT NULL DEFAULT '0';
 ALTER TABLE `wp_tzs_trucks` ADD `without_gate` TINYINT NOT NULL DEFAULT '0';
 ALTER TABLE `wp_tzs_trucks` ADD `path_segment_cities` VARCHAR(255) NULL DEFAULT NULL;
 ALTER TABLE `wp_tzs_trucks` ADD `path_segment_distances` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `wp_tzs_trucks` CHANGE `cost` `cost` FLOAT NOT NULL DEFAULT '0';
 
 ALTER TABLE `wp_tzs_products` ADD `dt_pickup` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 
