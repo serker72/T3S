@@ -514,12 +514,12 @@ function tzs_print_truck_form($errors, $edit=false) {
                 jQuery('#tr_type').css({'border': '1px solid #007FFF'});
             }
             
-            if (jQuery('#sh_descr').val() < 1) {
+            /*if (jQuery('#sh_descr').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указано описание груза.<br>\n';
                 jQuery('#sh_descr').css({'border': '1px solid #F00'});
             } else {
                 jQuery('#sh_descr').css({'border': '1px solid #007FFF'});
-            }
+            }*/
 
             if (jQuery('#trans_type').val() < 1) {
                 ErrorMsg2 = ErrorMsg2 + 'Не указан тип транспортного средства.<br>\n';
