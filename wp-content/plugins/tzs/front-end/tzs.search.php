@@ -457,14 +457,16 @@ function tzs_front_end_search_tr_form($form_type) {
                 </td>
                 
                 <td>Масса: от:<br>
-                    <select name="weight_from">
-                            <?php tzs_print_weight('weight_from'); ?>
-                    </select>
+                    <!--select name="weight_from">
+                            <?php //tzs_print_weight('weight_from'); ?>
+                    </select-->
+                    <input type="text" name="weight_from" value="<?php echo_val('weight_from'); ?>" size="10">
                 </td>
                 <td>Масса: до:<br>
-                    <select name="weight_to">
-                            <?php tzs_print_weight('weight_to'); ?>
-                    </select>
+                    <!--select name="weight_to">
+                            <?php //tzs_print_weight('weight_to'); ?>
+                    </select-->
+                    <input type="text" name="weight_to" value="<?php echo_val('weight_to'); ?>" size="10">
                 </td>
             <tr>
                 <td class="td_border_right_dotted">Регион:<br>
@@ -479,14 +481,16 @@ function tzs_front_end_search_tr_form($form_type) {
                 </td>
                 
                 <td>Объем: от:<br>
-                    <select name="volume_from">
-                            <?php tzs_print_volume('volume_from'); ?>
-                    </select>
+                    <!--select name="volume_from">
+                            <?php //tzs_print_volume('volume_from'); ?>
+                    </select-->
+                    <input type="text" name="volume_from" value="<?php echo_val('volume_from'); ?>" size="10">
                 </td>
                 <td>Объем: до:<br>
-                    <select name="volume_to">
-                            <?php tzs_print_volume('volume_to'); ?>
-                    </select>
+                    <!--select name="volume_to">
+                            <?php //tzs_print_volume('volume_to'); ?>
+                    </select-->
+                    <input type="text" name="volume_to" value="<?php echo_val('volume_to'); ?>" size="10">
                 </td>
             </tr>
             <tr>
