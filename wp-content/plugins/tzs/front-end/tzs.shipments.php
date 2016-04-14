@@ -162,21 +162,25 @@ function tzs_front_end_shipments_handler($atts) {
                         </div>
                         <div id="tbl_thead_search_div_5" class="tbl_thead_search_div">
                             Масса: от:<br>
-                            <select name="weight_from">
-                                    <?php tzs_print_weight('weight_from'); ?>
-                            </select><br>
+                            <!--select name="weight_from">
+                                    <?php //tzs_print_weight('weight_from'); ?>
+                            </select><br-->
+                            <input type="text" name="weight_from" value="<?php echo_val('weight_from'); ?>" size="10"><br>
                             Масса: до:<br>
-                            <select name="weight_to">
-                                    <?php tzs_print_weight('weight_to'); ?>
-                            </select><br>
+                            <!--select name="weight_to">
+                                    <?php //tzs_print_weight('weight_to'); ?>
+                            </select><br-->
+                            <input type="text" name="weight_to" value="<?php echo_val('weight_to'); ?>" size="10"><br>
                             Объем: от:<br>
-                            <select name="volume_from">
-                                    <?php tzs_print_volume('volume_from'); ?>
-                            </select><br>
+                            <!--select name="volume_from">
+                                    <?php //tzs_print_volume('volume_from'); ?>
+                            </select><br-->
+                            <input type="text" name="volume_from" value="<?php echo_val('volume_from'); ?>" size="10"><br>
                             Объем: до:<br>
-                            <select name="volume_to">
-                                    <?php tzs_print_volume('volume_to'); ?>
-                            </select>
+                            <!--select name="volume_to">
+                                    <?php //tzs_print_volume('volume_to'); ?>
+                            </select-->
+                            <input type="text" name="volume_to" value="<?php echo_val('volume_to'); ?>" size="10">
                         </div>
                     </th>
                     <th>
