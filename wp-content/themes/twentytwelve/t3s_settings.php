@@ -117,6 +117,14 @@ function t3s_settings_api_init() {
             'general', // страница
             't3s_setting_section' // секция
     );
+    
+    add_settings_field(
+            't3s_setting_marquee_text',
+            'Текст для бегущей строки',
+            't3s_setting_callback_function13',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
 
     // Регистрируем опции, чтобы они сохранялись при отправке 
     // $_POST параметров и чтобы callback функции опций выводили их значение.
@@ -132,6 +140,7 @@ function t3s_settings_api_init() {
     register_setting('general', 't3s_setting_pay_count');
     register_setting('general', 't3s_setting_signup_user_notification_page_id');
     register_setting('general', 't3s_setting_registration_user_notification_page_id');
+    register_setting('general', 't3s_setting_marquee_text');
 }
 
 // ------------------------------------------------------------------
@@ -258,6 +267,15 @@ function t3s_setting_callback_function12() {
 		name="t3s_setting_registration_user_notification_page_id"  
 		type="text" 
 		value="' . get_option('t3s_setting_registration_user_notification_page_id') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function13() {
+	echo '<input 
+		name="t3s_setting_marquee_text"  
+		type="text" 
+		value="' . get_option('t3s_setting_marquee_text') . '" 
 		class="code2"
 	 />';
 }

@@ -3137,3 +3137,28 @@ a#vverh:before {
 	color: white;
 	padding: 20px;
 }
+
+.marquee {
+    overflow: hidden;
+    white-space: nowrap; /* Запрещаем переносы слов */
+    animation: marquee 20s linear infinite; /*alternate;*/
+    /*background: #ffcc00;*/
+    padding: 5px;
+}
+@keyframes marquee {
+    from { text-indent: 100%; }
+    to { text-indent: 0; }
+}
+@-webkit-keyframes marquee {
+    from { text-indent: 100%; }
+    to { text-indent: 0; }
+}
+@-o-keyframes marquee {
+    from { text-indent: 100%; }
+    to { text-indent: 0; }
+}
+@-moz-keyframes marquee {
+    from { text-indent: 100%; }
+    to { text-indent: 0; }
+}
+   

@@ -32,13 +32,47 @@ get_header(); ?>
                                 <button id="calc-cities-distance" onclick="javascript:CalcCitiesDistance();">Рассчитать</button>
                                 <div id="map_canvas" style="display: none;"></div><!-- style="display: none;"-->
                             </div>
-                            <div id="marquee">Тестовый текст для бегущей строки</div>
+                            <div id="t3s-vseazs-informer">
+                                <div id="t3s-vseazs-informer-region">
+                                    <select id="t3s-vseazs-informer-region-selector">
+                                        <option value="1">Винницкая область</option>
+                                        <option value="2">Волынская область</option>
+                                        <option value="3">Днепропетровская область</option>
+                                        <option value="4">Донецкая область</option>
+                                        <option value="5">Житомирская область</option>
+                                        <option value="6">Закарпатская область</option>
+                                        <option value="7">Запорожская область</option>
+                                        <option value="8">Ивано-Франковская область</option>
+                                        <option value="9">Киевская область</option>
+                                        <option value="10">Кировоградская область</option>
+                                        <option value="11">Крым</option>
+                                        <option value="12">Луганская область</option>
+                                        <option value="13">Львовская область</option>
+                                        <option value="14">Николаевская область</option>
+                                        <option value="15">Одесская область</option>
+                                        <option value="16">Полтавская область</option>
+                                        <option value="17">Ровенская область</option>
+                                        <option value="18">Сумская область</option>
+                                        <option value="19">Тернопольская область</option>
+                                        <option value="20">Харьковская область</option>
+                                        <option value="21">Херсонская область</option>
+                                        <option value="22">Хмельницкая область</option>
+                                        <option value="23">Черкасская область</option>
+                                        <option value="24">Черниговская область</option>
+                                        <option value="25">Черновицкая область</option>
+                                    </select>
+                                </div>
+                                <div id="t3s-vseazs-informer-result"><a id="vseazs_informer" class="vseazs-informer" href="http://vseazs.com"></a><script type="text/javascript" charset="UTF-8" src="http://vseazs.com/inf.php?reg=1&fuels=01110101"></script></div>
+                            </div>
 			<?php endwhile; // end of the loop. ?>
 
 		</div><!-- #content -->
 	</div><!-- #primary -->
 
-<script src="/wp-content/themes/twentytwelve/js/jquery.simplemarquee.js"></script>
+<?php get_sidebar(); ?>
+<div style="clear: both;"></div>
+<div><?php echo do_shortcode('[logo-slider]'); ?></div>
+
 <script>
     var map, mapRoute;
     
@@ -117,8 +151,20 @@ get_header(); ?>
     
     jQuery(document).ready(function(){
        //jQuery('#marquee').simplemarquee(); 
+        jQuery("#t3s-vseazs-informer-region-selector").on('change', function() {
+            url = "http://vseazs.com/inf.php?reg=" + jQuery("#t3s-vseazs-informer-region-selector").val() + "&fuels=01110101";
+            jQuery.ajax({
+                type: "GET",
+                url: url,
+                dataType: "script",
+                success: function(data){
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown){
+                    jQuery("#t3s-vseazs-informer-result").html(textStatus);
+                }
+            });
+       });
     });
 </script>
 
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>

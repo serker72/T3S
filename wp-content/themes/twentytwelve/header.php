@@ -16,9 +16,6 @@
 	<link rel="stylesheet" href="/ui/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../info/tooltip.css"/>
         <script src="/wp-content/themes/twentytwelve/js/bootstrap.min.js"></script>
-        <script src="/wp-content/themes/twentytwelve/js/jquery.simplemarquee.js"></script>
-        
-        <!--script src="/wp-content/themes/twentytwelve/js/jquery.slick.js" type="text/javascript"></script-->
 	<script>
 		var ajax_url = '<?php echo admin_url('admin-ajax.php'); ?>';
                 
@@ -151,8 +148,7 @@
 		<div id="front-text">
 			<p>НАЦИОНАЛЬНАЯ ТОРГОВАЯ ТОВАРО-ТРАНСПОРТНАЯ СИСТЕМА Т3С</p>
 		</div>
-		<div id="marquee">Test test TEST
-		</div>
+		<div class="marquee"><?php echo get_option('t3s_setting_marquee_text'); ?></div>
             </div>
 <?php } ?>
 
@@ -183,10 +179,6 @@
 <script>
         // Функция, отрабатывающая после готовности HTML-документа
     jQuery(document).ready(function(){
-        jQuery('#marquee').simplemarquee({
-            cycles: Infinity
-        });
-        
 	<?php if (get_current_user_id() != 0) {?>
                 jQuery('#menu-profile li:last-child a').attr('href', "<?php echo htmlspecialchars_decode(wp_logout_url($redirectTo = "/account/login/")); ?>");
                 //jQuery('#menu-profile li:last-child a').css({'text-transform': 'uppercase'});
