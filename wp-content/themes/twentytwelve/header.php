@@ -78,19 +78,35 @@
 	</script>
 </head>
 <body <?php body_class(); ?>>
+<div class="banner span12">
+        <div class="span1"></div>
+        <div class="span10">
+            <img src="/wp-content/themes/twentytwelve/image/banner.png"/>
+        </div>
+    </div>
 <header id="masthead" class="site-header" role="banner">
 <div style="clear: both;"></div>
+
 	<div id="header">
+    
+    <div class="header-half" style="background-image: url(/wp-content/themes/twentytwelve/image/fonmenu.png); background-repeat:  no-repeat;">
+        <div class="head-block">
 		<?php if (!is_front_page()) {?>
-			<div id="logo_head" style="float: left;">
-                		<a href="/"><img src="/wp-content/themes/twentytwelve/images/logo_footer_3.png"></a>    
-            		</div>
+			<!-- <div id="logo_head" style="float: left;" class="span2">
+                		<a href="/"><img src="/wp-content/themes/twentytwelve/image/logo.png"></a>    
+            		</div> -->
 		<?php } ?>
-		<div id="time">
-			<!--script type="text/javascript">
+        <div id="logo_full" style="float: left;" class="span2">
+                		<a href="/"><img src="/wp-content/themes/twentytwelve/image/logo_full.png"></a>    
+            		</div>
+        <div id="description" class="span3">
+                            <span>Национальная торговая товарно-транспортная система</span>
+                        </div>
+		<!--<div id="time">
+			script type="text/javascript">
 				var l = new Date();
 				document.write (l.toLocaleString());
-			</script-->
+			</script
                         <div id="clock">
                             <ul>
                                 <li id="clock-date"></li>
@@ -100,31 +116,23 @@
                                 <li id="clock-minute"></li>
                             </ul>
                         </div>
-		</div>
-		<div id="lang">
-			<a href="#"><!-- Русский --></a>
-		</div>
-		<div id="chat">
-                    <a class="btn-chat" href="javascript:onChatButtonClick();">он-лайн помощник</a>
-		</div>
-                <div id="tel" >
-                    <a href="#modal" role="button" class="btn-tel" data-toggle="modal">Заказать звонок</a>
-                    <!--a href="skype:<?php //echo get_option( 't3s_setting_skype_login' ); ?>"><img src="/wp-content/themes/twentytwelve/images/skype.png"/><?php //echo "  ".get_option( 't3s_setting_skype_login' ); ?></a-->
-                </div>
-		<?php if (get_current_user_id() == 0) {?>
-		<div id="registr">
+		</div> -->
+        <div class="span1"></div>
+        	<?php if (get_current_user_id() == 0) {?>
+		<div id="registr" class="span2">
 			<a href="/account/registration/">Регистрация</a>
 		</div>
-		<div id="login">
+		<div id="login" class="span2">
 			<a href="/account/login">Войти в систему</a>
 		</div>
 		<?php } else {?>
                 
-		<div id="profile">
+		<div id="profile" class="span2">
 			<a href="/account/profile">Личный кабинет</a>
 		</div>
-                <div id="logined">
-                        <?php echo "Вы вошли как: ".$user_info['first_name']." ".$user_info['last_name']." Логин: "; echo $user_info['user_login'];?>
+        <div id="logined" class="span2">
+            <?php //echo "Вы вошли как: ".$user_info['first_name']." ".$user_info['last_name']." Логин: "; echo $user_info['user_login'];?>
+            <?php echo "Вы вошли как: ". $user_info['user_login'];?>
 			
 		</div>
 		<?php }?>
@@ -132,13 +140,53 @@
             $tel = $user_info['telephone'];?>
             <input type="hidden" value="<?php echo $tel; ?>" id="tel-user" />
         <?php }?>
+		
+		<div id="chat">
+                    <a class="btn-chat" href="javascript:onChatButtonClick();">он-лайн помощник</a>
+		</div>
+        <div id="lang">
+			<a href="#"><!-- Русский --></a>
+		</div>
+               <!-- <div id="tel" >
+                    <a href="#modal" role="button" class="btn-tel" data-toggle="modal">Заказать звонок</a>
+                   
+                </div> -->
+	
                 
+<?php 
+/*wp_nav_menu( array(
+	'menu_class'=>'tender-menu',
+    'theme_location'=>'top',
+    'after'=>' /'
+) );*/
+?>
 
+<?php //if (!dynamic_sidebar("Тендеры и Товары") ) : ?>
+        <?php //endif; ?>
+		<?php //if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("Слайдер") ) : ?>
+		<?php //endif; ?>
+
+</div>
+<div style="clear: both;"></div>
+        <div class="navigation">
+            <?php wp_nav_menu('menu=tender-menu'); ?>
+            <div style="clear: both;"></div>
+        </div>
+<!--div class="marquee"><?php /*echo get_option('t3s_setting_marquee_text');*/ ?></div-->
+<div><?php echo do_shortcode('[ditty_news_ticker id="410"]'); ?></div>
+</div>
+<div style="clear: both;"></div>
 
 <?php if (is_front_page()) {?>
-<div style="clear: both;"></div>
-	 <div id="sliders">
-		<div id="logo-front" style="float: left;">
+
+	 <div id="slidersk">
+     <div class="desc span5">Система создана с целью удовлетворения постоянно растущего спроса на различные виды продукции и определения их оптимальной стоимости</div>
+        <div class="header-half" style="background-image: url(/wp-content/themes/twentytwelve/image/fonmap.png); background-repeat:  no-repeat; background-position: center center;">
+            <div class="head-block">
+               <img src="/wp-content/themes/twentytwelve/image/slider1.png" /> 
+            </div>
+        </div>
+		<!--<div id="logo-front" style="float: left;">
 			<a href="/"><img src="/wp-content/themes/twentytwelve/images/logo_footer_3.png"></a>
 		</div>
 		<div id="front-image" style="float: left;">
@@ -147,19 +195,38 @@
 		<div style="clear: both;"></div>
 		<div id="front-text">
 			<p>НАЦИОНАЛЬНАЯ ТОРГОВАЯ ТОВАРО-ТРАНСПОРТНАЯ СИСТЕМА Т3С</p>
-		</div>
-		<div class="marquee"><?php echo get_option('t3s_setting_marquee_text'); ?></div>
-            </div>
+		</div> -->
+		
+    </div>
 <?php } ?>
 
 
-        <?php //if (!dynamic_sidebar("Тендеры и Товары") ) : ?>
-        <?php //endif; ?>
-		<?php //if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("Слайдер") ) : ?>
-		<?php //endif; ?>
-           
+        
+ 
 	</div>
 </header>
+<?php if (is_front_page()) {?>
+<div class="wrapper-button-block">
+    <div class="button-block">
+        <div class="tovar span3">
+            <span class="btn-add span2">
+                <a class="left-ancor" href="/cargo/">Найти</a> / <a class="left-ancor" href="/account/add-shipment/">Добавить</a>
+            </span>
+        </div>          
+        <div class="transport span3">
+            <span class="btn-add span2">
+                <a class="left-ancor" href="/transport/">Найти</a> / <a class="left-ancor" href="/account/add-truck/">Добавить</a>
+            </span>
+        </div>
+        <div class="tender span3">
+            <span class="btn-add span2">
+                <a class="left-ancor" href="/shop/">Найти</a> / <a class="left-ancor" href="/shop/">Добавить</a>
+            </span>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+<?php } ?> 
     <div id="modal" class="modal hide" style="width: 270px;">
 	<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Template Name: Default
  * Description: The default template.
@@ -21,6 +21,8 @@
 						<?php wpmtst_the_client(); ?>
 					</div>
 					<?php wpmtst_read_more(); ?>
+					<div class="testimonial-button"><button id="open-testimonial-form" onclick="javascript:OpenTestimonialForm();">Оставить отзыв</button></div>
+                    
 					<div class="clear"></div>
 				</div>
 			</div>

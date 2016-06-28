@@ -20,18 +20,28 @@ get_header(); ?>
 			<?php while ( have_posts() ) : the_post(); ?>
 				<?php get_template_part( 'content', 'page' ); ?>
 				<?php //comments_template( '', true ); ?>
-                            <div><?php echo do_shortcode('[testimonial_view id=1]'); ?></div>
-                            <div><button id="open-testimonial-form" onclick="javascript:OpenTestimonialForm();">Добавить</button></div>
-                            <div id="testimonial-form" style="display: none"><?php echo do_shortcode('[testimonial_view id=2]'); ?></div>
-                            <div id="cities-distance">
-                                <label for="city1">Начало маршрута</label>
-                                <input id="city1" type="text"><br>
-                                <label for="city1">Окончание маршрута</label>
-                                <input id="city2" type="text"><br>
-                                <label id="cities-distance-label">0 км</label>
-                                <button id="calc-cities-distance" onclick="javascript:CalcCitiesDistance();">Рассчитать</button>
-                                <div id="map_canvas" style="display: none;"></div><!-- style="display: none;"-->
+                            
+                            <div class="span4">
+                                <div class="header-block">
+                                    Калькулятор расстояния
+                                </div>
+                                <div class="cont-block">
+                                <div id="cities-distance">
+                                    <label for="city1">Начало маршрута</label>
+                                    <input id="city1" type="text"><br>
+                                    <label for="city1">Окончание маршрута</label>
+                                    <input id="city2" type="text"><br>
+                                    <label id="cities-distance-label">0 км</label>
+                                    <button id="calc-cities-distance" onclick="javascript:CalcCitiesDistance();">Рассчитать</button>
+                                    <div id="map_canvas" style="display: none;"></div><!-- style="display: none;"-->
+                                </div>
+                                </div>
                             </div>
+                             <div class="span4">
+                                <div class="header-block">
+                                    Цены на топливо
+                                </div>
+                                <div class="cont-block">
                             <div id="t3s-vseazs-informer">
                                 <div id="t3s-vseazs-informer-region">
                                     <select id="t3s-vseazs-informer-region-selector">
@@ -63,8 +73,24 @@ get_header(); ?>
                                     </select>
                                 </div>
                                 <div id="t3s-vseazs-informer-result"><a id="vseazs_informer" class="vseazs-informer" href="http://vseazs.com"></a><script type="text/javascript" charset="UTF-8" src="http://vseazs.com/inf.php?reg=1&fuels=01110101"></script></div>
+                                </div>
+                                </div>
                             </div>
+                            <div class="span4">
+                                <div class="header-block">
+                                    Погода в Вашем городе
+                                </div>
+                                <div class="cont-block">
+                                <div>
+                                    <div id="pogodnik-informer">
+                                        <iframe width="200" height="240" frameborder="0" scrolling="no" src="http://ad.pogodnik.com">Посмотреть прогноз погоды на <a href="http://pogodnik.com/"><img src="http://pogodnik.com/images/prognoz-pogody-200x240.png"> </a> </iframe>
+                                    </div>
+                                </div>
+                            </div>
+                               </div>
+                           
 			<?php endwhile; // end of the loop. ?>
+            <div style="clear: both;"></div>
 
 		</div><!-- #content -->
 	</div><!-- #primary -->

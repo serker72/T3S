@@ -125,6 +125,70 @@ function t3s_settings_api_init() {
             'general', // страница
             't3s_setting_section' // секция
     );
+    
+    add_settings_field(
+            't3s_setting_facebook_url',
+            'Адрес страницы в сети Facebook',
+            't3s_setting_callback_function14',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_vk_url',
+            'Адрес страницы в сети ВКонтакте',
+            't3s_setting_callback_function15',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_ok_url',
+            'Адрес страницы в сети Одноклассники',
+            't3s_setting_callback_function16',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_google_url',
+            'Адрес страницы в сети Google+',
+            't3s_setting_callback_function17',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_youtube_url',
+            'Адрес страницы в Youtube',
+            't3s_setting_callback_function18',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_twitter_url',
+            'Адрес страницы в сети Twitter',
+            't3s_setting_callback_function19',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_instagram_url',
+            'Адрес страницы в сети Instagram',
+            't3s_setting_callback_function20',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
+    
+    add_settings_field(
+            't3s_setting_skype_login',
+            'Логин в Skype',
+            't3s_setting_callback_function21',
+            'general', // страница
+            't3s_setting_section' // секция
+    );
 
     // Регистрируем опции, чтобы они сохранялись при отправке 
     // $_POST параметров и чтобы callback функции опций выводили их значение.
@@ -141,6 +205,14 @@ function t3s_settings_api_init() {
     register_setting('general', 't3s_setting_signup_user_notification_page_id');
     register_setting('general', 't3s_setting_registration_user_notification_page_id');
     register_setting('general', 't3s_setting_marquee_text');
+    register_setting('general', 't3s_setting_facebook_url');
+    register_setting('general', 't3s_setting_vk_url');
+    register_setting('general', 't3s_setting_ok_url');
+    register_setting('general', 't3s_setting_google_url');
+    register_setting('general', 't3s_setting_youtube_url');
+    register_setting('general', 't3s_setting_twitter_url');
+    register_setting('general', 't3s_setting_instagram_url');
+    register_setting('general', 't3s_setting_skype_login');
 }
 
 // ------------------------------------------------------------------
@@ -276,6 +348,78 @@ function t3s_setting_callback_function13() {
 		name="t3s_setting_marquee_text"  
 		type="text" 
 		value="' . get_option('t3s_setting_marquee_text') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function14() {
+	echo '<input 
+		name="t3s_setting_facebook_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_facebook_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function15() {
+	echo '<input 
+		name="t3s_setting_vk_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_vk_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function16() {
+	echo '<input 
+		name="t3s_setting_ok_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_ok_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function17() {
+	echo '<input 
+		name="t3s_setting_google_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_google_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function18() {
+	echo '<input 
+		name="t3s_setting_youtube_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_youtube_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function19() {
+	echo '<input 
+		name="t3s_setting_twitter_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_twitter_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function20() {
+	echo '<input 
+		name="t3s_setting_instagram_url"  
+		type="text" 
+		value="' . get_option('t3s_setting_instagram_url') . '" 
+		class="code2"
+	 />';
+}
+
+function t3s_setting_callback_function21() {
+	echo '<input 
+		name="t3s_setting_skype_login"  
+		type="text" 
+		value="' . get_option('t3s_setting_skype_login') . '" 
 		class="code2"
 	 />';
 }
