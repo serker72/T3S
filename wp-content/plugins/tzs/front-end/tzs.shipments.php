@@ -40,7 +40,7 @@ function tzs_front_end_shipments_handler($atts) {
                     </th>
                 </tr>
                 <tr>
-                    <th id="tbl_trucks_id">Номер, дата и время заявки</th>
+                    <th id="tbl_trucks_id">Дата и время заявки</th>
                     <th nonclickable="true" style="min-width: 260px; padding: 0; margin: 0;">
                         <div class="tbl_trucks_path">Пункты погрузки /<br/>выгрузки<br/>&nbsp;</div>
                         <div class="tbl_trucks_dtc">Даты погрузки /<br>выгрузки</div>
